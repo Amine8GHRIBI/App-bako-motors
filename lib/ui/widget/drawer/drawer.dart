@@ -1,5 +1,6 @@
 import
 'package:flutter/material.dart';
+import 'package:mini_project/ui/pages/user-page.dart';
 
 import 'drawer_collapse.dart';
 import 'drawer_item.dart';
@@ -132,27 +133,34 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
 
                           DrawerItem(
-                            icon: Icon(
-                              Icons.account_circle_rounded,
-                              color: Colors.black ,
-                              size: 20,
-                            ),
+                            icon:new IconButton(
+                                icon: Icon(Icons.account_circle_rounded,color: Colors.black,
+                                  size: 20,),
+//                  tooltip: "Admin",
+                                onPressed: () {
+                                  Navigator.pushNamed(context , '/profile');
+                                }),
+
                             label: Text(
                               'Profile         ',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
+
                               ),
                             ),
                             isCollapsed: isCollapsedAfterSec,
                           ),
                           DrawerItem(
-                            icon: Icon(
-                              Icons.bluetooth_connected,
-                              color: Colors.black,
-                              size: 20,
-                            ),
+                            icon:new IconButton(
+                                icon: Icon(Icons.bluetooth_connected,color: Colors.black,
+                                  size: 20,),
+//                  tooltip: "Admin",
+                                onPressed: () {
+                                  Navigator.pushNamed(context , '/conn');
+                                }),
+
                             label: Text(
                               'connexion',
                               style: TextStyle(
@@ -165,11 +173,14 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
 
                           DrawerItem(
-                            icon: Icon(
-                              Icons.ev_station,
-                              color: Colors.black,
-                              size: 20,
-                            ),
+                            icon:new IconButton(
+                                icon: Icon(Icons.ev_station,color: Colors.black,
+                                  size: 20,),
+//                  tooltip: "Admin",
+                                onPressed: () {
+                                  Navigator.pushNamed(context , '/conn');
+                                }),
+
                             label: Text(
                               'station      ',
                               style: TextStyle(
@@ -181,13 +192,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             isCollapsed: isCollapsedAfterSec,
                           ),
                           DrawerItem(
-                            icon: Icon(
-                              Icons.logout,
-                              color: Colors.black,
-                              size: 20,
-                            ),
+                            icon:new IconButton(
+                                icon: Icon(Icons.wifi
+                                  ,color: Colors.black,
+                                  size: 20,),
+//                  tooltip: "Admin",
+                                onPressed: () {
+                                  Navigator.pushNamed(context , '/conn');
+                                }),
+
                             label: Text(
-                              'Deconnexion',
+                              'WIFI',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -196,46 +211,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             ),
                             isCollapsed: isCollapsedAfterSec,
                           ),
+
                           DrawerItem(
-                            icon: Icon(
-                              Icons.bookmarks,
-                              color: Colors.white,
-                              size: 35,
-                            ),
+
+                            icon:new IconButton(
+                                icon: Icon(Icons.logout),
+//                  tooltip: "Admin",
+                                onPressed: () {
+                                  Navigator.pushNamed(context , '/conn');
+                                }),
                             label: Text(
-                              'Item 5',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
-                            ),
-                            isCollapsed: isCollapsedAfterSec,
-                          ),
-                          DrawerItem(
-                            icon: Icon(
-                              Icons.bookmarks,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                            label: Text(
-                              'Item 6',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                              ),
-                            ),
-                            isCollapsed: isCollapsedAfterSec,
-                          ),
-                          DrawerItem(
-                            icon: Icon(
-                              Icons.bookmarks,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                            label: Text(
-                              'Item 7',
+                              'DECONNEXION',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

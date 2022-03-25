@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class DrawerItem extends StatefulWidget {
@@ -7,9 +8,11 @@ class DrawerItem extends StatefulWidget {
     required this.label,
     required this.isCollapsed,
   }) : super(key: key);
-  final Icon icon;
+  final IconButton icon;
   final bool isCollapsed;
   final Text label;
+
+
 
   @override
   _DrawerItemState createState() => _DrawerItemState();
@@ -28,6 +31,7 @@ class _DrawerItemState extends State<DrawerItem> {
             : MainAxisAlignment.spaceEvenly,
         children: [
           widget.icon,
+
           (widget.isCollapsed)
               ? Container()
               : AnimatedOpacity(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mini_project/ui/pages/bleutooth-app.dart';
+import 'package:mini_project/ui/pages/Obd-Home-page.dart';
 import 'package:unicons/unicons.dart';
 
 import '../widget/bottom_nav_bar.dart';
@@ -36,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size; //check the size of device
     ThemeData themeData = Theme.of(context);
     int currIndex;
-
 
     return Stack(
       children :[
@@ -136,13 +135,17 @@ class _HomePageState extends State<HomePage> {
             onTap: (value) {
               switch (value) {
                 case 0:
-                  Navigator.pushNamed(context , '/méteo');
+                  Navigator.pushNamed(context , '/users');
                   break;
                 case 1:
-                  Navigator.pushNamed(context , '/gallerie');
+                  Navigator.pushNamed(context , '/register');
                   break;
                 case 2:
-                  Navigator.pushNamed(context , '/home');
+                  Navigator.pushNamed(context , '/login');
+                  break;
+
+                case 3:
+                  Navigator.pushNamed(context , '/cars');
                   break;
               }
               setState(() => currIndex = value);
@@ -268,9 +271,9 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              Navigator.push(
+                                             Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => const bleutoothApp()),
+                                                MaterialPageRoute(builder: (context) => const obd_home()),
                                               );
 
                                             },
