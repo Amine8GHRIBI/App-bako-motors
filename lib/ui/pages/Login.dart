@@ -20,11 +20,13 @@ class UserLogin extends StatefulWidget {
 }
 
 class _UserLoginState extends State<UserLogin> {
+
   late UserDatabase database;
   User? user ;
-  Future<bool> checklogin(String username , String password) async {
-    debugPrint("username " + username);
-    List<User>  users = await database.userDAO.finduserByusername(username.toString());
+
+  Future<bool> checklogin(String email , String password) async {
+
+    List<User>  users = await database.userDAO.finduserByemail(email.toString());
 
     debugPrint(users.length.toString());
 
@@ -130,7 +132,7 @@ class _UserLoginState extends State<UserLogin> {
                               isloading = true;
                             });
                             if( await checklogin(email,password)){
-                               await   Navigator.pushNamed(context , '/user',arguments: {"user" : user });
+                               await   Navigator.pushNamed(context , '/home',arguments: {"user" : user });
 
                                setState(() {
                                  isloading = false;

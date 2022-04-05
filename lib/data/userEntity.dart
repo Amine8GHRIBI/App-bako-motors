@@ -18,10 +18,12 @@ class User {
 
   @PrimaryKey(autoGenerate: true)
   final int? id;
+  final String username;
   final String name;
-  final String lastName;
+  final String surName;
   final String phoneNumber;
   final String email;
+  final String password;
   final String birthday;
   final String adresse;
   //@ColumnInfo(name: 'car_id')
@@ -31,7 +33,9 @@ class User {
   User({ this.id,
   //  required this.cars,
     required this.name,
-    required this.lastName,
+    required this.surName,
+    required this.username,
+    required this.password,
     required this.phoneNumber,
     required this.email,
     required this.birthday,
@@ -49,7 +53,9 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
-      'lastName': this.lastName,
+      'lastName': this.surName,
+      'password' : this.password,
+      'username' : this.username,
       'phoneNumber': this.phoneNumber,
       'email': this.email,
       'birthday': this.birthday,
@@ -62,7 +68,9 @@ class User {
     return User(
       name: map["name"] ,
       phoneNumber: map["phoneNumber"] ,
-      lastName : map["lastName"] ,
+      surName : map["surName"] ,
+      password : map["password"],
+      username:  map["username"],
       //cars : Car.listFromJson(map['cars']),
       email: map["email"] ,
       adresse: map["adresse"] ,

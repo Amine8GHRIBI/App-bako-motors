@@ -1,5 +1,6 @@
 
-import 'package:flutter/material.dart';
+import
+'package:flutter/material.dart';
 
 import '../../../../data/cars.dart';
 import 'car.dart';

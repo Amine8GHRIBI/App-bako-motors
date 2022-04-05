@@ -27,7 +27,7 @@ class _userRegisterState extends State<userRegister> {
 
   Future<int> addUsers(UserDatabase db , String nom ,String lastName,String phoneNumber , String email ,String  birthday , String adresse) async {
     //, String phoneNumber , String birthday , String email,String  adresse
-    User firstUser = User( name: nom, lastName : lastName, phoneNumber : phoneNumber , email : email , birthday :birthday , adresse: adresse );
+    User firstUser = User( name: nom, surName : lastName, phoneNumber : phoneNumber , email : email , birthday :birthday , adresse: adresse, username: '', password: '' );
     return await db.userDAO.inserUser(firstUser);
   }
 

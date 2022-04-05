@@ -18,10 +18,10 @@ AppBar buildAppBar(BuildContext context) {
         builder: (context) => IconButton(
           icon: Icon(icon),
           onPressed: () {
-            final theme = isDarkMode ? MyThemes.lightTheme : MyThemes.darkTheme;
+           // final theme = isDarkMode ? MyThemes.lightTheme : MyThemes.darkTheme;
 
             final switcher = ThemeSwitcher.of(context);
-            switcher.changeTheme(theme: theme);
+            //switcher.changeTheme(theme: theme);
           },
         ),
       ),

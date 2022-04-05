@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+/*
 class MyThemes {
   static final primary = Colors.blue;
   static final primaryColor = Colors.blue.shade300;
@@ -17,4 +17,4 @@ class MyThemes {
     colorScheme: ColorScheme.light(primary: primary),
     dividerColor: Colors.black,
   );
-}
+}*/

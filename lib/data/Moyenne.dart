@@ -5,14 +5,14 @@ List<Map> moyenne = [
   'valeur':"__",
 },
 {
-  'nom':"Temps de conduite totale",
+  'nom':"vitesse",
   'unit':"h:min",
-  'valeur':"00:00",
+  'valeur':"00",
 },
 {
 'nom':"Batterie",
 'unit':"h:min:s",
-'valeur':"__",
+'valeur':"__ %",
 
 }
 ];

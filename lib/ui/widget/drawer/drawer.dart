@@ -1,5 +1,6 @@
 import
 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/ui/pages/user-page.dart';
 
 import 'drawer_collapse.dart';
@@ -109,9 +110,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
                     ? width * .2 * _animation.value
                     : width * .5 * _animation.value,
                 margin: EdgeInsets.only(
-                  left: width * .06 * _animation.value,
-                  top: height * .12,
-                  bottom: height * .08,
+                  left: width * .04 * _animation.value,
+                  top: height * .04,
+                  bottom: height * .04,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
@@ -123,7 +124,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                     ? Column(
                         children: [
                           SizedBox(
-                            height: 30,
+                            height: 23,
                           ),
                           DrawerUser(
 
@@ -134,7 +135,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           DrawerItem(
                             icon:new IconButton(
-                                icon: Icon(Icons.account_circle_rounded,color: Colors.black,
+                                icon: Icon(Icons.account_circle_rounded,color:  HexColor("#175989"),
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
@@ -154,7 +155,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
                           DrawerItem(
                             icon:new IconButton(
-                                icon: Icon(Icons.bluetooth_connected,color: Colors.black,
+                                icon: Icon(Icons.bluetooth_connected,color: HexColor("#175989"),
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
@@ -223,9 +224,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             label: Text(
                               'DECONNEXION',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22,
+                                fontSize: 15,
                               ),
                             ),
                             isCollapsed: isCollapsedAfterSec,

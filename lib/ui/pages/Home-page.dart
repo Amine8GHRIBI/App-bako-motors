@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mini_project/DataBase/user_database.dart';
+import 'package:mini_project/data/stathome.dart';
 import 'package:mini_project/ui/pages/Obd-Home-page.dart';
 import 'package:unicons/unicons.dart';
 
+import '../../data/userEntity.dart';
 import '../widget/bottom_nav_bar.dart';
 import '../widget/bottom_nav_item.dart';
 import '../widget/drawer/drawer.dart';
 import '../widget/homePage/homePage/most_rented.dart';
 import '../widget/homePage/homePage/information.dart';
 import '../widget/homePage/homePage/top_brands.dart';
+import '../widget/login_widget/roundButton.dart';
 
 
 class HomePage extends StatefulWidget {
+
   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
   bool _showDrawer = false;
+  AnimationController? _loadingController;
+
 
   void showDrawer() {
     print('tapped on show drawer!');
@@ -30,17 +39,27 @@ class _HomePageState extends State<HomePage> {
 
   GlobalKey<ScaffoldState> _key = GlobalKey(); // add this
 
+  late UserDatabase database ;
+  late User user;
 
   @override
   Widget build(BuildContext context) {
+    final routes =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map<String, dynamic>;
+    database = routes["database"];
+    user=routes["user"];
+
     Size size = MediaQuery.of(context).size; //check the size of device
     ThemeData themeData = Theme.of(context);
     int currIndex;
 
     return Stack(
       children :[
-        Scaffold(
 
+        Scaffold(
           key: _key,
           //drawer: MyDrawer(),
           appBar: PreferredSize(
@@ -49,7 +68,7 @@ class _HomePageState extends State<HomePage> {
             child: AppBar(
               bottomOpacity: 0.0,
               elevation: 0.0,
-              shadowColor: Colors.transparent,
+             // shadowColor: Colors.transparent,
               backgroundColor: themeData.backgroundColor,
               leading: Padding(
                 padding: EdgeInsets.only(
@@ -135,17 +154,18 @@ class _HomePageState extends State<HomePage> {
             onTap: (value) {
               switch (value) {
                 case 0:
-                  Navigator.pushNamed(context , '/users');
+                  //Navigator.pushNamed(context , '/users');
+                  Navigator.pushNamed(context , '/users',arguments: {"database" : this.database , "user" : this.user});
                   break;
                 case 1:
-                  Navigator.pushNamed(context , '/register');
+                  Navigator.pushNamed(context , '/kilo',arguments: {"database" : this.database , "user" : this.user});
                   break;
                 case 2:
-                  Navigator.pushNamed(context , '/login');
+                  Navigator.pushNamed(context , '/login',arguments: {"database" : this.database , "user" : this.user});
                   break;
 
                 case 3:
-                  Navigator.pushNamed(context , '/cars');
+                  Navigator.pushNamed(context , '/cars',arguments: {"database" : this.database , "user" : this.user});
                   break;
               }
               setState(() => currIndex = value);
@@ -185,7 +205,6 @@ class _HomePageState extends State<HomePage> {
           //buildBottomNavBar(1, size, themeData),
           backgroundColor: themeData.backgroundColor,
           body: SafeArea(
-
             child: ListView(
               children: [
                 Padding(
@@ -197,7 +216,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-
                       borderRadius: const BorderRadius.all(
                         Radius.circular(15),
 
@@ -310,9 +328,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+               // _buildDashboardGrid(size),
 
                 //  buildTopBrands(size, themeData),
-                buildMostRented(size, themeData),
+               // buildMostRented(size, themeData),
 
                 //buildTopBrands(size, themeData),
                 //buildMostRented(size, themeData),
@@ -330,6 +349,81 @@ class _HomePageState extends State<HomePage> {
     // ignore: dead_code
 
   }
+
+  Widget _buildDashboardGrid(Size size) {
+    const step = 0.04;
+    const aniInterval = 0.75;
+
+    return GridView.count(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 32.0,
+        vertical: 18,
+      ),
+      childAspectRatio: .9,
+      // crossAxisSpacing: 5,
+      crossAxisCount: 3,
+      children: [
+/*
+         SizedBox(
+           width: 200,
+          height: 0,
+          child : RaisedButton(
+              color : Colors.lightBlue,
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            onPressed:() {
+
+        }),),
+*/
+        _buildButton(
+          icon: const Icon(UniconsLine.dashboard),
+          label: 'Dashboard',
+          interval: const Interval(0, aniInterval),
+        ),
+        ],
+    );
+  }
+
+  Widget _buildButton(
+      {Widget? icon, String? label, required Interval interval}) {
+    final routes =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map<String, dynamic>;
+    database = routes["database"];
+    user =routes["user"];
+   // Size size = MediaQuery.of(context).size; //check the size of device
+    //ThemeData themeData = Theme.of(context);
+
+    return RoundButton(
+      icon: icon,
+      label: label,
+      loadingController: _loadingController,
+      interval: Interval(
+        interval.begin,
+        interval.end,
+        curve: const ElasticOutCurve(0.42),
+      ),
+      onPressed: () {
+        debugPrint("pr " + label!);
+        if( label == "Profile"){
+          Navigator.pushNamed(context , '/profile',arguments: {"database" : this.database , "user" : this.user});
+        }
+        if( label == "connexion"){
+          Navigator.pushNamed(context , '/conn',arguments: {"database" : this.database , "user" : this.user});
+        }
+        if (label == "dashboard") {
+          //buildCar(1, size, themeData);
+          Navigator.pushNamed(context , '/users',arguments: {"database" : this.database , "user" : this.user});
+        }
+      },
+    );
+  }
+
+
+
 
   OutlineInputBorder textFieldBorder() {
     return OutlineInputBorder(

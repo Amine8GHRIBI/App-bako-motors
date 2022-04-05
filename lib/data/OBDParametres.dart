@@ -11,12 +11,10 @@ import 'package:mini_project/data/userEntity.dart';
       parentColumns: ['id'],
       entity: OBD,
     ),
-
   ],
 )
 
 class OBD{
-
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final String speed;
@@ -28,7 +26,6 @@ class OBD{
 
   @ColumnInfo(name: 'car_id' )
   final int car_id;
-
 
   OBD( {this.id,
     required this.date_debut,
@@ -50,5 +47,4 @@ class OBD{
       date_fin: parsedJson["date_fin"]
     );
   }
-
 }

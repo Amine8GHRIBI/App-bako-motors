@@ -20,8 +20,17 @@ abstract class UserDAO {
   Future<User?> retrieveUser(int id);
 
 
-  @Query('SELECT * FROM User WHERE lastName = :lastName')
-  Future<List<User>> finduserByusername(String lastName);
+  @Query('SELECT * FROM User WHERE email = :email')
+  Future<List<User>> finduserByemail(String email);
+
+  @Query('SELECT * FROM User WHERE phoneNumber = :phoneNumber')
+  Future<List<User>> finduserByphone(String phoneNumber);
+
+  @Query('SELECT * FROM User WHERE password = :password')
+  Future<List<User>> finduserBypassword(String password);
+
+
+
 
 
 }

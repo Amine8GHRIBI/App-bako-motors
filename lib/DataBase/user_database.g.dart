@@ -88,7 +88,7 @@ class _$UserDatabase extends UserDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `lastName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `email` TEXT NOT NULL, `birthday` TEXT NOT NULL, `adresse` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `name` TEXT NOT NULL, `surName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, `birthday` TEXT NOT NULL, `adresse` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Car` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `model` TEXT NOT NULL, `year` TEXT NOT NULL, `license_Plate` TEXT NOT NULL, `initial_mileage` TEXT NOT NULL)');
         await database.execute(
@@ -131,10 +131,12 @@ class _$UserDAO extends UserDAO {
             'User',
             (User item) => <String, Object?>{
                   'id': item.id,
+                  'username': item.username,
                   'name': item.name,
-                  'lastName': item.lastName,
+                  'surName': item.surName,
                   'phoneNumber': item.phoneNumber,
                   'email': item.email,
+                  'password': item.password,
                   'birthday': item.birthday,
                   'adresse': item.adresse
                 });
@@ -153,7 +155,9 @@ class _$UserDAO extends UserDAO {
         mapper: (Map<String, Object?> row) => User(
             id: row['id'] as int?,
             name: row['name'] as String,
-            lastName: row['lastName'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
             phoneNumber: row['phoneNumber'] as String,
             email: row['email'] as String,
             birthday: row['birthday'] as String,
@@ -166,7 +170,9 @@ class _$UserDAO extends UserDAO {
         mapper: (Map<String, Object?> row) => User(
             id: row['id'] as int?,
             name: row['name'] as String,
-            lastName: row['lastName'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
             phoneNumber: row['phoneNumber'] as String,
             email: row['email'] as String,
             birthday: row['birthday'] as String,
@@ -180,7 +186,9 @@ class _$UserDAO extends UserDAO {
         mapper: (Map<String, Object?> row) => User(
             id: row['id'] as int?,
             name: row['name'] as String,
-            lastName: row['lastName'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
             phoneNumber: row['phoneNumber'] as String,
             email: row['email'] as String,
             birthday: row['birthday'] as String,
@@ -193,7 +201,9 @@ class _$UserDAO extends UserDAO {
         mapper: (Map<String, Object?> row) => User(
             id: row['id'] as int?,
             name: row['name'] as String,
-            lastName: row['lastName'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
             phoneNumber: row['phoneNumber'] as String,
             email: row['email'] as String,
             birthday: row['birthday'] as String,
@@ -202,17 +212,51 @@ class _$UserDAO extends UserDAO {
   }
 
   @override
-  Future<List<User>> finduserByusername(String lastName) async {
-    return _queryAdapter.queryList('SELECT * FROM User WHERE lastName = ?1',
+  Future<List<User>> finduserByemail(String email) async {
+    return _queryAdapter.queryList('SELECT * FROM User WHERE email = ?1',
         mapper: (Map<String, Object?> row) => User(
             id: row['id'] as int?,
             name: row['name'] as String,
-            lastName: row['lastName'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
             phoneNumber: row['phoneNumber'] as String,
             email: row['email'] as String,
             birthday: row['birthday'] as String,
             adresse: row['adresse'] as String),
-        arguments: [lastName]);
+        arguments: [email]);
+  }
+
+  @override
+  Future<List<User>> finduserByphone(String phoneNumber) async {
+    return _queryAdapter.queryList('SELECT * FROM User WHERE phoneNumber = ?1',
+        mapper: (Map<String, Object?> row) => User(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
+            phoneNumber: row['phoneNumber'] as String,
+            email: row['email'] as String,
+            birthday: row['birthday'] as String,
+            adresse: row['adresse'] as String),
+        arguments: [phoneNumber]);
+  }
+
+  @override
+  Future<List<User>> finduserBypassword(String password) async {
+    return _queryAdapter.queryList('SELECT * FROM User WHERE password = ?1',
+        mapper: (Map<String, Object?> row) => User(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            surName: row['surName'] as String,
+            username: row['username'] as String,
+            password: row['password'] as String,
+            phoneNumber: row['phoneNumber'] as String,
+            email: row['email'] as String,
+            birthday: row['birthday'] as String,
+            adresse: row['adresse'] as String),
+        arguments: [password]);
   }
 
   @override

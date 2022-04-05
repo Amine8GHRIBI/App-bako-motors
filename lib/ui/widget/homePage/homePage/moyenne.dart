@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:unicons/unicons.dart';
 import '../../../../data/Moyenne.dart';
 import '../../../../data/cars.dart';
@@ -12,27 +13,35 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
   return Padding(
     padding: EdgeInsets.only(
      // right: size.width * 0.04,
-      left: size.width *0.006,
+      left: size.width *0.004,
     ),
     child: Center(
       child: SizedBox(
-        height: size.width * 1.9,
+        height: size.width * 3.9,
        // width: size.width * 0.90,
         child: Container(
           decoration: BoxDecoration(
-            color:Colors.grey.shade100,
+            color:Colors.grey.shade200,
           //  borderRadius: BorderRadius.circular(10),
-              borderRadius: new BorderRadius.all(const Radius.circular(6.0)),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                width: 0.5,
+                color: HexColor("#175989")
+            ),
 
-        gradient: new LinearGradient(
-                  stops: [0.028, 0.01],
-                  colors: [themeData.secondaryHeaderColor, Colors.white]
+/*
+            gradient: new LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+
+            stops: [0.028, 0.01],
+                  colors: [HexColor("#175989"), Colors.white]
               ),
-
+*/
             boxShadow: [
               BoxShadow(
                 color: Colors.grey,
-                blurRadius: 2,
+                blurRadius: 4,
                 offset: Offset(2, 4), // Shadow position
               ),
             ],
@@ -43,8 +52,10 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
             ),
             child: InkWell(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
                   Padding(
                     padding: EdgeInsets.only(
                       top: size.height * 0.01,
@@ -53,20 +64,28 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
                       moyenne[i]['nom'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: themeData.secondaryHeaderColor,
-                        fontSize: size.width * 0.028,
+                        color:  HexColor("#175989"),
+                        fontSize: size.width * 0.030,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                  Icon(
+                    UniconsLine.battery_bolt,
+                    color: HexColor("#175989"),
+                    size: size.width * 0.06,
+                  ),
 
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+
                     children: [
+
                       Text(
                         moyenne[i]['valeur'],
                         style: GoogleFonts.poppins(
-                          color: themeData.secondaryHeaderColor,
-                          fontSize: size.width * 0.06,
+                          color:  HexColor("#175989"),
+                          fontSize: size.width * 0.045,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

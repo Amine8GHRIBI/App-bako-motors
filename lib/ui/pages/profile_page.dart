@@ -73,26 +73,20 @@ class _profile_pageState extends State<profile_page> {
 
   @override
   void initState() {
-    super.initState();
-    super.initState();
-    $FloorUserDatabase
-        .databaseBuilder('user_database.db')
-        .build()
-        .then((value) async {
-      this.database = value;
 
-      //await this.addcar(this.database);
-      //await this.addusercar(this.database);
-
-      // await this.addUsers(this.database);
-      setState(() {});
-    });
 
   }
 
 
   @override
   Widget build(BuildContext context) {
+    final routes =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map<String, dynamic>;
+    database = routes["database"];
+    user =routes["user"];
     return Scaffold(
       body: Container(
         width: MediaQuery
@@ -146,7 +140,7 @@ class _profile_pageState extends State<profile_page> {
               Colors.red
           ),
       child :  _myListContainer(
-    snapshot.data!.name, snapshot.data!.lastName,
+    snapshot.data!.name, snapshot.data!.surName,
     snapshot.data!.phoneNumber, Colors.red
     ),);
 

@@ -16,7 +16,14 @@ class userPage extends StatefulWidget {
 
 class _userPageState extends State<userPage> {
 
+
   late UserDatabase database;
+  Future<int> addUsers(UserDatabase db ) async {
+    //, String phoneNumber , String birthday , String email,String  adresse
+    User firstUser = User( name: "wevioo", surName : "ghribi", phoneNumber : "94574896" ,
+                           email : "aghribi@gmail.com" , birthday :"1995" , adresse: "gabes", username: '', password: '' );
+    return await db.userDAO.inserUser(firstUser);
+  }
 
   Future<List<User>> retrieveUsers() async {
     return await this.database.userDAO.retrieveUsers();
@@ -24,21 +31,23 @@ class _userPageState extends State<userPage> {
   Future<List<Car>> retrievCars() async {
     return await this.database.carDAO.retrieveCars();
   }
-
   @override
   void initState() {
     super.initState();
-    $FloorUserDatabase
-        .databaseBuilder('user_database.db')
-        .build()
-        .then((value) async {
-      this.database = value;
+
       setState(() {});
-    });
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
+
+    final routes =
+    ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Map<String, dynamic>;
+    database = routes["database"];
+
     return Scaffold(
       appBar: AppBar(
         title: Text("list users"),
@@ -46,7 +55,8 @@ class _userPageState extends State<userPage> {
       ),
       body: FutureBuilder(
         future:retrieveUsers(),
-        builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+
+          builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
 
           if (snapshot.hasData) {
             return ListView.builder(
@@ -77,7 +87,7 @@ class _userPageState extends State<userPage> {
                         child: ListTile(
                           contentPadding: EdgeInsets.all(8.0),
                           title: Text(snapshot.data![index].name),
-                          subtitle: Text(snapshot.data![index].lastName),
+                          subtitle: Text(snapshot.data![index].surName),
                         ),
                       ),
                       onTap: () {

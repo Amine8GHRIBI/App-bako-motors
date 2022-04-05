@@ -8,16 +8,18 @@ import '../widget/bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
 
-Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData) {
-   BuildContext context;
-  return BottomNavigationBar(
+Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData , BuildContext context) {
+
+   final theme = Theme.of(context);
+
+   return BottomNavigationBar(
 
     iconSize: size.width * 0.07,
     elevation: 0,
     selectedLabelStyle: const TextStyle(fontSize: 0),
     unselectedLabelStyle: const TextStyle(fontSize: 0),
     currentIndex: currIndex,
-    backgroundColor: const Color(0x00ffffff),
+    backgroundColor: theme.primaryColor.withOpacity(.1),
     type: BottomNavigationBarType.fixed,
     selectedItemColor: themeData.brightness == Brightness.dark
         ? Colors.indigoAccent

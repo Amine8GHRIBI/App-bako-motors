@@ -14,12 +14,12 @@ Column information (Size size, ThemeData themeData) {
   //buildCategory('Most Rented', size, themeData),
       Padding(
         padding: EdgeInsets.only(
-          top: size.height * 0.0,
-          left: size.width * 0.018,
+          top: size.height * 0.012,
+          left: size.width * 0.017,
           right: size.width * 0.06,
         ),
         child: SizedBox(
-          height: size.width * 0.285,
+          height: size.width * 0.25,
           width: moyenne.length * size.width * 1.5 * 1.09,
           child: GridView.builder(
             //padding: EdgeInsets.all(0),//primary: false,
@@ -27,7 +27,9 @@ Column information (Size size, ThemeData themeData) {
             // nst EdgeInsets.all(8.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              // mainAxisExtent: 120.0,
+              //childAspectRatio: 3 / 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
             ),
             //shrinkWrap: true,
             //scrollDirection: Axis.horizontal,
