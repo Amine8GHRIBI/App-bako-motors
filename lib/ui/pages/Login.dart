@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mini_project/ui/pages/Home-page.dart';
 import 'package:mini_project/ui/pages/SignIn.dart';
-import 'package:mobile_number/mobile_number.dart';
 import '../../data/userEntity.dart';
 
 

@@ -282,12 +282,12 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                         ),
-                                        Padding(
+                                     /*   Padding(
                                           padding: EdgeInsets.only(
                                             top: size.height * 0.005,
                                             left : size.width*0.235,
                                           ),
-                                          child: ElevatedButton(
+                                         child: ElevatedButton(
                                             onPressed: () {
                                              Navigator.push(
                                                 context,
@@ -303,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                                                     borderRadius: BorderRadius.circular(50))),
                                           ),
 
-                                        ),
+                                        ),*/
                                       ]
                                   )
                               )
@@ -418,12 +418,14 @@ class _HomePageState extends State<HomePage> {
           //buildCar(1, size, themeData);
           Navigator.pushNamed(context , '/users',arguments: {"database" : this.database , "user" : this.user});
         }
+        if (label == "maintenance") {
+          //buildCar(1, size, themeData);
+          Navigator.pushNamed(context , '/cnxobd' , /*,arguments: {"database" : this.database , "user" : this.user}*/);
+        }
+        //
       },
     );
   }
-
-
-
 
   OutlineInputBorder textFieldBorder() {
     return OutlineInputBorder(

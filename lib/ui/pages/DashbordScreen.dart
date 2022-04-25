@@ -1,13 +1,30 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_login/theme.dart';
 import 'package:flutter_login/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/DataBase/user_database.dart';
+import 'package:mini_project/customswitch/app.dart';
 import 'package:mini_project/data/stathome.dart';
+import 'package:mini_project/tesla_app/app.dart';
+import 'package:mini_project/ui/pages/Dashboard.dart';
+import 'package:mini_project/ui/pages/SpeedometerContainer.dart';
+import 'package:mini_project/ui/pages/connexion_obd.dart';
+import 'package:mini_project/ui/pages/profile_page.dart';
+import 'package:mini_project/ui/pages/realtime_db.dart';
+import 'package:mini_project/ui/widget/speedo-widget.dart';
+import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
+import '../../data/OBDParametres.dart';
+import '../../data/model.dart';
+import '../../tesla_app/screens/settings_screen.dart';
+import '../widget/bottom_nav_bar.dart';
 import '../widget/bottom_nav_item.dart';
 import '../widget/drawer/drawer.dart';
 import '../widget/homePage/homePage/car.dart';
@@ -22,11 +39,13 @@ import '../widget/login_widget/roundButton.dart';
 import 'Obd-Home-page.dart';
 
 import 'TransitionRouteObserver.dart';
+import 'car_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
-
-  const DashboardScreen({Key? key}) : super(key: key);
+   UserDatabase database;
+   User user;
+   DashboardScreen({Key? key ,  required this.database, required this.user}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -35,10 +54,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin, TransitionRouteAware {
 
-  late UserDatabase database;
-  User? user;
   bool _showDrawer = false;
-
+  List<OBD> obds = [];
+  List<OBD> obdss= [];
+//  late UserDatabase database;
+//  late User? user;
 
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context)
@@ -52,9 +72,38 @@ class _DashboardScreenState extends State<DashboardScreen>
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
 
+
+  Future<List<OBD>> retrieveOBD(UserDatabase db) async {
+    obds =await this.widget.database.obdDAO.retrieveAllOBD();
+    //debugPrint("obd diagno " + obds.length.toString());
+    setState(()  {},);
+    return obds;
+  }
+
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero,() {
+      setState(() async {
+       obdss = await retrieveOBD(this.widget.database);
+       debugPrint("obd car cnx " + obdss.length.toString());
+      },);
+    },);
+
+    /*debugPrint("user" + this.widget.user!.surName.toString());
+    Future.delayed(Duration.zero,() {
+      setState(()  {
+        final routes =
+        ModalRoute
+            .of(context)
+            ?.settings
+            .arguments as Map<String, dynamic>;
+        database = routes["database"];
+        user = routes["user"];
+      },
+      );
+      },
+    );*/
 
     _loadingController = AnimationController(
       vsync: this,
@@ -66,6 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           parent: _loadingController!,
           curve: headerAniInterval,
         ));
+
   }
 
   @override
@@ -255,9 +305,6 @@ class _DashboardScreenState extends State<DashboardScreen>
 
                 borderRadius: const BorderRadius.all(
                   Radius.circular(15),
-
-
-
                 ),
 
                 color: themeData.cardColor, //section bg color
@@ -286,7 +333,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                               borderRadius: BorderRadius.circular(7),
                               boxShadow: [
                                 BoxShadow(
-
                                   color: Colors.grey,
                                   blurRadius: 2,
                                   offset: Offset(2, 4), // Shadow position
@@ -320,10 +366,9 @@ class _DashboardScreenState extends State<DashboardScreen>
 
                                     ),
                                     child: Align(
-                                      child: Text( 'Connected car : bako  ',
+                                      child: Text( 'Connected car : bako',
                                         style: GoogleFonts.poppins(
                                           color:    HexColor("#175989"),
-
                                           fontSize: size.width * 0.04,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -335,22 +380,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       top: size.height * 0.005,
                                       left : size.width*0.235,
                                     ),
-                                   /* child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const obd_home()),
-                                        );
-
-                                      },
-
-                                      child: const Text('connexion'),
-                                      style: ElevatedButton.styleFrom(
-                                          primary: const Color(0xff3b22a1),
-                                          fixedSize: const Size(120, 15),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(50))),
-                                    ),*/
 
                                   ),
                                 ]
@@ -379,10 +408,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
 
           //  buildTopBrands(size, themeData),
-         // buildMostRented(size, themeData),
 
-          //buildTopBrands(size, themeData),
-          //buildMostRented(size, themeData),
         ],
       ),
     );
@@ -391,43 +417,50 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildButton(
       {Widget? icon, String? label, required Interval interval}) {
-    final routes =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Map<String, dynamic>;
-    database = routes["database"];
-    user =routes["user"];
+
+
     Size size = MediaQuery.of(context).size; //check the size of device
     //ThemeData themeData = Theme.of(context);
 
     return RoundButton(
-      size: 68,
+      size: 72,
       icon: icon,
       label: label,
       loadingController: _loadingController,
       interval: Interval(
         interval.begin,
         interval.end,
-        curve: const ElasticOutCurve(0.42),
+        curve: const ElasticOutCurve(0.1),
       ),
 
       onPressed: () {
         debugPrint("pr " + label!);
         if( label == "Profile"){
-          Navigator.pushNamed(context , '/profile',arguments: {"database" : this.database , "user" : this.user});
+          Get.to( profile_page() ,arguments: {"database" : this.widget.database , "user" : this.widget.user});
         }
         if( label == "connexion"){
-          Navigator.pushNamed(context , '/Speed',arguments: {"database" : this.database , "user" : this.user});
+          Get.to( connexion() ,arguments: {"database" : this.widget.database , "user" : this.widget.user});
         }
-        if (label == "dashboard") {
+        if( label == "Station"){
+          Get.to( obd_home( database : this.widget.database , user : this.widget.user) );
+        }
+        if (label == "Dashboard") {
           //buildCar(1, size, themeData);
-          Navigator.pushNamed(context , '/Speed',arguments: {"database" : this.database , "user" : this.user});
+          Get.to( speedo() ,arguments: {"database" : this.widget.database , "user" : this.widget.user});
+          //Get.to( SpeedometerContainer(),arguments: {"database" : this.widget.database , "user" : this.widget.user});
+        }
+        if (label == "Maintenance") {
+          //buildCar(1, size, themeData);
+          Get.to(SettingsScreen(), );
+          //Navigator.pushNamed(context , '/cnxobd' , arguments: {"database" : this.database , "user" : this.user});
+        }
+        if (label == "Settings") {
+          //buildCar(1, size, themeData);
+          Get.to(realtime_db());
         }
       },
     );
   }
-
 
 
   Widget _buildDashboardGrid() {
@@ -436,46 +469,19 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     return GridView.count(
       padding: const EdgeInsets.symmetric(
-        horizontal: 32.0,
-        vertical: 18,
+        horizontal: 25.0,
+        vertical: 14,
       ),
       childAspectRatio: .9,
       // crossAxisSpacing: 5,
       crossAxisCount: 3,
       children: [
-/*
-         SizedBox(
-           width: 200,
-          height: 0,
-          child : RaisedButton(
-              color : Colors.lightBlue,
-
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            onPressed:() {
-
-        }),),
-*/
         _buildButton(
           icon: const Icon(UniconsLine.dashboard),
           label: 'Dashboard',
           interval: const Interval(0, aniInterval),
         ),
-        /*Padding(
-            padding: const EdgeInsets.all(1),
-            child : ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                primary: HexColor("#175989"), // background
-                onPrimary: Colors.white, // foreground
-              ),
-              onPressed: (){
-              Navigator.pushNamed(context , '/profile',arguments: {"database" : this.database , "user" : this.user});
-      },
-          child: Icon(FontAwesomeIcons.car),
-        )
-        ),*/
+
         _buildButton(
           icon: const Icon(FontAwesomeIcons.chargingStation),
           label: 'Station',
@@ -484,7 +490,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         _buildButton(
           icon: const Icon(Icons.car_repair_outlined, size: 20),
           label: 'Maintenance',
-          interval: const Interval(step * 2, aniInterval + step * 2),
+          interval: const Interval(step * 6, aniInterval + step * 2),
         ),
         _buildButton(
           icon: Container(
@@ -509,100 +515,38 @@ class _DashboardScreenState extends State<DashboardScreen>
       ],
     );
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Size size = MediaQuery.of(context).size; //check the size of device
+   // Size size = MediaQuery.of(context).size; //check the size of device
     ThemeData themeData = Theme.of(context);
     int currIndex;
-
-
     return WillPopScope(
 
       onWillPop: () => _goToLogin(context),
       child: SafeArea(
         child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar( //bottomNavigationBar
-            iconSize: size.width * 0.07,
-            elevation: 0,
-            selectedLabelStyle: const TextStyle(fontSize: 0),
-            unselectedLabelStyle: const TextStyle(fontSize: 0),
-            currentIndex: currIndex = 0,
+          //bottomNavigationBar: buildBottomNavBar(1,size ,themeData,context , this.widget.database , this.widget.user),
 
-            backgroundColor: theme.primaryColor.withOpacity(.08),
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: themeData.brightness == Brightness.dark
-                ? Colors.indigoAccent
-                : Colors.black,
-            unselectedItemColor: const Color(0xff3b22a1),
-            onTap: (value) {
-              switch (value) {
-                case 0:
-                //Navigator.pushNamed(context , '/users');
-                  Navigator.pushNamed(context , '/dashboard',arguments: {"database" : this.database , "user" : this.user});
-                  break;
-                case 1:
-                  Navigator.pushNamed(context , '/dash',arguments: {"database" : this.database , "user" : this.user});
-                  break;
-                case 2:
-                  Navigator.pushNamed(context , '/bleu');
-                  break;
-
-                case 3:
-                  Navigator.pushNamed(context , '/home',arguments: {"database" : this.database , "user" : this.user});
-                  break;
-              }
-              setState(() => currIndex = value);
-
-
-/*
-      if (value != currIndex) {
-        if (value == 2) {
-          Get.off(const MeteoPage());
-        }
-      }*/
-            },
-            items: [
-              buildBottomNavItem(
-                UniconsLine.apps,
-                themeData,
-                size,
-              ),
-              buildBottomNavItem(
-                FontAwesomeIcons.carAlt,
-                themeData,
-                size,
-              ),
-              buildBottomNavItem(
-                FontAwesomeIcons.map,
-                themeData,
-                size,
-              ),
-              buildBottomNavItem(
-                FontAwesomeIcons.bell,
-                themeData,
-                size,
-              ),
-            ],
-          ),
           appBar: _buildAppBar(theme),
           body:  Container(
 
             width: double.infinity,
             height: double.infinity,
-           // color: const Color(0xfff8f8f8), // background color
+            //color: const Color(0xfff8f8f8), // background color
              decoration: BoxDecoration(
+
              image: new DecorationImage(
              fit: BoxFit.cover,
+
              colorFilter: new ColorFilter.mode(HexColor("#175989"), BlendMode.softLight),
              image: AssetImage(
        'assets/image/back.png',
     ),
     ),),
-           child: Stack(
+    child :BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+            child: Stack(
               children: <Widget>[
                 //kilometrage_data(),
                 Column(
@@ -626,14 +570,17 @@ class _DashboardScreenState extends State<DashboardScreen>
                     const SizedBox(height : 5),
                     Expanded(
                       flex: 6,
-                      child: ShaderMask(
+
+                      //child:// ShaderMask(
                         // blendMode: BlendMode.srcOver,
-                        shaderCallback: (Rect bounds) {
+                       /* shaderCallback: (Rect bounds) {
                           return LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             tileMode: TileMode.clamp,
                             colors: <Color>[
+                              Colors.white60,
+                              Colors.white60,
                               Colors.white60,
                               Colors.white60,
 
@@ -645,11 +592,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                             ],
                           ).createShader(bounds);
                         },
-
+*/
                         child:
+
                         _buildDashboardGrid(),
                       ),
-                    ),
+
                   ],
                 ),
 
@@ -657,11 +605,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   DrawerWidget(
                     closeFunction: showDrawer,
                   ),
-
-
               ],
-
-            ),
+           ),),
           ),
         ),
       ),

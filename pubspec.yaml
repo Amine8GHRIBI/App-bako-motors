@@ -32,6 +32,13 @@ dependencies:
   unicons: ^2.0.2
   google_fonts: ^2.2.0
   get: ^4.6.1
+  get_storage: ^2.0.3
+  percent_indicator: ^3.3.0-nullsafety.1
+  flutter_svg: ^0.22.0
+  firebase_core: ^1.10.5
+  firebase_database: ^8.0.0
+  hotreloader: ^3.0.2
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -40,7 +47,7 @@ dependencies:
   floor: ^1.2.0
   provider: ^6.0.1
   #splashscreen: ^1.3.5
-  mobile_number: ^1.0.4
+  #mobile_number: ^1.0.4
   connectivity_plus: ^2.2.1
   fluttertoast: ^8.0.9
   intro_slider: ^3.0.3
@@ -56,6 +63,14 @@ dependencies:
   battery_indicator: ^0.1.0
   flutter_speedometer: ^1.0.2
   sensors: ^2.0.3
+  group_list_view: ^1.1.1
+  #camera: ^0.9.4+19
+  dio: ^4.0.0
+  image_compare: ^1.1.2
+  change_app_package_name: ^1.0.0
+  bubble_tab_indicator: ^0.1.6
+  fl_chart: ^0.50.1
+
 
 
   #flutter_svg: ^1.0.3
@@ -65,6 +80,7 @@ dependencies:
 dev_dependencies:
   floor_generator: ^1.2.0
   build_runner: ^2.1.4
+
 
   flutter_test:
     sdk: flutter
@@ -116,6 +132,22 @@ flutter:
      - assets/image/bako.png
      - assets/image/back.png
      - assets/image/dash.jpg
+     - assets/images/photo_eraser.png
+     - assets/images/photo_pencil.png
+     - assets/images/photo_ruler.png
+     - assets/images/photo_school.png
+     - assets/images/photo_museum.png
+     - assets/images/photo_coffee_shop.png
+     - assets/images/forest.png
+     - assets/images/beach.jpeg
+     - assets/images/city.jpeg
+     - assets/images/obdii.png
+     - assets/images/bluetooth.png
+     - assets/images/startcar.jpg
+     - images/dashboard-icon.png
+     - lib/tesla_app/images/
+     - lib/customswitch/images/
+     - lib/Parallax/assets/
 
 
 
@@ -131,17 +163,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: assets/fonts/RobotoMono-Regular.ttf
+        - asset: assets/fonts/RobotoMono-Bold.ttf
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Bold.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

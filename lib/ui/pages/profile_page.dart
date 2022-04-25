@@ -1,6 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/data/CarEntity.dart';
+import 'package:mini_project/ui/pages/slider_page.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarUserEntity.dart';
@@ -34,6 +42,7 @@ class _profile_pageState extends State<profile_page> {
     user = await this.database.userDAO.retrieveUser(id);
     return user;
   }
+
   Future<int> addcar(UserDatabase db ,String name , String model ,String year ,String license_Plate ,String initial_mileage ) async {
     //, String phoneNumber , String birthday , String email,String  adresse
     Car firstcar = Car(name : name, model : model, year :year ,license_Plate: license_Plate, initial_mileage : initial_mileage );
@@ -73,10 +82,7 @@ class _profile_pageState extends State<profile_page> {
 
   @override
   void initState() {
-
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,54 +116,86 @@ class _profile_pageState extends State<profile_page> {
                     .size
                     .height / 4,
                 decoration: BoxDecoration(
-                    color: Color(0xff5a348b),
+                    image : DecorationImage(
+                      image : new ExactAssetImage('assets/image/dash.jpg'),
+                        fit: BoxFit.cover,
+                      // height: 30,
+                    ),
+                   color: Color(0xff5a348b),
                     gradient: LinearGradient(
                         colors: [Color(0xff8d70fe), Color(0xff2da9ef)],
                         begin: Alignment.centerRight,
                         end: Alignment(-1.0, -1.0)
                     )
                 ),
-                child: _myHeaderContent(),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    ClipRRect( // Clip it cleanly.
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: Container(
+                          color: Colors.grey.withOpacity(0.1),
+                          alignment: Alignment.center,
+                          child: _myHeaderContent(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Positioned( top: 200.0,
-            left: 10.0,
+            Positioned(
+              top: 225.0,
+              left: 10.0,
 
             child: Container(
+              padding:  EdgeInsets.all(2.3),
               color: Colors.white,
                   width: 320.0,
                  height: MediaQuery
         .of(context)
         .size
-        .height / 2.0,
+        .height / 0.5,
 
     child:FutureBuilder(
     future: retrieveUserbyid(1),
+
     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
       return Dismissible(
           key: Key(snapshot.data!.id!.toString()),
           background: _myHiddenContainer(
               Colors.red
           ),
-      child :  _myListContainer(
-    snapshot.data!.name, snapshot.data!.surName,
-    snapshot.data!.phoneNumber, Colors.red
-    ),);
+      child : Column(
+          children: <Widget>[
+          Text( 'Complete profile ',
+            textAlign: TextAlign.right,
+
+            style: GoogleFonts.poppins(
+            color:    HexColor("#175989"),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),),
+              //flex: 1, // takes 30% of available width
+               _myListContainer(snapshot.data!.name, snapshot.data!.surName,
+                  snapshot.data!.phoneNumber,  HexColor("#175989")),
+
+    ]),);
 
     },),),),
             Positioned(
-
-              
-              top: 350.0,
+              top: 340.0,
               left: 10.0,
-
               child: Container(
+                padding:  EdgeInsets.all(2.3),
                 color: Colors.white,
+
                 width: 320.0,
                 height: MediaQuery
                     .of(context)
                     .size
-                    .height / 2.0,
+                    .height / 1,
                 child:FutureBuilder(
                   future : retrievCarsByuser(1),
                   builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
@@ -169,10 +207,12 @@ class _profile_pageState extends State<profile_page> {
                         background: _myHiddenContainer(
                           Colors.black
                         ),
-                        child: _myListContainer(
-                            snapshot.data![index].name, snapshot.data![index].model,
-                            snapshot.data![index].year, Colors.red
+                        child :
+                        _myListContainer(
+                            snapshot.data![index].name, snapshot.data![index].license_Plate,
+                            snapshot.data![index].year,  HexColor("#175989")
                         ),
+
                         onDismissed: (direction) {
                           if (direction == DismissDirection.startToEnd) {
                             Scaffold.of(context).showSnackBar(
@@ -205,6 +245,10 @@ class _profile_pageState extends State<profile_page> {
               context: context,
               builder: (BuildContext context) {
                 final taskval = TextEditingController();
+                final modelval = TextEditingController();
+                final yearval = TextEditingController();
+                final mileageval = TextEditingController();
+                final platval = TextEditingController();
                 final subval = TextEditingController();
                 final tasktime = TextEditingController();
 
@@ -213,7 +257,7 @@ class _profile_pageState extends State<profile_page> {
                 return AlertDialog(
                   title: Text("New car"),
                   content: Container(
-                    height: 250.0,
+                    height: 280.0,
                     child: Column(
                       children: <Widget>[
                         Container(
@@ -235,7 +279,7 @@ class _profile_pageState extends State<profile_page> {
                             onChanged: (value) {
                               model = value.toString().trim();
                             },
-                            controller: taskval,
+                            controller:  modelval,
                             obscureText: false,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
@@ -250,7 +294,7 @@ class _profile_pageState extends State<profile_page> {
                             onChanged: (value) {
                               year = value.toString().trim();
                             },
-                            controller: subval,
+                            controller: yearval,
                             obscureText: false,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
@@ -265,7 +309,7 @@ class _profile_pageState extends State<profile_page> {
                             onChanged: (value) {
                               initial_mileage = value.toString().trim();
                             },
-                            controller: tasktime,
+                            controller: mileageval,
                             obscureText: false,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
@@ -277,7 +321,7 @@ class _profile_pageState extends State<profile_page> {
                           ),
                         ),
 
-                  Container(
+                  /*Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -323,13 +367,13 @@ class _profile_pageState extends State<profile_page> {
                               ),
                             ],
                           ),
-                        ),
+                        ),*/
                         Container(
                           child: TextField(
                             onChanged: (value) {
                               license_Plate = value.toString().trim();
                             },
-                            controller: tasktime,
+                            controller: platval,
                             obscureText: false,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
@@ -349,7 +393,7 @@ class _profile_pageState extends State<profile_page> {
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)
                       ),
-                      color: Color(0xff2da9ef),
+                      color: HexColor("#175989"),
                       child: Text("Add", style: new TextStyle(
                           color: Colors.white
                       ),),
@@ -370,14 +414,14 @@ class _profile_pageState extends State<profile_page> {
               }
           );
         },
-        backgroundColor: Color(0xff2da9ef),
+        backgroundColor:  HexColor("#175989"),
         foregroundColor: Color(0xffffffff),
         tooltip: "Increment",
         child: new Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: Color(0xff2da9ef),
+        color:  HexColor("#175989"),
         shape: CircularNotchedRectangle(
 
         ),
@@ -405,30 +449,40 @@ class _profile_pageState extends State<profile_page> {
     );
   }
 
-  Widget _myListContainer(String taskname, String subtask, String taskTime,
-      Color taskColor) {
+  Widget _myListContainer(String taskname, String subtask, String taskTime, Color taskColor) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
+
       child: Container(
         height: 80.0,
         child: Material(
           color: Colors.white,
           elevation: 14.0,
           shadowColor: Color(0x802196F3),
+
           child: Container(
             child: Row(
               children: <Widget>[
-                Container(
+            InkWell(
+
+            child : Container(
                   height: 80.0,
                   width: 10.0,
                   color: taskColor,
                 ),
-                Expanded(
+
+            ),
+          InkWell(
+            onTap: () {
+              Get.to( slider_connexion(database: this.database, use: this.user));
+            },
+        child :          Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+
                         Align(
                           alignment: Alignment.topLeft,
                           child: Container(
@@ -440,6 +494,7 @@ class _profile_pageState extends State<profile_page> {
                         ),
                         Align(
                           alignment: Alignment.topLeft,
+
                           child: Container(
                             child: Text(subtask, style: TextStyle(
                                 fontSize: 18.0, color: Colors.blueAccent)
@@ -449,7 +504,7 @@ class _profile_pageState extends State<profile_page> {
                       ],
                     ),
                   ),
-                ),
+                ),),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
@@ -509,11 +564,11 @@ class _profile_pageState extends State<profile_page> {
   Widget _myHeaderContent() {
     return Align(
       child: ListTile(
-        leading: Icon(Icons.account_box, size: 60,),
+        leading: Icon(Icons.account_box, size: 75, color:  HexColor("#175989")),
         title: Text(
-            "Profile", style: TextStyle(fontSize: 24.0, color: Colors.white)),
+            "Profile", style: TextStyle(fontSize: 28.0, color:  Colors.white)),
         subtitle: Text(
-            "", style: TextStyle(fontSize: 14.0, color: Colors.white)),
+            "Amine Ghribi", style: TextStyle(fontSize: 24.0, color:  Colors.white)),
       ),
     );
   }

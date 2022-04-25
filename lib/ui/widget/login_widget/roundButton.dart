@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class RoundButton extends StatefulWidget {
   const RoundButton({
@@ -81,7 +82,9 @@ class _RoundButtonState extends State<RoundButton>
                   child: FloatingActionButton(
                     // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
                     heroTag: null,
-                    backgroundColor: primaryColor.shade400,
+                    backgroundColor:  HexColor("#175989"),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
+
                     onPressed: () {
                       _pressController.forward().then((_) {
                         _pressController.reverse();
@@ -98,7 +101,7 @@ class _RoundButtonState extends State<RoundButton>
             Text(
               widget.label!,
               style:
-              theme.textTheme.caption!.copyWith(color: theme.primaryColor),
+              theme.textTheme.caption!.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ],

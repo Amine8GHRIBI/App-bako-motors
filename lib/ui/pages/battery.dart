@@ -101,7 +101,7 @@ class _batteryState extends State<battery> {
                   Text('size:'),
                   Expanded(
                     child: Slider(
-                      min: 8.0,
+                      min: 25.0,
                       max: 65.0,
                       divisions: 300,
                       label: '${_size.toStringAsFixed(1)}',

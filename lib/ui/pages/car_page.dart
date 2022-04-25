@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unicons/unicons.dart';
 
@@ -15,6 +17,8 @@ import '../widget/login_widget/AnimatedNumericText.dart';
 import '../widget/login_widget/fadeIn.dart';
 import '../widget/login_widget/roundButton.dart';
 import 'TransitionRouteObserver.dart';
+import '../widget/bottom_nav_bar.dart';
+
 
 class car_page extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -28,7 +32,7 @@ class car_page extends StatefulWidget {
 class _car_pageState extends State<car_page>  with SingleTickerProviderStateMixin, TransitionRouteAware {
 
   late UserDatabase database;
-  User? user;
+  late User user;
 
 
 
@@ -441,69 +445,53 @@ class _car_pageState extends State<car_page>  with SingleTickerProviderStateMixi
       onWillPop: () => _goToLogin(context),
       child: SafeArea(
         child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar( //bottomNavigationBar
-            iconSize: size.width * 0.07,
-            elevation: 0,
-            selectedLabelStyle: const TextStyle(fontSize: 0),
-            unselectedLabelStyle: const TextStyle(fontSize: 0),
-            currentIndex: currIndex = 0,
-            backgroundColor: theme.primaryColor.withOpacity(.08),
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: themeData.brightness == Brightness.dark
-                ? Colors.indigoAccent
-                : Colors.black,
-            unselectedItemColor: const Color(0xff3b22a1),
-            onTap: (value) {
-              switch (value) {
-                case 0:
-                //Navigator.pushNamed(context , '/users');
-                  Navigator.pushNamed(context , '/dashboard',arguments: {"database" : this.database , "user" : this.user});
-                  break;
-                case 1:
-                  Navigator.pushNamed(context , '/dashboard',arguments: {"database" : this.database , "user" : this.user});
-                  break;
-                case 2:
-                  Navigator.pushNamed(context , '/bleu');
-                  break;
+          bottomNavigationBar:buildBottomNavBar(1,size ,themeData,context , this.database , this.user),
 
-                case 3:
-                  Navigator.pushNamed(context , '/dash');
-                  break;
-              }
-              setState(() => currIndex = value);
-
-
-/*
-      if (value != currIndex) {
-        if (value == 2) {
-          Get.off(const MeteoPage());
-        }
-      }*/
-            },
-            items: [
-              buildBottomNavItem(
-                UniconsLine.apps,
-                themeData,
-                size,
+          appBar: //_buildAppBar(theme),
+          AppBar(
+            bottomOpacity: 0.0,
+            elevation: 0.0,
+            shadowColor: Colors.transparent,
+            backgroundColor: themeData.backgroundColor,
+            leading: Padding(
+              padding: EdgeInsets.only(
+                left: size.width * 0.05,
               ),
-              buildBottomNavItem(
-                FontAwesomeIcons.carAlt,
-                themeData,
-                size,
+              child: SizedBox(
+                height: size.width * 0.1,
+                width: size.width * 0.1,
+                child: InkWell(
+                  onTap: () {
+                    Get.back(); //go back to home page
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: themeData.cardColor,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Icon(
+                      UniconsLine.multiply,
+                      color: themeData.secondaryHeaderColor,
+                      size: size.height * 0.025,
+                    ),
+                  ),
+                ),
               ),
-              buildBottomNavItem(
-                FontAwesomeIcons.map,
-                themeData,
-                size,
-              ),
-              buildBottomNavItem(
-                FontAwesomeIcons.bell,
-                themeData,
-                size,
-              ),
-            ],
+            ),
+            automaticallyImplyLeading: false,
+            titleSpacing: 0,
+            leadingWidth: size.width * 0.15,
+            title: Image.asset(
+              themeData.brightness == Brightness.dark
+                  ? 'assets/icons/SobGOGlight.png'
+                  : 'assets/icons/SobGOGdark.png',
+              height: size.height * 0.06,
+              width: size.width * 0.35,
+            ),
+            centerTitle: true,
           ),
-          appBar: _buildAppBar(theme),
           body:  Container(
 
             width: double.infinity,

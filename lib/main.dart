@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:mini_project/data/stathome.dart';
+import 'package:mini_project/tesla_app/app.dart';
 import 'package:mini_project/ui/pages/Dashboard.dart';
 import 'package:mini_project/ui/pages/DashbordScreen.dart';
 import 'package:mini_project/ui/pages/Gallerie-page.dart';
@@ -15,22 +16,43 @@ import 'package:mini_project/ui/pages/SpeedometerContainer.dart';
 import 'package:mini_project/ui/pages/TransitionRouteObserver.dart';
 import 'package:mini_project/ui/pages/car_page.dart';
 import 'package:mini_project/ui/pages/connectivity.dart';
+import 'package:mini_project/ui/pages/connexion_obd.dart';
 import 'package:mini_project/ui/pages/number.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
+import 'package:mini_project/ui/pages/slider_page.dart';
 import 'package:mini_project/ui/pages/userDetails.dart';
 import 'package:mini_project/ui/pages/user-page.dart';
 //import 'package:splashscreen/splashscreen.dart';
 
 import 'DataBase/user_database.dart';
+import 'data/OBDParametres.dart';
 import 'data/car_page.dart';
 import 'data/model.dart';
 import 'data/themes_data.dart';
 import 'data/userEntity.dart';
 
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
 
 Future <void> main() async {
-
+WidgetsFlutterBinding.ensureInitialized();
+  FirebaseApp firebaseApp = await Firebase.initializeApp();
+  /*FirebaseApp firebaseApp = await Firebase.initializeApp(
+      options: FirebaseOptions(
+      apiKey: "AIzaSyAkVwF1hIKEo-kcZI50pBHSnsMUrQo9s3c",
+      authDomain: "datahub-bako.firebaseapp.com",
+      databaseURL: "https://datahub-bako-default-rtdb.firebaseio.com",
+      projectId: "datahub-bako",
+      storageBucket: "datahub-bako.appspot.com",
+      messagingSenderId: "872535802080",
+      appId: "1:872535802080:web:9ae57c6577837513fed085",
+      measurementId: "G-GM14MKKNPE",
+  ),
+  );*/
   //WidgetsFlutterBinding.ensureInitialized();
   runApp( MultiProvider(
       providers: [
@@ -48,10 +70,35 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late UserDatabase database;
+  List<OBD> obds = [];
+
+  Future<List<OBD>> retrieveOBD(UserDatabase db) async {
+    obds =await this.database.obdDAO.retrieveAllOBD();
+    debugPrint("obd diagno " + obds.length.toString());
+
+    return obds;
+  }
+
+  List<int> ob =[];
+  Future<List<int>> addOBD(UserDatabase db) async {
+    // int i = context.read<ObdReader>().obdData.length;
+    //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
+
+    OBD obddtat= OBD( speed: "15", rpm: "30", CoolantTemperature: "12", ModuleVoltage: "50", date_debut: '29/03/2022', car_id: 1, date_fin: '30/03/2022');
+    List<int> obdsaved = await database.obdDAO.insertOBD([obddtat]);
+
+    for (int idsaved in obdsaved) {
+      ob.add(idsaved);
+    }
+    debugPrint("obd diagno " + ob.length.toString());
+
+    return obdsaved;
+  }
 
   // This widget is the root of your application.
   @override
   void initState() {
+
     super.initState();
     $FloorUserDatabase
         .databaseBuilder('user_database.db')
@@ -59,18 +106,19 @@ class _MyAppState extends State<MyApp> {
         .then((value) async {
       this.database = value;
 
+
       setState(() {});
     });
   }
     @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+
       defaultTransition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 500),
       debugShowCheckedModeBanner: false,
-      title: 'Car Rental App',
-
-        theme: ThemeData(
+      title: 'My bako app',
+       theme: ThemeData(
           textSelectionTheme:
           const TextSelectionThemeData(cursorColor: Colors.orange),
           // fontFamily: 'SourceSansPro',
@@ -105,6 +153,8 @@ class _MyAppState extends State<MyApp> {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
               .copyWith(secondary: Colors.orange),
         ),
+        //home :LoginScreen(),
+
         //navigatorObservers: [TransitionRouteObserver()],
     /* home:  SplashScreen(
         seconds: 8,
@@ -120,9 +170,9 @@ class _MyAppState extends State<MyApp> {
         //backgroundColor: Colors.indigo.shade700,
          imageBackground: AssetImage("assets/image/background.png")
       ),*/
-        initialRoute: '/log',
-    routes: {
-      '/méteo': (context) => MeteoPage(),
+
+      routes: {
+        '/méteo': (context) => MeteoPage(),
       '/register' : (context) => userRegister(),
       '/login' : (context) => UserLogin(),
       '/home' : (context) => car_page(),
@@ -132,14 +182,22 @@ class _MyAppState extends State<MyApp> {
       '/conn' : (context) => connectivity_home(),
       '/profile':(context) => profile_page(),
       '/log' : (context) => LoginScreen(),
-      '/dashboard' : (context) => DashboardScreen(),
+      //'/log' : (context) => DashboardScreen(),
+      //'/dashboard' : (context) => DashboardScreen(),
       '/kilo' : (context) => kilometrage_data(),
-      '/bleu' : (context) => obd_home(),
-      '/dash' : (context) => dashboard(),
+      //'/bleu' : (context) => obd_home(daaa),
+      //'/dash' : (context) => dashboard(),
       '/Speed' : (context) => SpeedometerContainer(),
-    }
-    );
+        '/cnxobd' : (context) => connexion(),
+        '/app' : (context) => TeslaApp(),
+        //'/slider' : (context) => slider_connexion(),
+      },
 
-}}
+
+    initialRoute: '/log',
+
+    );
+  }
+}
 
 

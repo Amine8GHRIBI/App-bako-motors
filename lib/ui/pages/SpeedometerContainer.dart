@@ -30,7 +30,7 @@ class _SpeedometerContainerState extends State<SpeedometerContainer> {
     });
     super.initState();
   }
-/*
+
   void _onAccelerate(UserAccelerometerEvent event) {
     double newVelocity = sqrt(
         event.x * event.x + event.y * event.y + event.z * event.z
@@ -47,13 +47,10 @@ class _SpeedometerContainerState extends State<SpeedometerContainer> {
         highestVelocity = velocity;
       }
     });
-  }*/
-
-
+  }
 
   @override
   Widget build(BuildContext context) {
-
     final routes =
     ModalRoute
         .of(context)

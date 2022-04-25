@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:mini_project/ui/pages/DashbordScreen.dart';
 
 import '../../DataBase/user_database.dart';
@@ -64,14 +67,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    $FloorUserDatabase
-        .databaseBuilder('user_database.db')
-        .build()
-        .then((value) async {
-      this.database = value;
-      //this.addUsers(this.database);
-      setState(() {});
-    });
+
+      setState(() {
+        $FloorUserDatabase
+            .databaseBuilder('user_database.db')
+            .build()
+            .then((value) async {
+          this.database = value;
+          //this.addUsers(this.database);
+
+        });
+  });
   }
 
   List<User>  users =[];
@@ -132,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return
       FlutterLogin(
-        logo2: const AssetImage('assets/image/logo2.png'),
+        //logo2: const AssetImage('assets/image/logo2.png'),
         logo:const AssetImage('assets/image/logo.png'),
       //title: "gg",
       logoTag: Constants.logoTag,
@@ -256,9 +262,12 @@ class _LoginScreenState extends State<LoginScreen> {
         return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () {
-        Navigator.pushNamed(context , '/dashboard',arguments: {"database" : this.database , "user" : this.user});
 
-       /* Navigator.of(context).pushReplacement(FadePageRoute(
+          Navigator.pushNamed(context , '/app' , arguments: {"database" : this.database , "user" : this.user});
+        //Get.to(DashboardScreen( database: this.database, user :this.user));
+
+
+        /* Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context , arguments: {"user" : this.database }) => const DashboardScreen(),
         ));*/
       },

@@ -6,9 +6,14 @@ import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
+import '../widget/bottom_nav_bar.dart';
+
 
 import '../../DataBase/user_database.dart';
+import '../../data/OBDParametres.dart';
+import '../../data/model.dart';
 import '../../data/userEntity.dart';
 import '../Constants.dart';
 import '../widget/bottom_nav_item.dart';
@@ -21,7 +26,10 @@ import 'battery.dart';
 
 
 class dashboard extends StatefulWidget {
-  const dashboard({Key? key}) : super(key: key);
+  final UserDatabase database;
+  final User user;
+
+  const dashboard({Key? key,required this.database, required this.user}) : super(key: key);
 
   @override
   State<dashboard> createState() => _dashboardState();
@@ -29,9 +37,10 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> with SingleTickerProviderStateMixin, TransitionRouteAware{
   bool _showDrawer = false;
+  List<OBD> obds = [];
   late UserDatabase database;
-  User? user;
-
+  late User user;
+  List<OBD> newobd = [];
 
 
   @override
@@ -47,6 +56,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
     _loadingController!.dispose();
     super.dispose();
   }
+
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context)
         .pushReplacementNamed('/log')
@@ -57,9 +67,61 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
   static const headerAniInterval = Interval(.1, .3, curve: Curves.easeOut);
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
+
+
+
+  Future<List<OBD>> retrieveOBD(UserDatabase db) async {
+    obds =await this.widget.database.obdDAO.retrieveAllOBD();
+    debugPrint("obd diagno " + obds.length.toString());
+    setState(() {});
+
+    return obds;
+
+  }
+
+  List<int> ob =[];
+  Future<List<int>> addOBD(UserDatabase db) async {
+    // int i = context.read<ObdReader>().obdData.length;
+    //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
+
+    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date_debut: '22/04/2022', car_id: 1, date_fin: '22/04/2022');
+    List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
+
+    for (int idsaved in obdsaved) {
+      ob.add(idsaved);
+    }
+    // debugPrint("obd diagno " + ob.length.toString());
+
+    return obdsaved;
+  }
+
+
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero,() {
+      //  retrieveOBD(this.widget.database);
+      //debugPrint("obd diagno " + obds.last.speed.toString());
+      setState(() async {
+        database = this.widget.database;
+        user = this.widget.user;
+        newobd = await retrieveOBD(this.database);
+        debugPrint("obd stat " + newobd.last.speed.toString());
+      },);
+    });
+  /*  if(mounted) {
+      Future.delayed(Duration.zero, () {
+        setState(() {
+
+          //retrievCarsusers(this.database);
+         /// debugPrint("obd diagno " + obds.length.toString());
+        },
+
+        );
+      },
+      );
+    }*/
+    //context.read<ObdReader>().startOBD();
 
     _loadingController = AnimationController(
       vsync: this,
@@ -71,6 +133,12 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
           parent: _loadingController!,
           curve: headerAniInterval,
         ));
+
+  }
+
+  Future<List<OBD>> retrievCarsusers(UserDatabase database) async {
+    obds =await this.widget.database.obdDAO.retrieveAllOBD();
+    return obds;
   }
 
   void showDrawer() {
@@ -79,6 +147,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
       _showDrawer = !_showDrawer;
     });
   }
+  late bool start;
 
   @override
   void didPushAfterTransition() => _loadingController!.forward();
@@ -95,6 +164,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
       color:  HexColor("#175989"),
       onPressed: () => _goToLogin(context),
     );
+
 
 
     final title = Center(
@@ -372,144 +442,71 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+
     final theme = Theme.of(context);
     ThemeData themeData = Theme.of(context);
-    final routes =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Map<String, dynamic>;
-    database = routes["database"];
-    user =routes["user"];
     Size size = MediaQuery.of(context).size;
-
     final _dashboardState? state = context.findAncestorStateOfType<_dashboardState>();
+   // while(true) {
+      //context.read<ObdReader>().increment();
 
 
-    return Scaffold(
-      appBar:  _buildAppBar(theme),
-      bottomNavigationBar: BottomNavigationBar( //bottomNavigationBar
-        iconSize: size.width * 0.07,
-        elevation: 0,
-        selectedLabelStyle: const TextStyle(fontSize: 0),
-        unselectedLabelStyle: const TextStyle(fontSize: 0),
-        backgroundColor: theme.primaryColor.withOpacity(.08),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: themeData.brightness == Brightness.dark
-            ? Colors.indigoAccent
-            : Colors.black,
-        unselectedItemColor: const Color(0xff3b22a1),
-        onTap: (value) {
-          switch (value) {
-            case 0:
-            //Navigator.pushNamed(context , '/users');
-              Navigator.pushNamed(context , '/dashboard',arguments: {"database" : this.database , "user" : this.user});
-              break;
-            case 1:
-              Navigator.pushNamed(context , '/dash',arguments: {"database" : this.database , "user" : this.user});
-              break;
-            case 2:
-              Navigator.pushNamed(context , '/bleu');
-              break;
+      return Scaffold(
+        appBar: _buildAppBar(theme),
+       // bottomNavigationBar: buildBottomNavBar(1,size ,themeData,context , this.widget.database , this.widget.user),
 
-            case 3:
-              Navigator.pushNamed(context , '/home',arguments: {"database" : this.database , "user" : this.user});
-              break;
-          }
+        body: Container(
+          color: Color(0xffE5E5E5),
 
-
-/*
-      if (value != currIndex) {
-        if (value == 2) {
-          Get.off(const MeteoPage());
-        }
-      }*/
-        },
-        items: [
-          buildBottomNavItem(
-            UniconsLine.apps,
-            themeData,
-            size,
-          ),
-          buildBottomNavItem(
-            FontAwesomeIcons.carAlt,
-            themeData,
-            size,
-          ),
-          buildBottomNavItem(
-            FontAwesomeIcons.map,
-            themeData,
-            size,
-          ),
-          buildBottomNavItem(
-            FontAwesomeIcons.bell,
-            themeData,
-            size,
-          ),
-        ],
-      ),
-      /*AppBar(
-        leading: IconButton(icon: Icon(Icons.menu), onPressed: () {
-          //
-        }),
-        //title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(icon: Icon(
-              FontAwesomeIcons.chartLine), onPressed: () {
-            //
-          }),
-        ],
-      ),*/
-      body:Container(
-        color:Color(0xffE5E5E5),
-
-        child:StaggeredGridView.count(
-          crossAxisCount: 4,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: battery(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: mychart1Items("kilometrage by hour","00","+12.9% of target"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: myCircularItems("Temps de conduit","00.00"),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right:8.0),
-              child: myTextItems("Max speed","48.6"),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right:8.0),
-              child: myTextItems("Max kilometrage","25"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: mychart2Items("Moy temperature","0.9M","+19% of target"),
-            ),
-            if (_showDrawer)
-              DrawerWidget(
-                closeFunction: showDrawer,
+          child: StaggeredGridView.count(
+            crossAxisCount: 4,
+            crossAxisSpacing: 12.0,
+            mainAxisSpacing: 12.0,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                //child: battery(),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: mychart1Items("kilometrage by hour","", "+12.9% of target"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: myCircularItems("Temps de conduit", context
+                    .watch<ObdReader>().obdData['3'][1].toString()),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: myTextItems("Max speed", this.newobd.last.speed.toString()),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: myTextItems("Max kilometrage", ""),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: mychart2Items("Moy temperature", context.watch<ObdReader>().obdData['2'][1].toString(), "+19% of target"),
+              ),
+              if (_showDrawer)
+                DrawerWidget(
+                  closeFunction: showDrawer,
+                ),
 
-          ],
-          staggeredTiles: [
-            StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(4, 250.0),
+            ],
+            staggeredTiles: [
+              StaggeredTile.extent(4, 250.0),
+              StaggeredTile.extent(4, 250.0),
 
-            StaggeredTile.extent(2, 250.0),
-            StaggeredTile.extent(2, 120.0),
-            StaggeredTile.extent(2, 120.0),
-            StaggeredTile.extent(4, 250.0),
-          ],
+              StaggeredTile.extent(2, 250.0),
+              StaggeredTile.extent(2, 120.0),
+              StaggeredTile.extent(2, 120.0),
+              StaggeredTile.extent(4, 250.0),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
-}
+

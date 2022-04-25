@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1055587172054",
+    "project_id": "mybako",
+    "storage_bucket": "mybako.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055587172054:android:39d41351898686d98ad377",
+        "android_client_info": {
+          "package_name": "com.example.datahub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055587172054-8pavl773ksk0jb83ogojtvlg5339h5qc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1wk_DgO7C0Hzvysgow7GiFSwtqk0eGHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055587172054-8pavl773ksk0jb83ogojtvlg5339h5qc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
