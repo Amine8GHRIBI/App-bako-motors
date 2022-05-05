@@ -92,7 +92,7 @@ class _$UserDatabase extends UserDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Car` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `model` TEXT NOT NULL, `year` TEXT NOT NULL, `license_Plate` TEXT NOT NULL, `initial_mileage` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `OBD` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `speed` TEXT NOT NULL, `rpm` TEXT NOT NULL, `CoolantTemperature` TEXT NOT NULL, `ModuleVoltage` TEXT NOT NULL, `date_debut` TEXT NOT NULL, `date_fin` TEXT NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`car_id`) REFERENCES `OBD` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `OBD` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `speed` TEXT NOT NULL, `DistanceMILOn` TEXT NOT NULL, `rpm` TEXT NOT NULL, `CoolantTemperature` TEXT NOT NULL, `ModuleVoltage` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`car_id`) REFERENCES `OBD` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CarUser` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`car_id`) REFERENCES `Car` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
@@ -355,11 +355,12 @@ class _$ObdDAO extends ObdDAO {
             (OBD item) => <String, Object?>{
                   'id': item.id,
                   'speed': item.speed,
+                  'DistanceMILOn': item.DistanceMILOn,
                   'rpm': item.rpm,
                   'CoolantTemperature': item.CoolantTemperature,
                   'ModuleVoltage': item.ModuleVoltage,
-                  'date_debut': item.date_debut,
-                  'date_fin': item.date_fin,
+                  'date': item.date,
+                  'time': item.time,
                   'car_id': item.car_id
                 });
 
@@ -376,8 +377,9 @@ class _$ObdDAO extends ObdDAO {
     return _queryAdapter.queryList('SELECT * FROM OBD',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
-            date_debut: row['date_debut'] as String,
-            date_fin: row['date_fin'] as String,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
             car_id: row['car_id'] as int,
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
@@ -390,8 +392,9 @@ class _$ObdDAO extends ObdDAO {
     return _queryAdapter.query('DELETE * FROM OBD WHERE id = ?1',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
-            date_debut: row['date_debut'] as String,
-            date_fin: row['date_fin'] as String,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
             car_id: row['car_id'] as int,
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
@@ -405,8 +408,9 @@ class _$ObdDAO extends ObdDAO {
     return _queryAdapter.query('DELETE * FROM OBD',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
-            date_debut: row['date_debut'] as String,
-            date_fin: row['date_fin'] as String,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
             car_id: row['car_id'] as int,
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
@@ -419,14 +423,47 @@ class _$ObdDAO extends ObdDAO {
     return _queryAdapter.query('SELECT * FROM OBD WHERE id = ?1',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
-            date_debut: row['date_debut'] as String,
-            date_fin: row['date_fin'] as String,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
             car_id: row['car_id'] as int,
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
             ModuleVoltage: row['ModuleVoltage'] as String),
         arguments: [id]);
+  }
+
+  @override
+  Future<List<OBD>> retrieveLastOBD() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC',
+        mapper: (Map<String, Object?> row) => OBD(
+            id: row['id'] as int?,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
+            car_id: row['car_id'] as int,
+            speed: row['speed'] as String,
+            rpm: row['rpm'] as String,
+            CoolantTemperature: row['CoolantTemperature'] as String,
+            ModuleVoltage: row['ModuleVoltage'] as String));
+  }
+
+  @override
+  Future<List<OBD>> retrieveLastOBDByDate(String date) async {
+    return _queryAdapter.queryList('SELECT * FROM OBD WHERE date = ?1',
+        mapper: (Map<String, Object?> row) => OBD(
+            id: row['id'] as int?,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
+            car_id: row['car_id'] as int,
+            speed: row['speed'] as String,
+            rpm: row['rpm'] as String,
+            CoolantTemperature: row['CoolantTemperature'] as String,
+            ModuleVoltage: row['ModuleVoltage'] as String),
+        arguments: [date]);
   }
 
   @override

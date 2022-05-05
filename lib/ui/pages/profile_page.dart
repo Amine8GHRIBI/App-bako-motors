@@ -19,7 +19,9 @@ import '../../data/userEntity.dart';
 
 
 class profile_page extends StatefulWidget {
-  const profile_page({Key? key}) : super(key: key);
+
+
+  profile_page({Key? key}) : super(key: key);
 
   @override
   State<profile_page> createState() => _profile_pageState();
@@ -28,11 +30,13 @@ class profile_page extends StatefulWidget {
 class _profile_pageState extends State<profile_page> {
   late UserDatabase database;
   late User? user ;
+  late ThemeData theme;
   String name='';
   String model ='';
   String year ='';
   String license_Plate='';
   String initial_mileage='';
+
 
   Future<List<caruser>> retrievCarsusers() async {
     return await this.database.caruserDAO.retrieveAllcarsusers();
@@ -86,6 +90,7 @@ class _profile_pageState extends State<profile_page> {
 
   @override
   Widget build(BuildContext context) {
+
     final routes =
     ModalRoute
         .of(context)
@@ -93,7 +98,10 @@ class _profile_pageState extends State<profile_page> {
         .arguments as Map<String, dynamic>;
     database = routes["database"];
     user =routes["user"];
+    theme = routes["theme"];
+
     return Scaffold(
+      backgroundColor: theme.cardColor,
       body: Container(
         width: MediaQuery
             .of(context)
@@ -151,8 +159,8 @@ class _profile_pageState extends State<profile_page> {
 
             child: Container(
               padding:  EdgeInsets.all(2.3),
-              color: Colors.white,
-                  width: 320.0,
+              color: theme.cardColor,
+                  width: 340.0,
                  height: MediaQuery
         .of(context)
         .size
@@ -163,54 +171,53 @@ class _profile_pageState extends State<profile_page> {
 
     builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
       return Dismissible(
+
           key: Key(snapshot.data!.id!.toString()),
           background: _myHiddenContainer(
               Colors.red
           ),
       child : Column(
+
           children: <Widget>[
           Text( 'Complete profile ',
             textAlign: TextAlign.right,
 
             style: GoogleFonts.poppins(
-            color:    HexColor("#175989"),
+            color:    theme.textTheme.headline1?.color,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),),
               //flex: 1, // takes 30% of available width
                _myListContainer(snapshot.data!.name, snapshot.data!.surName,
-                  snapshot.data!.phoneNumber,  HexColor("#175989")),
+                  snapshot.data!.phoneNumber, theme.cardTheme.color),
 
     ]),);
 
     },),),),
             Positioned(
               top: 340.0,
-              left: 10.0,
+              left: 20.0,
               child: Container(
-                padding:  EdgeInsets.all(2.3),
-                color: Colors.white,
+                  padding:  EdgeInsets.all(2.3),
+                  color: theme.cardColor,
 
                 width: 320.0,
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height / 1,
+                height: MediaQuery.of(context).size.height / 1,
                 child:FutureBuilder(
                   future : retrievCarsByuser(1),
                   builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
                   return ListView.builder(
+
                     itemCount: snapshot.data?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Dismissible(
+
                         key: Key(snapshot.data![index].id!.toString()),
-                        background: _myHiddenContainer(
-                          Colors.black
-                        ),
+                        background: _myHiddenContainer(Colors.red),
                         child :
                         _myListContainer(
                             snapshot.data![index].name, snapshot.data![index].license_Plate,
-                            snapshot.data![index].year,  HexColor("#175989")
+                            snapshot.data![index].year,  theme.cardTheme.color
                         ),
 
                         onDismissed: (direction) {
@@ -255,6 +262,7 @@ class _profile_pageState extends State<profile_page> {
                 Color taskcolor;
 
                 return AlertDialog(
+                  backgroundColor: theme.cardTheme.color,
                   title: Text("New car"),
                   content: Container(
                     height: 280.0,
@@ -270,7 +278,7 @@ class _profile_pageState extends State<profile_page> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car name",
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -285,7 +293,7 @@ class _profile_pageState extends State<profile_page> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car modele",
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -300,7 +308,7 @@ class _profile_pageState extends State<profile_page> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car year",
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -316,58 +324,11 @@ class _profile_pageState extends State<profile_page> {
                               border: InputBorder.none,
                               hintText: "initial_mileage"
                               ,
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
 
-                  /*Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              new GestureDetector(
-                                onTap: () {
-                                  taskcolor = Colors.purple;
-                                },
-                                child: Container(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  color: Colors.purple,
-                                ),
-                              ),
-                              new GestureDetector(
-                                onTap: () {
-                                  taskcolor = Colors.amber;
-                                },
-                                child: Container(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  color: Colors.amber,
-                                ),
-                              ),
-                              new GestureDetector(
-                                onTap: () {
-                                  taskcolor = Colors.blue;
-                                },
-                                child: Container(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              new GestureDetector(
-                                onTap: () {
-                                  taskcolor = Colors.green;
-                                },
-                                child: Container(
-                                  width: 25.0,
-                                  height: 25.0,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),*/
                         Container(
                           child: TextField(
                             onChanged: (value) {
@@ -380,7 +341,7 @@ class _profile_pageState extends State<profile_page> {
                               border: InputBorder.none,
                               hintText: "license_Plate"
                                 ,
-                              hintStyle: TextStyle(color: Colors.grey),
+                              hintStyle: TextStyle(color:theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -393,7 +354,7 @@ class _profile_pageState extends State<profile_page> {
                       shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(30.0)
                       ),
-                      color: HexColor("#175989"),
+                      color: theme.bottomAppBarColor,
                       child: Text("Add", style: new TextStyle(
                           color: Colors.white
                       ),),
@@ -414,14 +375,14 @@ class _profile_pageState extends State<profile_page> {
               }
           );
         },
-        backgroundColor:  HexColor("#175989"),
+        backgroundColor:  theme.primaryColor,
         foregroundColor: Color(0xffffffff),
         tooltip: "Increment",
         child: new Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color:  HexColor("#175989"),
+        color: theme.primaryColor,
         shape: CircularNotchedRectangle(
 
         ),
@@ -449,16 +410,18 @@ class _profile_pageState extends State<profile_page> {
     );
   }
 
-  Widget _myListContainer(String taskname, String subtask, String taskTime, Color taskColor) {
+  Widget _myListContainer(String taskname, String subtask, String taskTime, Color? taskColor) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
 
       child: Container(
+
         height: 80.0,
         child: Material(
-          color: Colors.white,
+
+          color: taskColor,
           elevation: 14.0,
-          shadowColor: Color(0x802196F3),
+          shadowColor: theme.primaryColor,
 
           child: Container(
             child: Row(
@@ -478,8 +441,10 @@ class _profile_pageState extends State<profile_page> {
             },
         child :          Expanded(
                   child: Padding(
+
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
+
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
 
@@ -488,7 +453,7 @@ class _profile_pageState extends State<profile_page> {
                           child: Container(
                             child: Text(taskname, style: TextStyle(
                                 fontSize: 24.0,
-                                color: Colors.black,
+                                color: theme.textTheme.headline1?.color,
                                 fontWeight: FontWeight.bold)),
                           ),
                         ),
@@ -497,7 +462,7 @@ class _profile_pageState extends State<profile_page> {
 
                           child: Container(
                             child: Text(subtask, style: TextStyle(
-                                fontSize: 18.0, color: Colors.blueAccent)
+                                fontSize: 18.0, color:theme.textTheme.headline1?.color)
                             ),
                           ),
                         ),
@@ -511,7 +476,7 @@ class _profile_pageState extends State<profile_page> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       child: Text(taskTime, style: TextStyle(
-                          fontSize: 18.0, color: Colors.black45)
+                          fontSize: 18.0, color: theme.textTheme.headline1?.color)
                       ),
                     ),
                   ),
@@ -526,10 +491,8 @@ class _profile_pageState extends State<profile_page> {
 
   Widget _myHiddenContainer(Color taskColor) {
     return Container(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+
+      height: MediaQuery.of(context).size.height,
       color: taskColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -564,11 +527,11 @@ class _profile_pageState extends State<profile_page> {
   Widget _myHeaderContent() {
     return Align(
       child: ListTile(
-        leading: Icon(Icons.account_box, size: 75, color:  HexColor("#175989")),
+        leading: Icon(Icons.account_box, size: 75, color:  theme.primaryColor),
         title: Text(
-            "Profile", style: TextStyle(fontSize: 28.0, color:  Colors.white)),
+            "Profile", style: TextStyle(fontSize: 28.0, color: theme.primaryColor)),
         subtitle: Text(
-            "Amine Ghribi", style: TextStyle(fontSize: 24.0, color:  Colors.white)),
+            "Amine Ghribi", style: TextStyle(fontSize: 24.0, color:  theme.primaryColor)),
       ),
     );
   }

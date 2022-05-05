@@ -1,16 +1,39 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-const Color kBottomAppBarColor = Color.fromARGB(255, 49, 52, 63);
-const Color kPrimaryColor = Color.fromARGB(255, 1, 161, 254);
-const Color kSecondaryColor = Color.fromARGB(255, 107, 200, 252);
+const Color kBottomAppBarColordark =Colors.black38;
+const Color kBottomAppBarColorlight =  Color(0xFFEEEEEE);
 
-const Color kProgressBackGroundColor = Color.fromARGB(255, 24, 24, 28);
-const Color kCardColor = Color.fromARGB(255, 31, 32, 38);
+const Color PrimaryColorlight =  Color(0xff175989); //bleu
+const Color PrimaryColordark = Color(0xFF303030);
+
+const Color kPrimaryColorlight =  Color(0xff175989); //bleu for text
+const Color kPrimaryColorDark = Colors.white;   //white for text
+
+const Color kSecondaryColordark =  Color(0xff175989);
+const Color kSecondaryColorlight =  Color(0xFFEEEEEE);
+
+
+const Color progressColorlight = Color(0xff175989);
+const Color progressColordark = Color(0xFFF5F5F5);
+
+const Color CourbeColorlight = Colors.black;
+const Color CourbeColordark = Colors.white;
+
+const Color kProgressBackGroundColorlight = Color(0xFFF5F5F5);
+const Color kProgressBackGroundColordark = Colors.black38;
+
+const Color kCardColor =   Color(0xFFEEEEEE);
+const Color kCardColordark = Colors.black;
+
+const Color kCardColo2 = Colors.white;
+const Color kCardColordark2 = Color(0xFF303030);
+
 
 const LinearGradient buttonGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [kPrimaryColor, kSecondaryColor]);
+    colors: [kPrimaryColorlight, kSecondaryColorlight]);
 
 const LinearGradient kBackGroundGradient = LinearGradient(
     begin: Alignment.topCenter,
@@ -22,10 +45,17 @@ const LinearGradient kBackGroundGradient = LinearGradient(
       Color(0xFFF5F5F5),
     ]);
 
-const LinearGradient kCardGradient = LinearGradient(
+const LinearGradient kCardGradientlight = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Color.fromARGB(255, 40, 40, 50),
-      Color.fromARGB(255, 40, 40, 45),
+      Color(0xFFEEEEEE),
+      Color(0xFFEEEEEE),
+    ]);
+const LinearGradient kCardGradientdark = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF303030),
+      Color(0xFF303030),
     ]);

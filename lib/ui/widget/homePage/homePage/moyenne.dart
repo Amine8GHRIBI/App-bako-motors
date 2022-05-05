@@ -9,7 +9,7 @@ import '../../../../data/Moyenne.dart';
 import '../../../../data/cars.dart';
 
 
-Padding buildMoy(int i, Size size, ThemeData themeData) {
+Padding buildMoy(int i, Size size, ThemeData theme) {
   return Padding(
     padding: EdgeInsets.only(
      // right: size.width * 0.04,
@@ -21,12 +21,12 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
        // width: size.width * 0.90,
         child: Container(
           decoration: BoxDecoration(
-            color:Colors.grey.shade200,
+            color:theme.cardTheme.color,
           //  borderRadius: BorderRadius.circular(10),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
                 width: 0.5,
-                color: HexColor("#175989")
+                color: theme.primaryColor
             ),
 
 /*
@@ -40,7 +40,7 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
 */
             boxShadow: [
               BoxShadow(
-                color: Colors.grey,
+                color: theme.cardColor,
                 blurRadius: 4,
                 offset: Offset(2, 4), // Shadow position
               ),
@@ -64,7 +64,7 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
                       moyenne[i]['nom'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color:  HexColor("#175989"),
+                        color:  theme.textTheme.headline1?.color,
                         fontSize: size.width * 0.030,
                         fontWeight: FontWeight.bold,
                       ),
@@ -72,7 +72,7 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
                   ),
                   Icon(
                     UniconsLine.battery_bolt,
-                    color: HexColor("#175989"),
+                    color: theme.textTheme.headline1?.color,
                     size: size.width * 0.06,
                   ),
 
@@ -84,7 +84,7 @@ Padding buildMoy(int i, Size size, ThemeData themeData) {
                       Text(
                         moyenne[i]['valeur'],
                         style: GoogleFonts.poppins(
-                          color:  HexColor("#175989"),
+                          color:  theme.textTheme.headline1?.color,
                           fontSize: size.width * 0.045,
                           fontWeight: FontWeight.bold,
                         ),

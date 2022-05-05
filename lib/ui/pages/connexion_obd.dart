@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -15,7 +18,8 @@ import 'AppColors.dart';
 
 
 class connexion extends StatefulWidget {
-  const connexion({Key? key}) : super(key: key);
+  ThemeData? theme;
+ connexion({Key? key,required this.theme}) : super(key: key);
 
   @override
   State<connexion> createState() => _connexionState();
@@ -43,7 +47,7 @@ class _connexionState extends State<connexion> {
       _elements['List of Cars'] = ca;
 
     }
-    debugPrint("cars " + cars.toString());
+    debugPrint("cars " + cars.length.toString());
     debugPrint("user_id :" + use.id.toString());
     return cars;
   }
@@ -77,7 +81,9 @@ class _connexionState extends State<connexion> {
     // at the beginning, all users are shown
     //_foundUsers = _allUsers;
     super.initState();
-    Future.delayed(Duration.zero,()  {
+    Future.delayed(Duration.zero,() async  {
+      _foundCars = await retrievCarsByuser(this.use.id,this.database);
+
       setState(()  {
          //this.retrievCarsByuser(use.id, this.database);
         // _foundCars = CARS ;
@@ -91,9 +97,11 @@ class _connexionState extends State<connexion> {
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
      // results = _allUsers;
-      results =  CARS;
+      results =  cars;
+      debugPrint("cars founded " + cars.length.toString());
+
     } else {
-      results = CARS
+      results = cars
           .where((user) =>
           user.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -101,12 +109,12 @@ class _connexionState extends State<connexion> {
     }
 
     // Refresh the UI
-   /* setState(() {
+    setState(() {
      // _foundUsers = results;
-             _foundCars = results;
+      _foundCars = results;
 
-      debugPrint("cars founded " + _foundCars[0].name.toString());
-    });*/
+      debugPrint("cars founded " + cars.length.toString());
+    });
   }
  /* @override
   void initState()  {
@@ -140,17 +148,31 @@ class _connexionState extends State<connexion> {
     use = routes["user"];
 
     return Scaffold(
+
       appBar:
       AppBar(
-        backgroundColor: Colors.grey,
-
-        title: Image.asset('assets/image/bako.png', filterQuality: FilterQuality.high,
-            height: 30),
+          title: Text(
+            'Connexin OBD',
+            style: TextStyle(color: this.widget.theme?.iconTheme.color),
+          ),
+        backgroundColor: this.widget.theme?.cardColor,
+        iconTheme: IconThemeData(color: this.widget.theme?.iconTheme.color),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            const SizedBox(
+              height: 20,
+            ),
+              Text( 'Choose your car ',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.poppins(
+                  color:   this.widget.theme?.primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),),
             const SizedBox(
               height: 20,
             ),
@@ -163,39 +185,41 @@ class _connexionState extends State<connexion> {
               height: 20,
             ),
             Expanded(
-              child:FutureBuilder(
-                future : retrievCarsByuser(this.use.id,this.database),
-                builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
-                  return ListView.builder(
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        Card(
-                          key: ValueKey(snapshot.data![index].id!.toString()),
-                          color: HexColor("#175989"),
+              //child:FutureBuilder(
+                //future : retrievCarsByuser(this.use.id,this.database),
+                //builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
+                child: _foundCars.isNotEmpty
+                    ? ListView.builder(
+                    itemCount: _foundCars.length,
+                    //itemBuilder: (BuildContext context, int index) =>
+                    itemBuilder: (context, index) => Card(
+                          key: ValueKey(_foundCars[index].id),
+                          color: this.widget.theme?.primaryColor,
                           elevation: 4,
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: ListTile(
+                            onTap: () {
+                              Get.to( slider_connexion(database: this.database, use: this.use));
+                            },
                             leading: Text(
-                              snapshot.data![index].name.toString(),
+                              _foundCars[index].name.toString(),
                               style: const TextStyle(fontSize: 24 ,color: Colors.white),
 
                             ),
                             title: Text(
-                                snapshot.data![index].license_Plate.toString(),
+                                _foundCars[index].license_Plate.toString(),
                                 style: const TextStyle(color: Colors.white)),
                             subtitle: Text(
-                                '${snapshot.data![index].year
+                                '${_foundCars[index].year
                                     .toString()} years old',
                                 style: const TextStyle(color: Colors.white)),
                           ),
-                        ),
-                  );
-                }
-              )
-                    /*: const Text(
-                'No results found',
-                style: TextStyle(fontSize: 24),
-              ),*/
+                    ),
+                )
+                    : const Text(
+                  'No results found',
+                  style: TextStyle(fontSize: 24),
+                ),
             ),
           ],
         ),

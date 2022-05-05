@@ -1,4 +1,3 @@
-import 'package:battery_indicator/battery_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -11,7 +10,13 @@ class battery extends StatefulWidget {
 }
 
 class _batteryState extends State<battery> {
-  var _styleItems = [
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+ /* var _styleItems = [
     DropdownMenuItem(
       child: Text('skeumorphism'),
       value: 1,
@@ -145,4 +150,4 @@ class _batteryState extends State<battery> {
     );
   }
 
-}
+}*/

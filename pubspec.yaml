@@ -35,9 +35,11 @@ dependencies:
   get_storage: ^2.0.3
   percent_indicator: ^3.3.0-nullsafety.1
   flutter_svg: ^0.22.0
-  firebase_core: ^1.10.5
-  firebase_database: ^8.0.0
-  hotreloader: ^3.0.2
+  firebase_core: any
+  firebase_auth: any
+  #firebase_storage: ^4.0.0
+  cloud_firestore: any
+  adaptive_theme: ^2.3.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -58,9 +60,9 @@ dependencies:
   hexcolor: ^2.0.6
   #flutter_sparkline: ^0.1.0
   #flutter_circular_chart: ^0.1.0
-  chart_sparkline: ^1.0.10
+  #chart_sparkline: ^1.0.10
   flutter_staggered_grid_view: ^0.4.0
-  battery_indicator: ^0.1.0
+  #battery_indicator: ^0.1.0
   flutter_speedometer: ^1.0.2
   sensors: ^2.0.3
   group_list_view: ^1.1.1
@@ -69,7 +71,8 @@ dependencies:
   image_compare: ^1.1.2
   change_app_package_name: ^1.0.0
   bubble_tab_indicator: ^0.1.6
-  fl_chart: ^0.50.1
+  fl_chart: ^0.20.1
+  settings_ui: ^2.0.1
 
 
 

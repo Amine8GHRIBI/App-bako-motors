@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../../DataBase/user_database.dart';
+import '../../data/userEntity.dart';
 import '../configs/colors.dart';
+import 'base_screen.dart';
+import 'home_screen.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class DiagnostcScreen extends StatefulWidget {
+  UserDatabase database;
+  User user;
+  late ThemeData theme;
+
+  DiagnostcScreen({Key? key , required this.database, required this.user, required this.theme}) : super(key: key);
+
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<DiagnostcScreen> createState() => _DiagnostcScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _DiagnostcScreenState extends State<DiagnostcScreen> {
+
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Scaffold(
+        backgroundColor : this.widget.theme.cardColor,
      body : SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(15.0),
@@ -22,21 +37,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Row(
               children: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.back() ;             },
                     iconSize: 30,
                     splashRadius: 25,
                     icon: Icon(
                       Icons.arrow_back_ios_outlined,
-                      color: Colors.white,
+                      color: this.widget.theme.indicatorColor,
                     )),
                 Text(
                   'Diagnostics',
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 25 , color : this.widget.theme.indicatorColor),
                 ),
                 Spacer(),
                 Text(
                   'MODEL X',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ,  color : this.widget.theme.indicatorColor),
                 ),
               ],
             ),
@@ -45,9 +61,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Container(
               padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
+              color : this.widget.theme.cardTheme.color,
+
+              /*decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  gradient: kCardGradient),
+                  gradient: kCardGradient),*/
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -57,22 +75,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: double.maxFinite,
                     height: 600,
                     child: Stack(
+
                       children: [
                         Positioned(
                           top: 0,
                           left: 0,
                           child: Text(
                             'Overall Health',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold , color : this.widget.theme.indicatorColor),
                           ),
                         ),
                         Positioned(
                           top: 0,
                           right: 0,
                           child: Container(
-                              decoration: BoxDecoration(
+                             decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  gradient: buttonGradient),
+                               color : this.widget.theme.cardTheme.color,
+                             ),
+                                //  gradient: buttonGradient),
                               child: IconButton(
                                   iconSize: 35,
                                   onPressed: () {},
@@ -97,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         height: 230,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: kPrimaryColor),
+                                            color:this.widget.theme.iconTheme.color),
                                       ),
                                     ),
                                   ),
@@ -176,24 +197,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   Text('Battery Health',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontWeight: FontWeight.bold , color : this.widget.theme.indicatorColor)),
                   SizedBox(
                     height: 20,
                   ),
                   LinearPercentIndicator(
                     animation: true,
-                    backgroundColor: kProgressBackGroundColor.withOpacity(0.5),
+                    backgroundColor: this.widget.theme.cardColor,
                     percent: 0.8,
                     lineHeight: 20,
                     animationDuration: 2500,
                     center: Text('90.0%'),
                     linearGradient: LinearGradient(
-                        colors: [kPrimaryColor, kSecondaryColor]),
+                        colors: [theme.dialogBackgroundColor, theme.dialogBackgroundColor]),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 20),
                     child: Text('Sensors',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(fontWeight: FontWeight.bold,color : this.widget.theme.indicatorColor)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -201,18 +222,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Sensor(
                         value: 0.8,
                         label: 'Motors',
+                        theme: this.widget.theme,
                       ),
                       Sensor(
                         value: 0.4,
                         label: 'Batery Temp',
+                        theme: this.widget.theme,
                       ),
                       Sensor(
                         value: 0.9,
                         label: 'Brakes',
+                        theme: this.widget.theme,
                       ),
                       Sensor(
                         value: 0.6,
                         label: 'Suspentions',
+                        theme: this.widget.theme,
                       )
                     ],
                   )
@@ -232,11 +257,13 @@ class Sensor extends StatelessWidget {
     Key? key,
     required this.value,
     required this.label,
+    required this.theme
   }) : super(key: key);
 
   final double value;
   final double heigth = 120.0;
   final String label;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
@@ -247,17 +274,18 @@ class Sensor extends StatelessWidget {
             child: Container(
               width: 50,
               height: heigth,
-              color: kProgressBackGroundColor.withOpacity(0.5),
+              color: this.theme.cardColor,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
                     height: heigth * value,
                     decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                      color: this.theme.iconTheme.color
+                       /* gradient: LinearGradient(
                             end: Alignment.topCenter,
                             begin: Alignment.bottomCenter,
-                            colors: buttonGradient.colors)),
+                            colors: buttonGradient.colors)*/),
                   )
                 ],
               ),
@@ -265,7 +293,7 @@ class Sensor extends StatelessWidget {
         SizedBox(
           height: 5,
         ),
-        Text(label)
+        Text(label,style: TextStyle(fontWeight: FontWeight.bold , color : this.theme.indicatorColor))
       ],
     );
   }
@@ -303,11 +331,12 @@ class _CustomRippleState extends State<CustomRipple>
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return ScaleTransition(
       scale: _animation,
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(color: kPrimaryColor, width: 8),
+            border: Border.all(color: theme.primaryColor , width: 8),
             shape: BoxShape.circle),
       ),
     );

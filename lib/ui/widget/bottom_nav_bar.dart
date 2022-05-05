@@ -38,7 +38,7 @@ Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData , BuildCo
         case 0:
 
           // Navigator.pushNamed(context , '/dashboard',arguments: {"database" : database , "user" : user});
-          Get.to(DashboardScreen( database: database, user :user));
+         // Get.to(DashboardScreen( database: database, user :user));
           break;
         case 1:
          // Get.to(dashboard(),arguments: {"database" : database , "user" : user});

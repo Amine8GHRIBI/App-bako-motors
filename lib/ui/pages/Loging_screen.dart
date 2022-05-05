@@ -11,6 +11,7 @@ import 'package:mini_project/ui/pages/DashbordScreen.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/userEntity.dart';
+import '../../tesla_app/screens/base_screen.dart';
 import '../Constants.dart';
 import 'Home-Page.dart';
 import 'custom_route.dart';
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
   static const routeName = '/log';
   late UserDatabase database;
-  User? user ;
+  late User user ;
 
   @override
   void initState() {
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if(users != null) {
         user = users.first;
-        debugPrint("first user " + user!.name.toString());
+        debugPrint("first user " + user.name.toString());
       }
       return null;
     });
@@ -134,7 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+   // final theme = Theme.of(context);
+    ThemeData theme = Theme.of(context);
 
     return
       FlutterLogin(
@@ -152,11 +154,10 @@ class _LoginScreenState extends State<LoginScreen> {
           primaryColor: HexColor("#175989"),
 
           //accentColor: Colors. // bako
-           cardTheme: new CardTheme(
+          /* cardTheme: new CardTheme(
              //color: Colors.indigo.shade200
            ),
-
-
+*/
       ),
          loginProviders: [
        /* LoginProvider(
@@ -264,7 +265,8 @@ class _LoginScreenState extends State<LoginScreen> {
       onSubmitAnimationCompleted: () {
 
           Navigator.pushNamed(context , '/app' , arguments: {"database" : this.database , "user" : this.user});
-        //Get.to(DashboardScreen( database: this.database, user :this.user));
+       // Navigator.pushNamed(context ,BaseScreen(database: this.database,user: this.user));
+        //Get.to(BaseScreen(database: this.database,  user : this.user));
 
 
         /* Navigator.of(context).pushReplacement(FadePageRoute(

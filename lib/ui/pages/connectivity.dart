@@ -56,7 +56,7 @@ class _connectivity_homeState extends State<connectivity_home> {
       return Future.value(null);
     }
 
-    return _updateConnectionStatus(result);
+   return _updateConnectionStatus(result);
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {

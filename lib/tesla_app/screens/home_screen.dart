@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../DataBase/user_database.dart';
@@ -24,20 +27,91 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin, TransitionRouteAware {
-  late UserDatabase database;
-  late User user;
+  //late UserDatabase database;
+  //late User user;
   bool _showDrawer = false;
+  String batt ='' ;
+  String newbatt='';
+
   List<OBD> obds = [];
- List<OBD> newobd = [];
+  List<OBD> obdsbydate = [];
+
+  List<OBD> newobd = [];
+  int kilometrage = 0;
+  String conduite ="";
+
+  int conduiteheure =0;
+  int conduiteminute=0;
 
   Future<List<OBD>> retrieveOBD(UserDatabase db) async {
-    obds =await this.database.obdDAO.retrieveAllOBD();
-    //debugPrint("obd  your " + obds.length.toString());
+    obds =await db.obdDAO.retrieveAllOBD();
+    debugPrint("obd  your " + obds.last.speed.toString());
     setState(() {});
     return obds;
   }
 
+  Future<List<OBD>> retrieveOBDBydate(UserDatabase db , String date) async {
 
+    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date);
+
+    conduiteheure = (int.parse(obds.last.time.substring(0,2))) - (int.parse(obds.first.time.substring(0,2)));
+    conduiteminute = int.parse(obds.last.time.substring(3,5)) - int.parse(obds.first.time.substring(3,5));
+    conduite = conduiteheure.toString() + ':' + conduiteminute.toString();
+
+    for(OBD o in obdsbydate){
+      kilometrage += int.parse(o.DistanceMILOn);
+    }
+    debugPrint("obds by date  " + obdsbydate.length.toString());
+    setState(() {});
+    return obds;
+
+  }
+
+
+
+
+  Future<String> Mybattery(UserDatabase db) async {
+    newobd = await retrieveOBD(db);
+    late String speedtest;
+    if(newobd.last != null ) {
+      speedtest = newobd.last.CoolantTemperature;
+    }else{
+      speedtest = "no element in base ";
+    }
+    //OBD speedtestt = newobd.firstWhere((element) => element.speed.isNotEmpty,
+      //  orElse: () => 'No matching color found');
+
+    if (double. parse(speedtest) >= 12.6){
+       batt = "100%";
+    }else
+      if (12.5 <= (double. parse( speedtest.toString())) && (double. parse( speedtest.toString())) < 12.6){
+      batt = "85%";
+    }else
+      if (12.4 <=  (double. parse( speedtest.toString())) &&  (double. parse(speedtest.toString())) < 12.5 ){
+      batt = "75%";
+    }else
+
+    if (12.2 <=  (double. parse( speedtest.toString())) &&  (double. parse( speedtest.toString())) < 12.4 ){
+      batt = "65%";
+    }else
+    if (12.1 <=  (double. parse( speedtest.toString())) &&  (double. parse( speedtest.toString())) <  12.2 ){
+      batt = "50%";
+    }else
+    if (12.0 <=  (double. parse( speedtest.toString())) && (double. parse( speedtest.toString())) <  12.1 ){
+      batt = "35%";
+    }else
+    if (11.9 <=  (double. parse( speedtest.toString()))&& (double. parse( speedtest.toString())) <  12.0 ){
+      batt = "25%";
+    }else
+    if (11.8 <= (double. parse( speedtest.toString())) &&  (double. parse(speedtest.toString())) < 11.9 ){
+      batt = "15%";
+    }else
+    if ( double. parse( speedtest.toString()) <= 11.8 ){
+      batt = "0%";
+    }
+    setState(() {});
+    return batt;
+  }
 
   Future<bool> _goToLogin(BuildContext context) {
     return Navigator.of(context)
@@ -51,20 +125,44 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
 
+  Future<void> initConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      await this.chauffeurSetup();
+      debugPrint("data send ...");
+    }
+    setState(()  {},);
+  }
+  
+  Future<void> chauffeurSetup() async {
+    CollectionReference chauffeurs = FirebaseFirestore.instance.collection('Chauffeurs');
+    chauffeurs.add({ "name" : "aminos" ,  "surName" : "ghribi", "phoneNumber" : "94574896" ,
+      "email" : "aghribi011@gmail.com" , "birthday" :"9/11" , "adresse": "gabes", "username" :"amine", "password" : "123456" });
+  }
 
   @override
   void initState()  {
+
     super.initState();
-    Future.delayed(Duration.zero,() {
-      //  retrieveOBD(this.widget.database);
-      //debugPrint("obd diagno " + obds.last.speed.toString());
-      setState(() async {
-        database = this.widget.database;
-        user = this.widget.user;
-       newobd = await retrieveOBD(this.database);
-        debugPrint("obd your " + newobd.last.speed.toString());
-      },);
+
+    Future.delayed(Duration.zero,() async {
+      //await this.initConnectivity();
+      final DateTime now = DateTime.now();
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      final String formatted = formatter.format(now);
+      print(formatted);
+      await Mybattery(this.widget.database);
+      await retrieveOBDBydate(this.widget.database, formatted);
+
+      debugPrint("time " + obds.last.time.substring(0,2).toString());
+      debugPrint("time " + obds.first.time.substring(0,2).toString());
+
+
+      setState(() {
+        },);
     });
+
     _loadingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -75,11 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           parent: _loadingController!,
           curve: headerAniInterval,
         ));
-
-   // setState(() {});
   }
-
-
 
   @override
   void didChangeDependencies() {
@@ -94,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _loadingController!.dispose();
     super.dispose();
   }
+
   void showDrawer() {
     print('tapped on show drawer!');
     setState(() {
@@ -106,13 +201,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   AppBar _buildAppBar(ThemeData theme) {
 
     final menuBtn = IconButton(
-        color:  HexColor("#175989"),// parm color
+        color:  theme.iconTheme.color,// parm color
         icon: const Icon(FontAwesomeIcons.bars),
         onPressed: showDrawer
     );
     final signOutBtn = IconButton(
       icon: const Icon(FontAwesomeIcons.signOutAlt),
-      color:  HexColor("#175989"),
+      color:  theme.iconTheme.color,
       onPressed: () => _goToLogin(context),
     );
 
@@ -156,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         ),
       ],
       title: title,
-      backgroundColor: theme.primaryColor.withOpacity(.1),
+      backgroundColor: theme.bottomAppBarColor,
       elevation: 0,
       // toolbarTextStyle: TextStle(),
       // textTheme: theme.accentTextTheme,
@@ -174,21 +269,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
         onWillPop: () => _goToLogin(context),
         child: Scaffold(
-
-        appBar: _buildAppBar(theme),
-
-
-        body:  Container(
-         padding: const EdgeInsets.all(10),
-
-          child : SingleChildScrollView(
-
-
-    child: Stack(
-          children: <Widget>[
-
-           Column(
+          appBar: _buildAppBar(theme),
+          body:  Container(
+          padding: const EdgeInsets.all(10),
+            child : SingleChildScrollView(
+            child: Stack(
             children: <Widget>[
+
+            Column(
+             children: <Widget>[
 
               /*Material(
                 type: MaterialType
@@ -228,15 +317,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
               ),*/
               Text(
-                'Your Bako' + newobd.length.toString() ,
-                style: TextStyle(fontSize: 25,color: HexColor("#175989"), fontWeight: FontWeight.bold),
+                'Your Bako',
+                style: TextStyle(fontSize: 25,color: theme.textTheme.headline1?.color, fontWeight: FontWeight.bold),
               ),
 
               Padding(
                 padding: const EdgeInsets.only(top: 5, bottom: 35),
                 child: Text(
                   'MODEL X',
-                  style: TextStyle(fontSize: 35,color: HexColor("#175989"), fontWeight: FontWeight.w200),
+                  style: TextStyle(fontSize: 35,color: theme.textTheme.headline1?.color, fontWeight: FontWeight.w200),
                 ),
               ),
 
@@ -252,20 +341,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '80%',
+                        batt.toString(),
                         style:
-                            TextStyle(fontSize: 40, color: Colors.black, fontWeight: FontWeight.w300),
+                        theme.textTheme.headline5,
                       ),
                       Text(
                         'Charged',
-                        style: TextStyle(fontWeight: FontWeight.bold , color: Colors.black),
+                        style: TextStyle(fontWeight: FontWeight.bold , color: theme.textTheme.headline1?.color),
                       )
                     ],
                   ),
                 ),
                 circularStrokeCap: CircularStrokeCap.round,
-                progressColor: kPrimaryColor,
-                backgroundColor: kProgressBackGroundColor,
+                progressColor: theme.highlightColor,
+                backgroundColor: theme.dialogBackgroundColor,
               ),
 
               Row(
@@ -274,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   SvgPicture.asset('lib/tesla_app/images/lighting.svg'),
                   Padding(
                     padding: const EdgeInsets.only(right: 25),
-                    child: Text('Charging.. 14 mins remaining', style: TextStyle(color: HexColor("#175989"), fontWeight: FontWeight.w200),
+                    child: Text('Charging.. 14 mins remaining', style: TextStyle(color: theme.textTheme.headline1?.color , fontWeight: FontWeight.w200)
                     ),
 
                   )
@@ -287,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   children: [
 
                     Card(
-                      color: kCardColor,
+                      color: theme.bottomAppBarColor,
                       elevation: 10,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
@@ -300,29 +389,25 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('kilometrage',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text('Today'),
+                                  style: TextStyle(fontWeight: FontWeight.bold , color: theme.textTheme.headline1?.color)),
+                              Text('Today' , style: TextStyle(color: theme.textTheme.headline1?.color)),
+
                               SizedBox(height: 10),
                               Center(
                                 child: RichText(
                                   text: TextSpan(children: [
                                     TextSpan(
-                                        text: this.newobd.last.speed.toString(),
-                                        style: TextStyle(
-                                            fontSize: 50,
-                                            fontWeight: FontWeight.bold,
-                                            color: kPrimaryColor)),
+                                        text:  kilometrage.toString(),
+                                        style: theme.textTheme.headline2),
                                     WidgetSpan(
                                       child: Transform.translate(
                                         offset: Offset(0, -12),
                                         child: Text('km',
-                                            style: TextStyle(
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                                color: kPrimaryColor)),
+                                            style: theme.textTheme.bodyText2,
                                       ),
-                                    )
-                                  ]),
+                                    ),
+                                    ),    ]),
+
                                 ),
                               )
                             ],
@@ -340,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
 
                     Card(
-                      color: kCardColor,
+                      color: theme.bottomAppBarColor,
                       elevation: 10,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0)),
@@ -353,16 +438,27 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Conduite',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text('Today'),
+                                  style: TextStyle(fontWeight: FontWeight.bold , color: theme.textTheme.headline1?.color) ),
+                              Text('Today', style: TextStyle(color: theme.textTheme.headline1?.color)),
                               SizedBox(height: 10),
-                              Center(
-                                child: Text('4.3',
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold,
-                                        color: kPrimaryColor)),
-                              )
+                          SizedBox(height: 10),
+                          Center(
+                            child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    text: conduite.toString(),
+                                    style: theme.textTheme.headline2),
+                                WidgetSpan(
+                                  child: Transform.translate(
+                                    offset: Offset(0, -12),
+                                    child: Text('h/min',
+                                      style: theme.textTheme.bodyText2,
+                                    ),
+                                  ),
+                                ),    ]),
+                            ),
+                            ),
+
                             ],
                           ),
 

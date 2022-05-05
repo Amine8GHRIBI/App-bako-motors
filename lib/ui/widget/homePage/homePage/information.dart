@@ -7,7 +7,7 @@ import 'car.dart';
 import 'moyenne.dart';
 
 
-Column information (Size size, ThemeData themeData) {
+Column information (Size size, ThemeData theme) {
   //
   return Column(
     children: [
@@ -35,7 +35,7 @@ Column information (Size size, ThemeData themeData) {
             //scrollDirection: Axis.horizontal,
             itemCount: moyenne.length,
             itemBuilder: (context, i) {
-              return buildMoy(i, size, themeData,);
+              return buildMoy(i, size, theme,);
             },
           ),
         ),

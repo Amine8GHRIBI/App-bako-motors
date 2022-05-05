@@ -1,7 +1,9 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speedometer/flutter_speedometer.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 import 'package:mini_project/DataBase/user_database.dart';
 import 'package:mini_project/data/OBDParametres.dart';
 import 'package:mini_project/ui/widget/speedo-widget.dart';
@@ -56,31 +58,37 @@ class _obd_homeState extends State<obd_home> {
       obds =await this.widget.database.obdDAO.retrieveAllOBD();
       debugPrint("obd diagno " + obds.length.toString());
       setState(() {});
-
       return obds;
-
   }
 
   List<int> ob =[];
   Future<List<int>> addOBD(UserDatabase db) async {
+    final DateTime now = DateTime.now();
+    final DateFormat formatterdate = DateFormat('yyyy-MM-dd');
+    final DateFormat formattertime = DateFormat('HH:mm:ss');
+
+    final String formatteddate = formatterdate.format(now);
+    final String formattedtime = formattertime.format(now);
+
+    print(formatteddate); // something like 2013-04-20
    // int i = context.read<ObdReader>().obdData.length;
     //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
 
-    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date_debut: '22/04/2022', car_id: 1, date_fin: '22/04/2022');
+    OBD obddtat= OBD( speed: "192", rpm: "50", CoolantTemperature: "12.1", ModuleVoltage: "12", date:formatteddate , car_id: 1, time: formattedtime , DistanceMILOn: '120');
       List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
-
       for (int idsaved in obdsaved) {
         ob.add(idsaved);
       }
-   // debugPrint("obd diagno " + ob.length.toString());
+    //debugPrint("obd diagno " + );
     setState(() {});
+    // debugPrint("obd diagno " + ob.length.toString());
     return obdsaved;
   }
 
   Future<List<int>> addOBDst(UserDatabase db ,Map<dynamic, dynamic> obdwatch ) async {
     List<int> ob =[];
     obdwatch.forEach((k, v) async {
-      OBD obddtat= OBD( speed: v[0], rpm: v[1], CoolantTemperature: v[2], ModuleVoltage: v[3], date_debut: '05/04/2022', car_id: 1, date_fin: '06/04/2022');
+      OBD obddtat= OBD( speed: v[0], rpm: v[1], CoolantTemperature: v[2], ModuleVoltage: v[3], date: '05/04/2022', car_id: 1, time: '06/04/2022', DistanceMILOn: '20');
       List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
       for (int idsaved in obdsaved) {
         ob.add(idsaved);
@@ -94,8 +102,10 @@ class _obd_homeState extends State<obd_home> {
 
     bool start = false;
     return MaterialApp(
+
         home: Scaffold(
           appBar: AppBar(
+
               title:  Text('OBD READER' + OBDSS.length.toString()),
               actions: [
 

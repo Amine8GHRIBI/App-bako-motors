@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_sparkline/flutter_sparkline.dart';
-import 'package:chart_sparkline/chart_sparkline.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -35,6 +34,7 @@ class dashboard extends StatefulWidget {
   State<dashboard> createState() => _dashboardState();
 }
 
+// ignore: camel_case_types
 class _dashboardState extends State<dashboard> with SingleTickerProviderStateMixin, TransitionRouteAware{
   bool _showDrawer = false;
   List<OBD> obds = [];
@@ -84,7 +84,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
     // int i = context.read<ObdReader>().obdData.length;
     //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
 
-    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date_debut: '22/04/2022', car_id: 1, date_fin: '22/04/2022');
+    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date : '22/04/2022', car_id:this.widget.user.id!, time: '22/04/2022', DistanceMILOn: '');
     List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
 
     for (int idsaved in obdsaved) {
@@ -152,6 +152,12 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
   @override
   void didPushAfterTransition() => _loadingController!.forward();
 
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+/*
   AppBar _buildAppBar(ThemeData theme) {
 
     final menuBtn = IconButton(
@@ -439,8 +445,8 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
     );
   }
 
-
-  @override
+*/
+  /*@override
   Widget build(BuildContext context) {
 
     final theme = Theme.of(context);
@@ -506,7 +512,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
           ),
         ),
       );
-    }
+    }*/
   }
 
 

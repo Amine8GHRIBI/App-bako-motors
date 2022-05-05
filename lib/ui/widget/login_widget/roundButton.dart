@@ -62,9 +62,8 @@ class _RoundButtonState extends State<RoundButton>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor =
-        Colors.primaries.where((c) => c == theme.primaryColor).first;
-
+    //final primaryColor =
+      //  Colors.primaries.where((c) => c == theme.primaryColor).first;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ScaleTransition(
@@ -82,7 +81,7 @@ class _RoundButtonState extends State<RoundButton>
                   child: FloatingActionButton(
                     // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
                     heroTag: null,
-                    backgroundColor:  HexColor("#175989"),
+                    backgroundColor:  theme.buttonColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
 
                     onPressed: () {
@@ -101,7 +100,7 @@ class _RoundButtonState extends State<RoundButton>
             Text(
               widget.label!,
               style:
-              theme.textTheme.caption!.copyWith(color: Colors.white),
+              theme.textTheme.caption!.copyWith(color:Colors.white),
               textAlign: TextAlign.center,
             ),
           ],
