@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DrawerUser extends StatefulWidget {
-  const DrawerUser({
+   DrawerUser({
     Key? key,
     required this.afterCollapse,
     required this.beforeCollapse,
     required this.isCollapsed,
+    required this.theme,
   }) : super(key: key);
   final bool isCollapsed;
   final String beforeCollapse;
   final String afterCollapse;
+  ThemeData theme;
   @override
   _DrawerUserState createState() => _DrawerUserState();
 }
@@ -36,7 +38,7 @@ class _DrawerUserState extends State<DrawerUser> {
             ? BorderRadius.circular((width * .15) / 2)
             : BorderRadius.circular(10),
         border: Border.all(
-          color: Colors.black,
+          color : this.widget.theme.iconTheme.color!,
 
           width: (widget.isCollapsed) ? 1 : 2,
         ),
@@ -46,7 +48,7 @@ class _DrawerUserState extends State<DrawerUser> {
           child: Text(
             (widget.isCollapsed) ? widget.afterCollapse : widget.beforeCollapse,
             style: TextStyle(
-              color: Colors.black,
+              color: this.widget.theme.iconTheme.color,
             ),
           ),
         ),

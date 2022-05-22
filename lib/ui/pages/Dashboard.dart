@@ -19,7 +19,7 @@ import '../widget/bottom_nav_item.dart';
 import '../widget/drawer/drawer.dart';
 import '../widget/login_widget/fadeIn.dart';
 import 'TransitionRouteObserver.dart';
-import 'battery.dart';
+import 'OBD.dart';
 
 
 
@@ -76,7 +76,6 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
     setState(() {});
 
     return obds;
-
   }
 
   List<int> ob =[];

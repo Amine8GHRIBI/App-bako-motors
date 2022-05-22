@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speedometer/flutter_speedometer.dart';
@@ -26,13 +28,16 @@ class obd_home extends StatefulWidget {
 }
 
 
-class _obd_homeState extends State<obd_home> {
+class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
 
   List<OBD> obds = [];
   List<OBD> OBDSS =[];
+  late Timer timer;
+
 
   @override
   void initState()  {
+    //timer = Timer.periodic( Duration(seconds: 1), (Timer t) =>addOBD(this.widget.database));
 
     super.initState();
     Future.delayed(Duration.zero,() {
@@ -52,6 +57,12 @@ class _obd_homeState extends State<obd_home> {
     },
     );
 
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   Future<List<OBD>> retrieveOBD(UserDatabase db) async {
@@ -135,7 +146,8 @@ class _obd_homeState extends State<obd_home> {
                     Icons.bluetooth_disabled,
                   ),
                   onPressed: () {
-                    Get.to( HomeScreen(database: this.widget.database ,user: this.widget.user) );}
+                   // Get.to( HomeScreen(database: this.widget.database ,user: this.widget.user) );
+                  }
                 ),
               ],
             ),

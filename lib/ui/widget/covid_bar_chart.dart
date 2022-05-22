@@ -40,7 +40,7 @@ class _CovidBarChartState extends State<CovidBarChart> {
             padding: const EdgeInsets.all(20.0),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Daily kilometrage',
+              'Hourly kilometrage',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.bold,
@@ -66,19 +66,19 @@ class _CovidBarChartState extends State<CovidBarChart> {
                     getTitles: (double value) {
                       switch (value.toInt()) {
                         case 0:
-                          return 'May 24';
+                          return '10H';
                         case 1:
-                          return 'May 25';
+                          return '11H';
                         case 2:
-                          return 'May 26';
+                          return '12H';
                         case 3:
-                          return 'May 27';
+                          return '14H';
                         case 4:
-                          return 'May 28';
+                          return '15H';
                         case 5:
-                          return 'May 29';
+                          return '16H';
                         case 6:
-                          return 'May 30';
+                          return '17H';
                         default:
                           return '';
                       }
@@ -113,7 +113,6 @@ class _CovidBarChartState extends State<CovidBarChart> {
                     .map((key, value) => MapEntry(
                     key,
                     BarChartGroupData(
-
                       x: key,
                       barRods: [
                         BarChartRodData(

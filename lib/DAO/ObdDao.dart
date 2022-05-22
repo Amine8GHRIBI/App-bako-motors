@@ -16,18 +16,13 @@ abstract class ObdDAO{
   @Query('DELETE * FROM OBD')
   Future<OBD?> deleteAllOBD();
 
-  @Query('SELECT * FROM OBD WHERE id = :id')
-  Future<OBD?> retrieveOBD(int id);
+  @Query('SELECT * FROM OBD WHERE car_id = :id')
+  Future<List<OBD>> retrieveOBDbycar(int id);
 
-  @Query('SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC')
-  Future<List<OBD>> retrieveLastOBD();
+  @Query('SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC WHERE id = :id')
+  Future<List<OBD>> retrieveLastOBD(int id);
 
-  @Query('SELECT * FROM OBD WHERE date = :date')
-  Future<List<OBD>> retrieveLastOBDByDate(String date);
-
-
-
-
-
+  @Query('SELECT * FROM OBD WHERE date = :date and car_id = :id' )
+  Future<List<OBD>> retrieveLastOBDByDate(String date , int id);
 
 }

@@ -185,6 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               tag: Constants.logoTag,
               child: Image.asset(
                 'assets/image/bako.png',
+                color: theme.iconTheme.color,
                 filterQuality: FilterQuality.high,
                 height: 30,
               ),
@@ -509,7 +510,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         }
         if (label == "Dashboard") {
           //buildCar(1, size, themeData);
-          Get.to( speedo() ,arguments: {"database" : this.widget.database , "user" : this.widget.user});
+          Get.to( speedo(theme : theme , database : this.widget.database));
           //Get.to( SpeedometerContainer(),arguments: {"database" : this.widget.database , "user" : this.widget.user});
         }
         if (label == "Maintenance") {

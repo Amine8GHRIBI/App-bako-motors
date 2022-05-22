@@ -75,7 +75,7 @@ class _SpeedometerContainerState extends State<SpeedometerContainer> {
                   )
               ),
               Center(
-                  child: Speedometer(
+                  child: speedometer(
                     speed: velocity,
                     speedRecord: highestVelocity,
                   )

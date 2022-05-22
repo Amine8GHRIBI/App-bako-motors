@@ -419,8 +419,8 @@ class _$ObdDAO extends ObdDAO {
   }
 
   @override
-  Future<OBD?> retrieveOBD(int id) async {
-    return _queryAdapter.query('SELECT * FROM OBD WHERE id = ?1',
+  Future<List<OBD>> retrieveOBDbycar(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM OBD WHERE car_id = ?1',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
             DistanceMILOn: row['DistanceMILOn'] as String,
@@ -435,24 +435,17 @@ class _$ObdDAO extends ObdDAO {
   }
 
   @override
-  Future<List<OBD>> retrieveLastOBD() async {
+  Future<List<OBD>> retrieveLastOBD(int id) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC',
-        mapper: (Map<String, Object?> row) => OBD(
-            id: row['id'] as int?,
-            DistanceMILOn: row['DistanceMILOn'] as String,
-            date: row['date'] as String,
-            time: row['time'] as String,
-            car_id: row['car_id'] as int,
-            speed: row['speed'] as String,
-            rpm: row['rpm'] as String,
-            CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String));
+        'SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => OBD(id: row['id'] as int?, DistanceMILOn: row['DistanceMILOn'] as String, date: row['date'] as String, time: row['time'] as String, car_id: row['car_id'] as int, speed: row['speed'] as String, rpm: row['rpm'] as String, CoolantTemperature: row['CoolantTemperature'] as String, ModuleVoltage: row['ModuleVoltage'] as String),
+        arguments: [id]);
   }
 
   @override
-  Future<List<OBD>> retrieveLastOBDByDate(String date) async {
-    return _queryAdapter.queryList('SELECT * FROM OBD WHERE date = ?1',
+  Future<List<OBD>> retrieveLastOBDByDate(String date, int id) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM OBD WHERE date = ?1 and car_id = ?2',
         mapper: (Map<String, Object?> row) => OBD(
             id: row['id'] as int?,
             DistanceMILOn: row['DistanceMILOn'] as String,
@@ -463,7 +456,7 @@ class _$ObdDAO extends ObdDAO {
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
             ModuleVoltage: row['ModuleVoltage'] as String),
-        arguments: [date]);
+        arguments: [date, id]);
   }
 
   @override

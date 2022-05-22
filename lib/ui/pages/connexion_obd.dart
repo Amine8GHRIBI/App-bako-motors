@@ -19,7 +19,7 @@ import 'AppColors.dart';
 
 class connexion extends StatefulWidget {
   ThemeData? theme;
- connexion({Key? key,required this.theme}) : super(key: key);
+ connexion({Key? key, this.theme}) : super(key: key);
 
   @override
   State<connexion> createState() => _connexionState();
@@ -155,7 +155,7 @@ class _connexionState extends State<connexion> {
             'Connexin OBD',
             style: TextStyle(color: this.widget.theme?.iconTheme.color),
           ),
-        backgroundColor: this.widget.theme?.cardColor,
+        backgroundColor: this.widget.theme?.bottomAppBarColor,
         iconTheme: IconThemeData(color: this.widget.theme?.iconTheme.color),
       ),
 
@@ -199,7 +199,7 @@ class _connexionState extends State<connexion> {
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: ListTile(
                             onTap: () {
-                              Get.to( slider_connexion(database: this.database, use: this.use));
+                              Get.to( slider_connexion(database: this.database, use: this.use , theme : this.widget.theme, car : _foundCars[index] ));
                             },
                             leading: Text(
                               _foundCars[index].name.toString(),

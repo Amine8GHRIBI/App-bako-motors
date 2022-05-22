@@ -55,7 +55,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
   }
 
   Future<List<OBD>> retrieveLastOBD(UserDatabase db) async {
-    obdss = await db.obdDAO.retrieveLastOBD();
+    obdss = await db.obdDAO.retrieveLastOBD(1);
 
     setState(()  {},);
     return obdss;
@@ -198,31 +198,15 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
 
     return Scaffold(
       appBar: _buildAppBar(theme),
-
-      //backgroundColor:HexColor("#175989"),
-      //HexColor("#175989"),
-      //Palette.primaryColor,
-     // appBar: CustomAppBar(),
       body: Container(
         color: theme.primaryColor,
-
-        /*decoration: BoxDecoration(
-
-    image: new DecorationImage(
-    fit: BoxFit.cover,
-
-    colorFilter: new ColorFilter.mode(HexColor("#175989"), BlendMode.softLight),
-    image: AssetImage(
-    'assets/image/back.png',
-    ),
-    ),),*/
         child : CustomScrollView(
         physics: ClampingScrollPhysics(),
         slivers: <Widget>[
           _buildHeader(theme),
           _buildRegionTabBar(theme),
-          _buildStatsTabBar(theme),
-          SliverPadding(
+         // _buildStatsTabBar(theme),
+         SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             sliver: SliverToBoxAdapter(
               child: StatsGrid(database: this.widget.database ,user: this.widget.user),
@@ -294,7 +278,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
       sliver: SliverToBoxAdapter(
         child: DefaultTabController(
           length: 3,
-          child: TabBar(
+         child: TabBar(
             indicatorColor: Colors.transparent,
             labelStyle: Styles.tabTextStyle,
             labelColor: theme.secondaryHeaderColor,

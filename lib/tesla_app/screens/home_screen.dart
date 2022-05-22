@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../DataBase/user_database.dart';
+import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
 import '../../data/userEntity.dart';
 import '../../ui/Constants.dart';
@@ -20,7 +21,9 @@ class HomeScreen extends StatefulWidget {
 
    UserDatabase database;
    User user;
-   HomeScreen({Key? key,required this.database, required this.user} ) : super(key: key);
+   Car car;
+   ThemeData? theme;
+   HomeScreen({Key? key,required this.database, required this.user , required this.car , this.theme} ) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -52,11 +55,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   Future<List<OBD>> retrieveOBDBydate(UserDatabase db , String date) async {
 
-    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date);
+    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date, this.widget.car.id!.toInt());
 
     conduiteheure = (int.parse(obds.last.time.substring(0,2))) - (int.parse(obds.first.time.substring(0,2)));
     conduiteminute = int.parse(obds.last.time.substring(3,5)) - int.parse(obds.first.time.substring(3,5));
-    conduite = conduiteheure.toString() + ':' + conduiteminute.toString();
+    conduite = conduiteheure.toString() + ':' + "0";
 
     for(OBD o in obdsbydate){
       kilometrage += int.parse(o.DistanceMILOn);
@@ -422,8 +425,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     SizedBox(
                       width: 20,
                     ),
-
-
                     Card(
                       color: theme.bottomAppBarColor,
                       elevation: 10,
@@ -458,16 +459,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 ),    ]),
                             ),
                             ),
-
                             ],
                           ),
-
                         ),
-
                       ),
-
                     )
-
                   ],
 
                 ),
@@ -484,19 +480,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               child:
               DrawerWidget(
                 closeFunction: showDrawer,),
-            )),
+            )
+            ),
           ]
-
+            ),
+            ),
           ),
-
-    ),
-
         ),
-
-        ),
-
-
-
     );
   }
 }

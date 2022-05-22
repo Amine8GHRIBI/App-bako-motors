@@ -29,7 +29,6 @@ import 'package:mini_project/ui/pages/user-page.dart';
 
 import 'DataBase/user_database.dart';
 import 'data/OBDParametres.dart';
-import 'data/car_page.dart';
 import 'data/model.dart';
 import 'data/themes_data.dart';
 import 'data/userEntity.dart';
@@ -152,7 +151,7 @@ class _MyAppState extends State<MyApp> {
           '/login' : (context) => UserLogin(),
           '/home' : (context) => car_page(),
           '/users' : (context) => userPage(),
-          '/cars' : (context) => carPage(),
+
           '/user'  : (context) => userDetails(),
           '/conn' : (context) => connectivity_home(),
           '/profile':(context) => profile_page(),
@@ -167,14 +166,10 @@ class _MyAppState extends State<MyApp> {
           '/app' : (context) => TeslaApp(),
           //'/slider' : (context) => slider_connexion(),
         },
-
-
-       // initialRoute: '/log',
-
-      );
+      // initialRoute: '/log',
+    );
     }
-
-      }
+}
 
 
 

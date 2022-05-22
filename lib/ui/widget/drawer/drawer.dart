@@ -1,6 +1,8 @@
+import 'package:app_settings/app_settings.dart';
 import
 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mini_project/ui/pages/profile_page.dart';
 import 'package:mini_project/ui/pages/user-page.dart';
 
 import 'drawer_collapse.dart';
@@ -93,7 +95,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     Size size = MediaQuery.of(context).size; //check the size of device
-    ThemeData themeData = Theme.of(context);
+    ThemeData theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white12,
@@ -115,7 +117,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   bottom: height * .04,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(
                     20,
                   ),
@@ -127,7 +129,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             height: 23,
                           ),
                           DrawerUser(
-
+                            theme : theme,
                             afterCollapse: 'PR',
                             beforeCollapse: 'Parametres',
                             isCollapsed: isCollapsed,
@@ -135,12 +137,11 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           DrawerItem(
                             icon:new IconButton(
-                                icon: Icon(Icons.account_circle_rounded,color:  HexColor("#175989"),
+                                icon: Icon(Icons.account_circle_rounded,color:  theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
-                                  Navigator.pushNamed(context , '/profile');
-                                }),
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => profile_page()));                                }),
 
                             label: Text(
                               'Profile         ',
@@ -155,7 +156,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
                           DrawerItem(
                             icon:new IconButton(
-                                icon: Icon(Icons.bluetooth_connected,color: HexColor("#175989"),
+                                icon: Icon(Icons.bluetooth_connected,color: theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
@@ -175,17 +176,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           DrawerItem(
                             icon:new IconButton(
-                                icon: Icon(Icons.ev_station,color: Colors.black,
+                                icon: Icon(Icons.ev_station,color: theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
-                                  Navigator.pushNamed(context , '/conn');
+                                  AppSettings.openBluetoothSettings();
                                 }),
 
                             label: Text(
                               'station      ',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: theme.iconTheme.color,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
@@ -195,17 +196,17 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           DrawerItem(
                             icon:new IconButton(
                                 icon: Icon(Icons.wifi
-                                  ,color: Colors.black,
+                                  ,color: theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
-                                  Navigator.pushNamed(context , '/conn');
+                                  AppSettings.openWIFISettings();
                                 }),
 
                             label: Text(
                               'WIFI',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: theme.iconTheme.color,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
@@ -224,7 +225,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             label: Text(
                               'DECONNEXION',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: theme.iconTheme.color,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),

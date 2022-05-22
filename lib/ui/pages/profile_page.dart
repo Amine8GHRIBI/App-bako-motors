@@ -101,7 +101,16 @@ class _profile_pageState extends State<profile_page> {
     theme = routes["theme"];
 
     return Scaffold(
-      backgroundColor: theme.cardColor,
+      appBar:
+      AppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(color: theme.iconTheme.color),
+        ),
+        backgroundColor: theme.bottomAppBarColor,
+        iconTheme: IconThemeData(color: theme.iconTheme.color),
+      ),
+      backgroundColor: theme.cardTheme.color,
       body: Container(
         width: MediaQuery
             .of(context)
@@ -436,9 +445,9 @@ class _profile_pageState extends State<profile_page> {
 
             ),
           InkWell(
-            onTap: () {
-              Get.to( slider_connexion(database: this.database, use: this.user));
-            },
+           /* onTap: () {
+              Get.to( slider_connexion(database: this.database, use: this.user,theme:theme,));
+            },*/
         child :          Expanded(
                   child: Padding(
 

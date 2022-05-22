@@ -98,7 +98,7 @@ class _StatsGridState extends State<StatsGrid> {
           Flexible(
             child: Row(
               children: <Widget>[
-                _buildStatCard('Max speed', max.toString() + 'KM', Colors.orange),
+                _buildStatCard('Max speed', max.toString() + ' KM', Colors.orange),
                 _buildStatCard('Max kilometrage',maxkilo.toString() + ' KM' , Colors.red),
               ],
             ),

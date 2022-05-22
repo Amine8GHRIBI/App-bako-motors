@@ -1,18 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/scrollbar_behavior_enum.dart';
+import 'package:mini_project/ui/pages/Qrcode/home.dart';
 import 'package:mini_project/ui/pages/connexion_obd.dart';
+import 'package:mini_project/ui/pages/loading_conx.dart';
 
 import '../../DataBase/user_database.dart';
+import '../../data/CarEntity.dart';
 import '../../data/userEntity.dart';
 
 
 class slider_connexion extends StatefulWidget {
   final UserDatabase database;
   final User? use;
-  const slider_connexion({Key? key,  required this.database, required this.use,}) : super(key: key);
+  ThemeData? theme;
+  Car? car;
+
+   slider_connexion({Key? key,  required this.database, required this.use, required this.theme , this.car }) : super(key: key);
 
   @override
   State<slider_connexion> createState() => _slider_connexionState();
@@ -47,7 +55,7 @@ class _slider_connexionState extends State<slider_connexion> {
         ),
         marginDescription:
         EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0, bottom: 70.0),
-        centerWidget: Text("Replace this with a custom widget",
+        centerWidget: Text("",
             style: TextStyle(color: Colors.white)),
           backgroundImage: "assets/images/obdii.png",
         directionColorBegin: Alignment.topLeft,
@@ -100,15 +108,13 @@ class _slider_connexionState extends State<slider_connexion> {
 
   void onDonePress() {
     // Do what you want
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => HomeScreen()),
-    // );
+    Get.to(loading(user : this.widget.use , database : this.widget.database , car : this.widget.car ));
   }
 
   void onPrevPress() {
     // Do what you want
-    Navigator.of(context).pushNamed( '/cnxobd',arguments: {"database" : widget.database, "user" : widget.use});
+    //Navigator.of(context).pushNamed( '/cnxobd',arguments: {"database" : widget.database, "user" : widget.use});
+    Get.back();
     //Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => connexion() ,), (r) => false );
   }
 

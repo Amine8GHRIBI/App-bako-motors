@@ -61,11 +61,10 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
             ),
             Container(
               padding: const EdgeInsets.all(20.0),
-              color : this.widget.theme.cardTheme.color,
-
-              /*decoration: BoxDecoration(
+                decoration: BoxDecoration(
+                  color : this.widget.theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(20),
-                  gradient: kCardGradient),*/
+                  ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -207,9 +206,10 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                     percent: 0.8,
                     lineHeight: 20,
                     animationDuration: 2500,
-                    center: Text('90.0%'),
+                    center: Text('90.0%', style: TextStyle(color : this.widget.theme.secondaryHeaderColor)),
                     linearGradient: LinearGradient(
-                        colors: [theme.dialogBackgroundColor, theme.dialogBackgroundColor]),
+
+                        colors: [this.widget.theme.highlightColor, this.widget.theme.highlightColor]),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 20),

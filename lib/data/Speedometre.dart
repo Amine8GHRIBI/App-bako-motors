@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 import 'SpeedometerPainter.dart';
 
-class Speedometer extends StatelessWidget {
+class speedometer extends StatelessWidget {
 
-  Speedometer({
+  speedometer({
     required this.speed,
     required this.speedRecord,
     this.size = 300

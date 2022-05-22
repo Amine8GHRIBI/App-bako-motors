@@ -6,6 +6,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../DataBase/user_database.dart';
+import '../data/CarEntity.dart';
 import '../data/userEntity.dart';
 import '../ui/pages/Loging_screen.dart';
 import '../ui/pages/setting_screen.dart';
@@ -116,10 +117,10 @@ class TeslaApp extends StatelessWidget {
     debugShowCheckedModeBanner: false,
     theme: theme,
     darkTheme: darkTheme,
-        home: BaseScreen(database: this.database,user: this.user),
+        home: BaseScreen(database: this.database,user: this.user , car: Car(name: "a", model: "a", year: "a", license_Plate: "a", initial_mileage: "a") ),
         routes: {
           '/setting' : (context)=> SettingsScreen(),
-          '/base' : (context) => BaseScreen(database: this.database,user: this.user),
+          '/base' : (context) => BaseScreen(database: this.database,user: this.user , car: Car(name: "a", model: "a", year: "a", license_Plate: "a", initial_mileage: "a")),
         },
     // initialRoute: '/base',
     ),

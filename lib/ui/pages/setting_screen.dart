@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  bool isenabled =false;
+  bool isenabledwifi = false;
   bool lockInBackground = true;
   bool notificationsEnabled = true;
   bool darkmode = false;
@@ -49,7 +53,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ThemeData theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title:  Text('Diagnostics', style: TextStyle(color : theme.primaryColor),), backgroundColor: theme.cardTheme.color),
+      appBar:
+      AppBar(
+        title: Text(
+          'Settings',
+          style: TextStyle(color: theme.iconTheme.color),
+        ),
+        backgroundColor: theme.bottomAppBarColor,
+        iconTheme: IconThemeData(color: theme.iconTheme.color),
+      ),
       body: buildSettingsList(),
     );
   }
@@ -60,17 +72,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return SettingsList(
       sections: [
         SettingsSection(
-          title:   Text( 'Commun ',
+          title:   Text( 'Commun',
             textAlign: TextAlign.right,
 
             style: GoogleFonts.poppins(
-              color:   theme.primaryColor,
+              color:   theme.iconTheme.color,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),),
           tiles: [
             SettingsTile(
-              title: Text('Language'),
+              title: Text('Language',
+                  style: GoogleFonts.poppins(
+
+                  color:   theme.iconTheme.color,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+    ),),
               //title: const Text('English'),
               leading: Icon(Icons.language),
               onPressed: (context) {
@@ -119,45 +137,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
           tiles: [
 
             SettingsTile.switchTile(
-              title: Text('Lock app in background'),
+              title: Text('Mode theme'),
               leading: Icon(Icons.dark_mode),
               onToggle: (bool value) {
                 print(value);
                 if (value == true) {
+
                   AdaptiveTheme.of(context).setDark();
                   debugPrint("true dark");
-                  // iconAdress = 'assets/icon/dark-icon.png';
-                  //icon: Image.asset('assets/icon/dark-icon.png');
+                  lockInBackground =true;
                 } else {
+
                   AdaptiveTheme.of(context).setLight();
+                  lockInBackground =false;
+
                   debugPrint("false light");
 
                   //icon: Image.asset('assets/icons/light-icon.png');
                 }
                 setState(() {
-                  lockInBackground = value;
-                  notificationsEnabled = value;
                   darkmode = value;
                 });
               },
                initialValue: lockInBackground,
             ),
             SettingsTile.switchTile(
-              title: Text('Use fingerprint'),
-              //subtitle: 'Allow application to access stored fingerprint IDs.',
+              title: Text('WIFI'),
+              //subtitle: 'Allow application to access stored fingerprint IDs.',          AppSettings.openWIFISettings();
               leading: Icon(Icons.fingerprint),
-              onToggle: (bool value) {},
+              onToggle: (bool value) {
+                if (value == true) {
+                  AppSettings.openWIFISettings();
+                  isenabledwifi =true;                }
+                else {
+                  AppSettings.openWIFISettings();
+                  isenabledwifi =false;
+                }
+
+                setState(() {
+
+                });
+
+              },
               //switchValue: false,
-              initialValue: false,
+              initialValue: isenabledwifi,
             ),
 
             SettingsTile.switchTile(
-              title: Text('Enable Notifications'),
+              title: Text('Bluetooth'),
               enabled: notificationsEnabled,
               leading: Icon(Icons.notifications_active),
               //switchValue: true,
-              onToggle: (value) {},
-              initialValue: true,
+              onToggle: (value) {
+                  if (value == true) {
+                    AppSettings.openBluetoothSettings();
+                    isenabled = true;
+                  } else {
+                    AppSettings.openBluetoothSettings();
+                    isenabled =false;
+                 }
+                 setState(() {
+
+                });
+
+              },
+              initialValue: isenabled,
             ),
           ],
         ),
