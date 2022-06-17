@@ -1,8 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
-import '../../config/styles.dart';
+
 
 class CovidBarChart extends StatefulWidget {
   final List<double> covidCases;
@@ -29,7 +28,7 @@ class _CovidBarChartState extends State<CovidBarChart> {
       height: 350.0,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20.0),
           topRight: Radius.circular(20.0),
         ),
@@ -48,7 +47,7 @@ class _CovidBarChartState extends State<CovidBarChart> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width * 0.85,
             child: BarChart(
               BarChartData(

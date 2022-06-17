@@ -2,7 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 
 class GalleriePage extends StatefulWidget {
-  GalleriePage({Key? key}) : super(key: key);
+  const GalleriePage({Key? key}) : super(key: key);
 
   @override
   State<GalleriePage> createState() => _GalleriePageState();
@@ -14,6 +14,7 @@ class _GalleriePageState extends State<GalleriePage> {
   late String iconAdress;
 
 
+  @override
   void initState() {
     super.initState();
     getCurrentTheme();
@@ -39,14 +40,14 @@ class _GalleriePageState extends State<GalleriePage> {
     ThemeData theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Gallerie'),),
+      appBar: AppBar(title: const Text('Gallerie'),),
       body: Column (
         children: [
       Center(
         child: Text("Gallerie page ",style:  theme.textTheme.headline6,),
       ),
     SwitchListTile(
-    title: Text('Mode sombre'),
+    title: const Text('Mode sombre'),
     value: darkmode,
     activeColor: Colors.orange,
     onChanged: (bool value) {

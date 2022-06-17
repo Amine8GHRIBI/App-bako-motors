@@ -1,14 +1,9 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/data/CarEntity.dart';
-import 'package:mini_project/ui/pages/slider_page.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarUserEntity.dart';
@@ -21,7 +16,7 @@ import '../../data/userEntity.dart';
 class profile_page extends StatefulWidget {
 
 
-  profile_page({Key? key}) : super(key: key);
+  const profile_page({Key? key}) : super(key: key);
 
   @override
   State<profile_page> createState() => _profile_pageState();
@@ -39,23 +34,23 @@ class _profile_pageState extends State<profile_page> {
 
 
   Future<List<caruser>> retrievCarsusers() async {
-    return await this.database.caruserDAO.retrieveAllcarsusers();
+    return await database.caruserDAO.retrieveAllcarsusers();
   }
 
   Future<User?> retrieveUserbyid(int id) async {
-    user = await this.database.userDAO.retrieveUser(id);
+    user = await database.userDAO.retrieveUser(id);
     return user;
   }
 
-  Future<int> addcar(UserDatabase db ,String name , String model ,String year ,String license_Plate ,String initial_mileage ) async {
+  Future<int> addcar(UserDatabase db ,String name , String model ,String year ,String licensePlate ,String initialMileage ) async {
     //, String phoneNumber , String birthday , String email,String  adresse
-    Car firstcar = Car(name : name, model : model, year :year ,license_Plate: license_Plate, initial_mileage : initial_mileage );
-     int id_car =  await db.carDAO.insertCar(firstcar);
+    Car firstcar = Car(name : name, model : model, year :year ,license_Plate: licensePlate, initial_mileage : initialMileage );
+     int idCar =  await db.carDAO.insertCar(firstcar);
 
      debugPrint("car add " + firstcar.name );
-    List<int> carusers = await this.addusercar(db, id_car, 1);
+    List<int> carusers = await addusercar(db, idCar, 1);
     //User firstUser = User(name: "amine ", lastName: "ghribi", phoneNumber : "94574896" , email : "agh@gmail.com ", birthday :"19595", adresse :"gabes ");
-    return id_car;
+    return idCar;
   }
 
   Future<List<int>> addusercar(UserDatabase db , int idcar , int iduser  ) async {
@@ -68,7 +63,7 @@ class _profile_pageState extends State<profile_page> {
   }
 
   Future<List<Car>> retrievCarsByuser(int id ) async {
-    List<caruser> carsuser = await this.database.caruserDAO.findcaridbyuserid(id);
+    List<caruser> carsuser = await database.caruserDAO.findcaridbyuserid(id);
     List<int> idcars = [] ;
     List<Car> cars =[];
     for (caruser cu in carsuser){
@@ -76,7 +71,7 @@ class _profile_pageState extends State<profile_page> {
       idcars.add(cu.id_car);
     }
     for (int id in idcars){
-      Car? cr = await this.database.carDAO.retrieveCar(id);
+      Car? cr = await database.carDAO.retrieveCar(id);
       cars.add(cr!);
     }
 
@@ -111,7 +106,7 @@ class _profile_pageState extends State<profile_page> {
         iconTheme: IconThemeData(color: theme.iconTheme.color),
       ),
       backgroundColor: theme.cardTheme.color,
-      body: Container(
+      body: SizedBox(
         width: MediaQuery
             .of(context)
             .size
@@ -132,9 +127,9 @@ class _profile_pageState extends State<profile_page> {
                     .of(context)
                     .size
                     .height / 4,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image : DecorationImage(
-                      image : new ExactAssetImage('assets/image/dash.jpg'),
+                      image : ExactAssetImage('assets/image/dash.jpg'),
                         fit: BoxFit.cover,
                       // height: 30,
                     ),
@@ -167,7 +162,7 @@ class _profile_pageState extends State<profile_page> {
               left: 10.0,
 
             child: Container(
-              padding:  EdgeInsets.all(2.3),
+              padding:  const EdgeInsets.all(2.3),
               color: theme.cardColor,
                   width: 340.0,
                  height: MediaQuery
@@ -207,7 +202,7 @@ class _profile_pageState extends State<profile_page> {
               top: 340.0,
               left: 20.0,
               child: Container(
-                  padding:  EdgeInsets.all(2.3),
+                  padding:  const EdgeInsets.all(2.3),
                   color: theme.cardColor,
 
                 width: 320.0,
@@ -232,7 +227,7 @@ class _profile_pageState extends State<profile_page> {
                         onDismissed: (direction) {
                           if (direction == DismissDirection.startToEnd) {
                             Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text("Delete")));
+                                const SnackBar(content: Text("Delete")));
                             if (snapshot.data!.contains(snapshot.data!.removeAt(index))) {
                               setState(() {
                                 snapshot.data!.remove(snapshot.data!.removeAt(index));
@@ -241,7 +236,7 @@ class _profile_pageState extends State<profile_page> {
                           } else {
                             if (direction == DismissDirection.endToStart) {
                               Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text("Archive"))
+                                  const SnackBar(content: Text("Archive"))
                               );
                               // Archive functionality
                             }
@@ -255,7 +250,7 @@ class _profile_pageState extends State<profile_page> {
           ],
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
               context: context,
@@ -272,8 +267,8 @@ class _profile_pageState extends State<profile_page> {
 
                 return AlertDialog(
                   backgroundColor: theme.cardTheme.color,
-                  title: Text("New car"),
-                  content: Container(
+                  title: const Text("New car"),
+                  content: SizedBox(
                     height: 280.0,
                     child: Column(
                       children: <Widget>[
@@ -361,14 +356,14 @@ class _profile_pageState extends State<profile_page> {
                   actions: <Widget>[
                     RaisedButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)
+                          borderRadius: BorderRadius.circular(30.0)
                       ),
                       color: theme.bottomAppBarColor,
-                      child: Text("Add", style: new TextStyle(
+                      child: const Text("Add", style: TextStyle(
                           color: Colors.white
                       ),),
                       onPressed: () {
-                        this.addcar(database ,name, model,year,license_Plate, initial_mileage);
+                        addcar(database ,name, model,year,license_Plate, initial_mileage);
 
                         setState(() {
 
@@ -385,14 +380,14 @@ class _profile_pageState extends State<profile_page> {
           );
         },
         backgroundColor:  theme.primaryColor,
-        foregroundColor: Color(0xffffffff),
+        foregroundColor: const Color(0xffffffff),
         tooltip: "Increment",
-        child: new Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         color: theme.primaryColor,
-        shape: CircularNotchedRectangle(
+        shape: const CircularNotchedRectangle(
 
         ),
         child: Row(
@@ -400,14 +395,14 @@ class _profile_pageState extends State<profile_page> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
-              icon: Icon(FontAwesomeIcons.stickyNote),
+              icon: const Icon(FontAwesomeIcons.stickyNote),
               color: Colors.white,
               onPressed: () {
 
               },
             ),
             IconButton(
-              icon: Icon(FontAwesomeIcons.search),
+              icon: const Icon(FontAwesomeIcons.search),
               color: Colors.white,
               onPressed: () {
 
@@ -423,7 +418,7 @@ class _profile_pageState extends State<profile_page> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
 
-      child: Container(
+      child: SizedBox(
 
         height: 80.0,
         child: Material(
@@ -509,7 +504,7 @@ class _profile_pageState extends State<profile_page> {
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-                icon: Icon(FontAwesomeIcons.solidTrashAlt),
+                icon: const Icon(FontAwesomeIcons.solidTrashAlt),
                 color: Colors.white,
                 onPressed: () {
                   setState(() {
@@ -520,7 +515,7 @@ class _profile_pageState extends State<profile_page> {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-                icon: Icon(FontAwesomeIcons.archive),
+                icon: const Icon(FontAwesomeIcons.archive),
                 color: Colors.white,
                 onPressed: () {
                   setState(() {

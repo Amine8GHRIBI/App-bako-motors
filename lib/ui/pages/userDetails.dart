@@ -1,13 +1,9 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/userEntity.dart';
-import '../widget/profile-widget/appbar_widget.dart';
 import '../widget/profile-widget/button_widget.dart';
 import '../widget/profile-widget/numbers_widget.dart';
-import '../widget/profile-widget/profile_widget.dart';
 
 class userDetails extends StatefulWidget {
   const userDetails({Key? key}) : super(key: key);
@@ -34,7 +30,7 @@ class _userDetailsState extends State<userDetails> {
     return Scaffold(
           //appBar: buildAppBar(context),
           body: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             children: [
 
               const SizedBox(height: 24),
@@ -54,12 +50,12 @@ class _userDetailsState extends State<userDetails> {
     children: [
       Text(
         user.name,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
       ),
       const SizedBox(height: 4),
       Text(
         user.name.toString(),
-        style: TextStyle(color: Colors.grey),
+        style: const TextStyle(color: Colors.grey),
       )
     ],
   );
@@ -70,11 +66,11 @@ class _userDetailsState extends State<userDetails> {
   );
 
   Widget buildAbout(User user) => Container(
-    padding: EdgeInsets.symmetric(horizontal: 48),
+    padding: const EdgeInsets.symmetric(horizontal: 48),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'About',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),

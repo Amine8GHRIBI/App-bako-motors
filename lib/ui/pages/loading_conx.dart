@@ -1,14 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:mini_project/tesla_app/screens/base_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:widget_loading/widget_loading.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
+import '../../data/model.dart';
 import '../../data/userEntity.dart';
 
 class loading extends StatefulWidget {
@@ -16,7 +14,7 @@ class loading extends StatefulWidget {
   User? user;
   Car? car;
   ThemeData? theme;
-  loading({Key? key , this.car , this.database , this.user }) : super(key: key);
+  loading({Key? key , this.car , this.database , this.user ,this.theme }) : super(key: key);
 
   @override
   State<loading> createState() => _loadingState();
@@ -33,7 +31,8 @@ class _loadingState extends State<loading> {
   void initState() {
     super.initState();
 
-    _subscription = Stream.periodic(Duration(seconds: 4)).listen((i) {
+    _subscription = Stream.periodic(const Duration(seconds: 12)).listen((i) {
+      context.read<ObdReader>().startOBD();
       setState(() {
         loading = !loading;
         counter++;
@@ -41,21 +40,21 @@ class _loadingState extends State<loading> {
     });
 
     future = Future.delayed(
-      Duration(seconds: 4),
+      const Duration(seconds: 4),
           () => Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: ListTile(
           onTap: () {
-            Get.to(BaseScreen(user: this.widget.user!,database: this.widget.database!, car: this.widget.car!,));
+            //Get.to(BaseScreen(user: this.widget.user!,database: this.widget.database!, car: this.widget.car!,theme: this.widget.theme,));
+            Navigator.pushNamed(context , '/app' , arguments: {"database" : widget.database , "user" : widget.user , "car":widget.car});
           },
           leading: Text(
             'Loaded!',
             style: Theme.of(context).textTheme.headline5,
           ),
-          trailing: Icon(
+          trailing: const Icon(
             Icons.account_circle,
             size: 50,
-            
           ),
         ),
       ),
@@ -72,12 +71,13 @@ class _loadingState extends State<loading> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Example'),
+        backgroundColor: widget.theme!.primaryColor,
+        title: const Text('Example'),
       ),
       body: Center(
         child: ConstrainedBox(
           // Constraints for a nicer look in web demo
-          constraints: BoxConstraints.loose(Size.fromWidth(750.0)),
+          constraints: BoxConstraints.loose(const Size.fromWidth(750.0)),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
@@ -99,7 +99,7 @@ class _loadingState extends State<loading> {
                           width: width,
                           height: height,
                           decoration: BoxDecoration(
-                              color: Colors.purple,
+                              color: widget.theme!.primaryColor,
                               borderRadius: BorderRadius.circular(5.0))),
                       wiperWidth: 50),
                 ],
@@ -179,7 +179,7 @@ class LoadingScaffold extends StatefulWidget {
 }
 
 class _LoadingScaffoldState extends State<LoadingScaffold> {
-  Future future = Future.delayed(Duration(seconds: 3));
+  Future future = Future.delayed(const Duration(seconds: 3));
 
   late StreamSubscription _subscription;
   bool loading = true;
@@ -188,7 +188,7 @@ class _LoadingScaffoldState extends State<LoadingScaffold> {
   void initState() {
     super.initState();
 
-    _subscription = Stream.periodic(Duration(seconds: 4)).listen((i) {
+    _subscription = Stream.periodic(const Duration(seconds: 4)).listen((i) {
       setState(() {
         loading = !loading;
       });
@@ -207,8 +207,8 @@ class _LoadingScaffoldState extends State<LoadingScaffold> {
       child: CircularWidgetLoading(
         padding: EdgeInsets.zero,
         child: Scaffold(
-          appBar: AppBar(title: Text('Example')),
-          body: Center(child: Text('Loaded!')),
+          appBar: AppBar(title: const Text('connexion OBD')),
+          body: const Center(child: Text('Loaded!')),
         ),
         loading: loading,
       ),

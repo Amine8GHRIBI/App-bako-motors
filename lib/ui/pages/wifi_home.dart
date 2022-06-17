@@ -1,8 +1,5 @@
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:wifi_iot/wifi_iot.dart';
 
 
 class wifi_home extends StatefulWidget {
@@ -43,7 +40,7 @@ class _wifi_homeState extends State<wifi_home> {
                 children: List.generate(actionItems.length, (index) {
                   return Center(
                       child: ButtonTheme(
-                        colorScheme: ColorScheme.dark(),
+                        colorScheme: const ColorScheme.dark(),
                         minWidth: 150.0,
                         child: actionItems[index],
                       ));
@@ -55,91 +52,91 @@ class _wifi_homeState extends State<wifi_home> {
 
     actionItems.addAll([
       ElevatedButton(
-        child: Text("WIFI"),
+        child: const Text("WIFI"),
         onPressed: () {
           AppSettings.openWIFISettings();
         },
       ),
       ElevatedButton(
-        child: Text("Location"),
+        child: const Text("Location"),
         onPressed: () {
           AppSettings.openLocationSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Security"),
+        child: const Text("Security"),
         onPressed: () {
           AppSettings.openSecuritySettings();
         },
       ),
       ElevatedButton(
-        child: Text("Lock & Password"),
+        child: const Text("Lock & Password"),
         onPressed: () {
           AppSettings.openLockAndPasswordSettings();
         },
       ),
       ElevatedButton(
-        child: Text("App Settings"),
+        child: const Text("App Settings"),
         onPressed: () {
           AppSettings.openAppSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Bluetooth"),
+        child: const Text("Bluetooth"),
         onPressed: () {
           AppSettings.openBluetoothSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Data Roaming"),
+        child: const Text("Data Roaming"),
         onPressed: () {
           AppSettings.openDataRoamingSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Date"),
+        child: const Text("Date"),
         onPressed: () {
           AppSettings.openDateSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Display"),
+        child: const Text("Display"),
         onPressed: () {
           AppSettings.openDisplaySettings();
         },
       ),
       ElevatedButton(
-        child: Text("Notification"),
+        child: const Text("Notification"),
         onPressed: () {
           AppSettings.openNotificationSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Sound"),
+        child: const Text("Sound"),
         onPressed: () {
           AppSettings.openSoundSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Internal Storage"),
+        child: const Text("Internal Storage"),
         onPressed: () {
           AppSettings.openInternalStorageSettings();
         },
       ),
       ElevatedButton(
-        child: Text("Battery optimization"),
+        child: const Text("Battery optimization"),
         onPressed: () {
           AppSettings.openBatteryOptimizationSettings();
         },
       ),
       ElevatedButton(
-        child: Text("NFC"),
+        child: const Text("NFC"),
         onPressed: () {
           AppSettings.openNFCSettings();
         },
       ),
       ElevatedButton(
-        child: Text("VPN"),
+        child: const Text("VPN"),
         onPressed: () {
           AppSettings.openVPNSettings(
             asAnotherTask: true,
@@ -147,7 +144,7 @@ class _wifi_homeState extends State<wifi_home> {
         },
       ),
       ElevatedButton(
-        child: Text("Device Settings"),
+        child: const Text("Device Settings"),
         onPressed: () {
           AppSettings.openDeviceSettings(
             asAnotherTask: true,
@@ -155,7 +152,7 @@ class _wifi_homeState extends State<wifi_home> {
         },
       ),
       ElevatedButton(
-        child: Text("Accessibility"),
+        child: const Text("Accessibility"),
         onPressed: () {
           AppSettings.openAccessibilitySettings(
             asAnotherTask: true,
@@ -163,7 +160,7 @@ class _wifi_homeState extends State<wifi_home> {
         },
       ),
       ElevatedButton(
-        child: Text("Developer"),
+        child: const Text("Developer"),
         onPressed: () {
           AppSettings.openDevelopmentSettings(
             asAnotherTask: true,
@@ -171,7 +168,7 @@ class _wifi_homeState extends State<wifi_home> {
         },
       ),
       ElevatedButton(
-        child: Text("Hotspot"),
+        child: const Text("Hotspot"),
         onPressed: () {
           AppSettings.openHotspotSettings(
             asAnotherTask: true,

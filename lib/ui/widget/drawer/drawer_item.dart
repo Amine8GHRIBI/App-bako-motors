@@ -22,7 +22,7 @@ class _DrawerItemState extends State<DrawerItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         top: 30,
       ),
       child: Row(
@@ -35,7 +35,7 @@ class _DrawerItemState extends State<DrawerItem> {
           (widget.isCollapsed)
               ? Container()
               : AnimatedOpacity(
-                  duration: Duration(
+                  duration: const Duration(
                     seconds: 1,
                   ),
                   opacity: (widget.isCollapsed) ? 0 : 1,

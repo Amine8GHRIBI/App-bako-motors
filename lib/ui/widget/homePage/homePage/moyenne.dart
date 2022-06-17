@@ -1,15 +1,27 @@
-import 'dart:math';
 
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:unicons/unicons.dart';
-import '../../../../data/Moyenne.dart';
-import '../../../../data/cars.dart';
+import '../../../../data/CarEntity.dart';
 
 
-Padding buildMoy(int i, Size size, ThemeData theme) {
+Padding buildMoy(int i, Size size, ThemeData theme , Car car) {
+  List<Map> moyenne = [
+    {
+      'nom': "License Plate",
+      'valeur':car.license_Plate,
+    },
+    {
+      'nom':"Années",
+      'valeur':car.year,
+    },
+    {
+      'nom':"initiale kilometrage",
+
+      'valeur':car.initial_mileage,
+
+    }
+  ];
+
   return Padding(
     padding: EdgeInsets.only(
      // right: size.width * 0.04,
@@ -42,7 +54,7 @@ Padding buildMoy(int i, Size size, ThemeData theme) {
               BoxShadow(
                 color: theme.cardColor,
                 blurRadius: 4,
-                offset: Offset(2, 4), // Shadow position
+                offset: const Offset(2, 4), // Shadow position
               ),
             ],
           ),
@@ -70,11 +82,7 @@ Padding buildMoy(int i, Size size, ThemeData theme) {
                       ),
                     ),
                   ),
-                  Icon(
-                    UniconsLine.battery_bolt,
-                    color: theme.textTheme.headline1?.color,
-                    size: size.width * 0.06,
-                  ),
+
 
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

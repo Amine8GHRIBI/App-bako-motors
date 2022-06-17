@@ -1,14 +1,11 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../DataBase/user_database.dart';
 import '../data/CarEntity.dart';
 import '../data/userEntity.dart';
-import '../ui/pages/Loging_screen.dart';
 import '../ui/pages/setting_screen.dart';
 import 'configs/colors.dart';
 import 'screens/base_screen.dart';
@@ -16,6 +13,8 @@ import 'screens/base_screen.dart';
 class TeslaApp extends StatelessWidget {
   late UserDatabase database;
   late User user;
+  late Car car;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,6 +25,7 @@ class TeslaApp extends StatelessWidget {
         .arguments as Map<String, dynamic>;
     database = routes["database"];
     user = routes["user"];
+    car = routes["car"];
 
    /* return MaterialApp(
       title: 'Flutter Demo',
@@ -47,25 +47,18 @@ class TeslaApp extends StatelessWidget {
     return AdaptiveTheme(
 
            light: ThemeData(
-           cardTheme: CardTheme(
+           cardTheme: const CardTheme(
                color: kCardColo2
-           ),
-        //  scaffoldBackgroundColor: Colors.red,
-           buttonColor: PrimaryColorlight ,
+           ) ,
            primaryColor :  PrimaryColorlight,
-           accentColor: HexColor("#175989"),
            bottomAppBarColor: kBottomAppBarColorlight,
            cardColor: kCardColor,
            indicatorColor: CourbeColorlight,
            secondaryHeaderColor: kSecondaryColorlight,
-
-           //secondaryHeaderColor: Colors.grey.shade200 ,
-    //shadowColor : Colors.grey,
-          primarySwatch: Colors.blue,
              highlightColor : progressColorlight,
              dialogBackgroundColor : kProgressBackGroundColorlight,
    // iconTheme: IconThemeData(color: Color.fromARGB(255, 101,101,101)),
-           iconTheme: IconThemeData(color: kPrimaryColorlight ),
+           iconTheme: const IconThemeData(color: kPrimaryColorlight ),
 
            textTheme: const TextTheme(
              headline1: TextStyle(fontWeight: FontWeight.bold , color: kPrimaryColorlight),
@@ -77,21 +70,18 @@ class TeslaApp extends StatelessWidget {
              headline4: TextStyle( color: kPrimaryColorlight, fontWeight: FontWeight.w200),
              headline5: TextStyle(fontSize: 40, color: kPrimaryColorlight, fontWeight: FontWeight.w300),
 
-           ),
+           ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(secondary: HexColor("#175989")),
 
          ),
 
     dark: ThemeData(
       cardColor: kCardColordark,
-      cardTheme: CardTheme(
+      cardTheme: const CardTheme(
         color: kCardColordark2
       ),
 
       primaryColor :  PrimaryColordark,
-      brightness: Brightness.dark,
-      primarySwatch: Colors.red,
-      accentColor: Colors.white,
-      buttonColor:PrimaryColordark ,
+      brightness: Brightness.dark ,
       bottomAppBarColor: kBottomAppBarColordark,
       indicatorColor : CourbeColordark,
       secondaryHeaderColor: kSecondaryColordark,
@@ -99,7 +89,7 @@ class TeslaApp extends StatelessWidget {
 
       highlightColor : progressColordark,
       dialogBackgroundColor : kProgressBackGroundColordark,
-      iconTheme: IconThemeData(color: kPrimaryColorDark ),
+      iconTheme: const IconThemeData(color: kPrimaryColorDark ),
       textTheme: const TextTheme(
         headline1: TextStyle(fontWeight: FontWeight.bold , color: kPrimaryColorDark),
         headline2: TextStyle( fontSize: 50,fontWeight: FontWeight.bold , color: kPrimaryColorDark),
@@ -109,7 +99,7 @@ class TeslaApp extends StatelessWidget {
 
         headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
         bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',color:kPrimaryColorDark),
-      ),
+      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red).copyWith(secondary: Colors.white),
     ),
     initial: AdaptiveThemeMode.light,
     builder: (theme, darkTheme) => MaterialApp(
@@ -117,10 +107,10 @@ class TeslaApp extends StatelessWidget {
     debugShowCheckedModeBanner: false,
     theme: theme,
     darkTheme: darkTheme,
-        home: BaseScreen(database: this.database,user: this.user , car: Car(name: "a", model: "a", year: "a", license_Plate: "a", initial_mileage: "a") ),
+        home: BaseScreen(database: database,user: user , car: car ),
         routes: {
-          '/setting' : (context)=> SettingsScreen(),
-          '/base' : (context) => BaseScreen(database: this.database,user: this.user , car: Car(name: "a", model: "a", year: "a", license_Plate: "a", initial_mileage: "a")),
+          '/setting' : (context)=> const SettingsScreen(),
+          '/base' : (context) => BaseScreen(database: database,user: user , car: car ),
         },
     // initialRoute: '/base',
     ),

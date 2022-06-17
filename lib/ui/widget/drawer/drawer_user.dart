@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DrawerUser extends StatefulWidget {
@@ -26,7 +25,7 @@ class _DrawerUserState extends State<DrawerUser> {
     return AnimatedContainer(
 
       curve: Curves.linear,
-      duration: Duration(
+      duration: const Duration(
         milliseconds: 100,
       ),
       width: (widget.isCollapsed) ? width * .15 : width * .4,
@@ -38,7 +37,7 @@ class _DrawerUserState extends State<DrawerUser> {
             ? BorderRadius.circular((width * .15) / 2)
             : BorderRadius.circular(10),
         border: Border.all(
-          color : this.widget.theme.iconTheme.color!,
+          color : widget.theme.iconTheme.color!,
 
           width: (widget.isCollapsed) ? 1 : 2,
         ),
@@ -48,7 +47,7 @@ class _DrawerUserState extends State<DrawerUser> {
           child: Text(
             (widget.isCollapsed) ? widget.afterCollapse : widget.beforeCollapse,
             style: TextStyle(
-              color: this.widget.theme.iconTheme.color,
+              color: widget.theme.iconTheme.color,
             ),
           ),
         ),

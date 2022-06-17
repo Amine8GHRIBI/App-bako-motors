@@ -19,6 +19,10 @@ abstract class ObdDAO{
   @Query('SELECT * FROM OBD WHERE car_id = :id')
   Future<List<OBD>> retrieveOBDbycar(int id);
 
+  @Query('DELETE * FROM OBD WHERE car_id = :id')
+  Future<OBD?> deleteOBDbycar(int id);
+
+
   @Query('SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC WHERE id = :id')
   Future<List<OBD>> retrieveLastOBD(int id);
 

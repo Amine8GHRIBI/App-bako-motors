@@ -19,7 +19,7 @@ class _theme_mainState extends State<theme_main> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       child: isMaterial
           ? MaterialExample(
           savedThemeMode: widget.savedThemeMode,

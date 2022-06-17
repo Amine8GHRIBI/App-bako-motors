@@ -18,13 +18,13 @@ class _DrawerCollapseState extends State<DrawerCollapse> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Spacer(),
+        const Spacer(),
         FittedBox(
           fit: BoxFit.scaleDown,
           child: IconButton(
             icon: (widget.isCollapsed)
-                ? Icon(Icons.arrow_forward_ios)
-                : Icon(Icons.arrow_back_ios),
+                ? const Icon(Icons.arrow_forward_ios)
+                : const Icon(Icons.arrow_back_ios),
             color: Colors.white,
             onPressed: () => widget.onTap(),
           ),

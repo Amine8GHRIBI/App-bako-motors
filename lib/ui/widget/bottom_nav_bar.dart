@@ -1,19 +1,13 @@
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:mini_project/ui/pages/Dashboard.dart';
-import 'package:mini_project/ui/pages/Meteo-page.dart';
+import
+'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/userEntity.dart';
-import '../pages/DashbordScreen.dart';
-import '../pages/Home-Page.dart';
-import '../pages/Obd-Home-page.dart';
-import '../pages/car_page.dart';
 import '../widget/bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:unicons/unicons.dart';
+
 
 Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData , BuildContext context ,  UserDatabase databas , User use) {
   late UserDatabase database = databas;

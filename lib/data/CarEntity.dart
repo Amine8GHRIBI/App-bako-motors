@@ -1,6 +1,4 @@
 import 'package:floor/floor.dart';
-import 'package:mini_project/data/OBDParametres.dart';
-import 'package:mini_project/data/userEntity.dart';
 
 @entity
 class Car {
@@ -35,11 +33,11 @@ class Car {
   }
   Map<String, dynamic> toMap() {
     return {
-      'name': this.name,
-      'model': this.model,
-      'year': this.initial_mileage,
-      'license_Plate': this.license_Plate,
-      'initial_mileage': this.initial_mileage,
+      'name': name,
+      'model': model,
+      'year': initial_mileage,
+      'license_Plate': license_Plate,
+      'initial_mileage': initial_mileage,
 
     };
   }

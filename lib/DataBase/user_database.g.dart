@@ -92,7 +92,7 @@ class _$UserDatabase extends UserDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Car` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `model` TEXT NOT NULL, `year` TEXT NOT NULL, `license_Plate` TEXT NOT NULL, `initial_mileage` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `OBD` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `speed` TEXT NOT NULL, `DistanceMILOn` TEXT NOT NULL, `rpm` TEXT NOT NULL, `CoolantTemperature` TEXT NOT NULL, `ModuleVoltage` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`car_id`) REFERENCES `OBD` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `OBD` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `speed` TEXT NOT NULL, `DistanceMILOn` TEXT NOT NULL, `rpm` TEXT NOT NULL, `CoolantTemperature` TEXT NOT NULL, `ModuleVoltage` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `troublecodes` TEXT NOT NULL, `tripRecords` TEXT NOT NULL, `engineload` TEXT NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`car_id`) REFERENCES `OBD` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CarUser` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `user_id` INTEGER NOT NULL, `car_id` INTEGER NOT NULL, FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`car_id`) REFERENCES `Car` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
@@ -361,6 +361,9 @@ class _$ObdDAO extends ObdDAO {
                   'ModuleVoltage': item.ModuleVoltage,
                   'date': item.date,
                   'time': item.time,
+                  'troublecodes': item.troublecodes,
+                  'tripRecords': item.tripRecords,
+                  'engineload': item.engineload,
                   'car_id': item.car_id
                 });
 
@@ -384,7 +387,10 @@ class _$ObdDAO extends ObdDAO {
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String));
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String));
   }
 
   @override
@@ -399,7 +405,10 @@ class _$ObdDAO extends ObdDAO {
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String),
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String),
         arguments: [id]);
   }
 
@@ -415,7 +424,10 @@ class _$ObdDAO extends ObdDAO {
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String));
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String));
   }
 
   @override
@@ -430,7 +442,29 @@ class _$ObdDAO extends ObdDAO {
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String),
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String),
+        arguments: [id]);
+  }
+
+  @override
+  Future<OBD?> deleteOBDbycar(int id) async {
+    return _queryAdapter.query('DELETE * FROM OBD WHERE car_id = ?1',
+        mapper: (Map<String, Object?> row) => OBD(
+            id: row['id'] as int?,
+            DistanceMILOn: row['DistanceMILOn'] as String,
+            date: row['date'] as String,
+            time: row['time'] as String,
+            car_id: row['car_id'] as int,
+            speed: row['speed'] as String,
+            rpm: row['rpm'] as String,
+            CoolantTemperature: row['CoolantTemperature'] as String,
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String),
         arguments: [id]);
   }
 
@@ -438,7 +472,7 @@ class _$ObdDAO extends ObdDAO {
   Future<List<OBD>> retrieveLastOBD(int id) async {
     return _queryAdapter.queryList(
         'SELECT * FROM (SELECT * FROM OBD ORDER BY id DESC LIMIT 7) Var1 ORDER BY id ASC WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => OBD(id: row['id'] as int?, DistanceMILOn: row['DistanceMILOn'] as String, date: row['date'] as String, time: row['time'] as String, car_id: row['car_id'] as int, speed: row['speed'] as String, rpm: row['rpm'] as String, CoolantTemperature: row['CoolantTemperature'] as String, ModuleVoltage: row['ModuleVoltage'] as String),
+        mapper: (Map<String, Object?> row) => OBD(id: row['id'] as int?, DistanceMILOn: row['DistanceMILOn'] as String, date: row['date'] as String, time: row['time'] as String, car_id: row['car_id'] as int, speed: row['speed'] as String, rpm: row['rpm'] as String, CoolantTemperature: row['CoolantTemperature'] as String, ModuleVoltage: row['ModuleVoltage'] as String, tripRecords: row['tripRecords'] as String, troublecodes: row['troublecodes'] as String, engineload: row['engineload'] as String),
         arguments: [id]);
   }
 
@@ -455,7 +489,10 @@ class _$ObdDAO extends ObdDAO {
             speed: row['speed'] as String,
             rpm: row['rpm'] as String,
             CoolantTemperature: row['CoolantTemperature'] as String,
-            ModuleVoltage: row['ModuleVoltage'] as String),
+            ModuleVoltage: row['ModuleVoltage'] as String,
+            tripRecords: row['tripRecords'] as String,
+            troublecodes: row['troublecodes'] as String,
+            engineload: row['engineload'] as String),
         arguments: [date, id]);
   }
 

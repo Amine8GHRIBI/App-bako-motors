@@ -1,56 +1,36 @@
 import 'dart:ui';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_login/theme.dart';
-import 'package:flutter_login/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/DataBase/user_database.dart';
-import 'package:mini_project/customswitch/app.dart';
-import 'package:mini_project/data/stathome.dart';
-import 'package:mini_project/tesla_app/app.dart';
-import 'package:mini_project/ui/pages/Dashboard.dart';
-import 'package:mini_project/ui/pages/SpeedometerContainer.dart';
 import 'package:mini_project/ui/pages/connexion_obd.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
-import 'package:mini_project/ui/pages/realtime_db.dart';
-import 'package:mini_project/ui/pages/setting_screen.dart';
-import 'package:mini_project/ui/pages/theme_page/theme_main.dart';
 import 'package:mini_project/ui/widget/speedo-widget.dart';
-import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
+import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
-import '../../data/model.dart';
 import '../../tesla_app/screens/diagnostic_screen.dart';
-import '../widget/bottom_nav_bar.dart';
-import '../widget/bottom_nav_item.dart';
 import '../widget/drawer/drawer.dart';
-import '../widget/homePage/homePage/car.dart';
 
 import '../../data/userEntity.dart';
 import '../Constants.dart';
 import '../widget/homePage/homePage/information.dart';
-import '../widget/homePage/homePage/most_rented.dart';
 import '../widget/login_widget/AnimatedNumericText.dart';
 import '../widget/login_widget/fadeIn.dart';
 import '../widget/login_widget/roundButton.dart';
-import 'Meteo-page.dart';
 import 'Obd-Home-page.dart';
 
 import 'TransitionRouteObserver.dart';
-import 'car_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
    UserDatabase database;
    User user;
+   Car car;
 
-  DashboardScreen({Key? key ,  required this.database, required this.user,  }) : super(key: key);
+  DashboardScreen({Key? key ,  required this.database, required this.user, required this.car}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -353,7 +333,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ),
                               color:theme.cardTheme.color,
                               borderRadius: BorderRadius.circular(7),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.grey,
                                   blurRadius: 2,
@@ -365,12 +345,12 @@ class _DashboardScreenState extends State<DashboardScreen>
 
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(
+                                    padding: const EdgeInsets.only(
                                       //right: size.width * 0.01,
                                     ),
                                     child: SizedBox(
                                       height: size.width * 0.18,
-                                      width: size.width * 0.1,
+                                      width: size.width * 0.08,
                                       child: Container(
 
                                         child: Icon(
@@ -385,13 +365,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     padding: EdgeInsets.only(
                                       top: size.height * 0.005,
                                       left: size.width *0.001,
-
                                     ),
                                     child: Align(
-                                      child: Text( 'Connected car : bako',
+                                      child: Text( 'Connected :' + widget.car.name.toString(),
                                         style: GoogleFonts.poppins(
                                           color: theme.textTheme.headline1?.color,
-                                          fontSize: size.width * 0.04,
+                                          fontSize: size.width * 0.036,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -421,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     SizedBox(
                         width: size.width * 0.99,
                         height: size.height * 0.148,
-                        child:  information(size, theme) // information list
+                        child:  information(size, theme,widget.car) // information list
                     ),
                   ),
                 ],
@@ -500,22 +479,22 @@ class _DashboardScreenState extends State<DashboardScreen>
       onPressed: () {
         debugPrint("pr " + label!);
         if( label == "Profile"){
-          Get.to( profile_page() ,arguments: {"database" : this.widget.database , "user" : this.widget.user,"theme" : theme});
+          Get.to( const profile_page() ,arguments: {"database" : widget.database , "user" : widget.user,"theme" : theme});
         }
         if( label == "connexion"){
-          Get.to( connexion(theme: theme) ,arguments: {"database" : this.widget.database , "user" : this.widget.user,});
+          Get.to( connexion(theme: theme) ,arguments: {"database" : widget.database , "user" : widget.user,});
         }
         if( label == "Station"){
-          Get.to( obd_home( database : this.widget.database , user : this.widget.user) );
+          Get.to( obd_home( database : widget.database , user : widget.user) );
         }
         if (label == "Dashboard") {
           //buildCar(1, size, themeData);
-          Get.to( speedo(theme : theme , database : this.widget.database));
+          Get.to( speedo(theme : theme , database : widget.database, car : widget.car));
           //Get.to( SpeedometerContainer(),arguments: {"database" : this.widget.database , "user" : this.widget.user});
         }
         if (label == "Maintenance") {
           //buildCar(1, size, themeData);
-          Get.to(DiagnostcScreen(database : this.widget.database , user : this.widget.user , theme: theme,));
+          Get.to(DiagnostcScreen(database : widget.database , user : widget.user , theme: theme,car : widget.car));
           //Navigator.pushNamed(context , '/cnxobd' , arguments: {"database" : this.database , "user" : this.user});
         }
         if (label == "Settings") {
@@ -609,11 +588,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             //color: const Color(0xfff8f8f8), // background color
              decoration: BoxDecoration(
 
-             image: new DecorationImage(
+             image: DecorationImage(
              fit: BoxFit.cover,
 
-             colorFilter: new ColorFilter.mode(theme.primaryColor, BlendMode.softLight),
-             image: AssetImage('assets/image/back.png',),),),
+             colorFilter: ColorFilter.mode(theme.primaryColor, BlendMode.softLight),
+             image: const AssetImage('assets/image/back.png',),),),
              child :BackdropFilter(
              filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
               child: Stack(

@@ -1,20 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:intro_slider/slide_object.dart';
-import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/scrollbar_behavior_enum.dart';
-import 'package:group_list_view/group_list_view.dart';
-import 'package:mini_project/ui/pages/slider_page.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
 import '../../data/CarUserEntity.dart';
 import '../../data/userEntity.dart';
-import 'AppColors.dart';
+import 'Qrcode/home.dart';
 
 
 class connexion extends StatefulWidget {
@@ -52,7 +44,7 @@ class _connexionState extends State<connexion> {
     return cars;
   }
 
-  Map<String, List> _elements = {
+  final Map<String, List> _elements = {
     'List of Cars': []
     //'Team B': ['Toyah Downs', 'Tyla Kane'],
   };
@@ -73,7 +65,7 @@ class _connexionState extends State<connexion> {
   ];
 
   // This list holds the data for the list view
-  List<Map<String, dynamic>> _foundUsers = [];
+  final List<Map<String, dynamic>> _foundUsers = [];
   List<Car> _foundCars = [];
 
   @override
@@ -82,7 +74,7 @@ class _connexionState extends State<connexion> {
     //_foundUsers = _allUsers;
     super.initState();
     Future.delayed(Duration.zero,() async  {
-      _foundCars = await retrievCarsByuser(this.use.id,this.database);
+      _foundCars = await retrievCarsByuser(use.id,database);
 
       setState(()  {
          //this.retrievCarsByuser(use.id, this.database);
@@ -153,10 +145,10 @@ class _connexionState extends State<connexion> {
       AppBar(
           title: Text(
             'Connexin OBD',
-            style: TextStyle(color: this.widget.theme?.iconTheme.color),
+            style: TextStyle(color: widget.theme?.iconTheme.color),
           ),
-        backgroundColor: this.widget.theme?.bottomAppBarColor,
-        iconTheme: IconThemeData(color: this.widget.theme?.iconTheme.color),
+        backgroundColor: widget.theme?.bottomAppBarColor,
+        iconTheme: IconThemeData(color: widget.theme?.iconTheme.color),
       ),
 
       body: Padding(
@@ -169,7 +161,7 @@ class _connexionState extends State<connexion> {
               Text( 'Choose your car ',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.poppins(
-                  color:   this.widget.theme?.primaryColor,
+                  color:   widget.theme?.primaryColor,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),),
@@ -194,12 +186,13 @@ class _connexionState extends State<connexion> {
                     //itemBuilder: (BuildContext context, int index) =>
                     itemBuilder: (context, index) => Card(
                           key: ValueKey(_foundCars[index].id),
-                          color: this.widget.theme?.primaryColor,
+                          color: widget.theme?.primaryColor,
                           elevation: 4,
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: ListTile(
                             onTap: () {
-                              Get.to( slider_connexion(database: this.database, use: this.use , theme : this.widget.theme, car : _foundCars[index] ));
+                              Get.to( HomePage(database: database, use: use , theme : widget.theme, car : _foundCars[index]));
+                                  //slider_connexion(database: this.database, use: this.use , theme : this.widget.theme, car : _foundCars[index] ));
                             },
                             leading: Text(
                               _foundCars[index].name.toString(),

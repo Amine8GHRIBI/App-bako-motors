@@ -1,34 +1,21 @@
 import 'dart:async';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:mini_project/tesla_app/screens/diagnostic_screen.dart';
-import 'package:mini_project/ui/pages/Dashboard.dart';
 import 'package:mini_project/ui/pages/DashbordScreen.dart';
-import 'package:mini_project/ui/pages/slider_page.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mini_project/ui/pages/wifi_home.dart';
-import 'package:unicons/unicons.dart';
-import 'dart:developer' as developer;
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
 import '../../data/userEntity.dart';
-import '../../ui/pages/Meteo-page.dart';
 import '../../ui/pages/OBD.dart';
 import '../../ui/pages/StatsScreen.dart';
 import '../../ui/pages/connexion_obd.dart';
-import '../../ui/pages/meteo_page/GetStarted.dart';
-import '../../ui/pages/setting_screen.dart';
 import '../configs/colors.dart';
 import 'home_screen.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 
 class BaseScreen extends StatefulWidget {
@@ -53,9 +40,6 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
 
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-
-
-
   int _selectedIndex = 0;
   late final TabController _tabController;
   final int _tabLength = 4;
@@ -66,9 +50,9 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(now);
     super.initState();
-   // initConnectivity();
-    useradd();
-    retrieveOBDBydate(this.widget.database , formatted);
+    //initConnectivity();
+
+    retrieveOBDBydate(widget.database , formatted);
 
    // _connectivitySubscription =
       //  _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -81,85 +65,59 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile) {
       } else if (connectivityResult == ConnectivityResult.wifi) {
-        this.chauffeurSetup();
+        await useradd();
         debugPrint("data send ...");
       }
   }
 
-  Future<void> chauffeurSetup() async {
-    CollectionReference chauffeurs = FirebaseFirestore.instance.collection('Chauffeurs');
-    chauffeurs.add({ "name" : "amineca" ,  "surName" : "ghribi", "phoneNumber" : "94574896" ,
-      "email" : "aghribi011@gmail.com" , "birthday" :"9/11" , "adresse": "gabes", "username" :"amine", "password" : "123456" });
+
+  Future<void> deletedatafromlocal() async {
+
+
+
   }
-
-
   Future<void> useradd() async {
-   /* String name ="";
-    final querySnapshot = await FirebaseFirestore.instance.collection("Users")
-        .doc("firstuser")
-        .collection("Chauffeurs").where('Name', isEqualTo: this.widget.user.name.toString()).get();
-    for (var doc in querySnapshot.docs) {
-      // Getting data directly
-      name = doc.get('name');
-    }
-
-    if(name != "") {
-      FirebaseFirestore.instance.collection("Users")
-          .doc("firstuser")
-          .collection("Chauffeurs").where('Name', isEqualTo: this.widget.user.name.toString())
-          .then((value) {
-        print(value.id);
-        FirebaseFirestore.instance
-            .collection("Users")
-            .doc("firstuser")
-            .collection("Chauffeurs")
-            .doc(value.id)
-            .collection("Cars")
-            .add({"petName": "blacky", "petType": "dog", "petAge": 1});
-
-        return ;
-    });
-          }
-    else{*/
-    debugPrint("use mail " + this.widget.user.email.toString());
+// timer = Timer.periodic(Duration(seconds: 1), (Timer t) => context.read<ObdReader>().increment());
+    debugPrint("use mail " + widget.user.email.toString());
     FirebaseFirestore.instance.collection("Users")
         .doc("firstuser")
-        .collection("Chauffeurs").doc(this.widget.user.email.toString())
-        .set({ "userName": this.widget.user.username.toString(),
-               "Name": this.widget.user.name.toString(),
-               "SurName":this.widget.user.surName.toString(),
-               "email" : this.widget.user.email.toString(),
-               "phoneNumber" : this.widget.user.phoneNumber.toString()
-            ,  "adresse" : this.widget.user.adresse.toString()
-             , "birthday" : this.widget.user.birthday.toString()}).then((value) {
+        .collection("Chauffeurs").doc(widget.user.email.toString())
+        .set({ "userName": widget.user.username.toString(),
+               "Name": widget.user.name.toString(),
+               "SurName":widget.user.surName.toString(),
+               "email" : widget.user.email.toString(),
+               "phoneNumber" : widget.user.phoneNumber.toString()
+            ,  "adresse" : widget.user.adresse.toString()
+             , "birthday" : widget.user.birthday.toString()}).then((value) {
 
       FirebaseFirestore.instance
           .collection("Users")
           .doc("firstuser")
           .collection("Chauffeurs")
-          .doc(this.widget.user.email.toString())
+          .doc(widget.user.email.toString())
           .collection("Cars")
-          .doc(this.widget.car.license_Plate.toString())
-          .set({"Name": this.widget.car.name.toString(),
-                "modele": this.widget.car.model.toString(),
-               "Year": this.widget.car.year.toString(),
-                "intial mileage" : this.widget.car.initial_mileage.toString(), "license_plat" : this.widget.car.license_Plate.toString()})
+          .doc(widget.car.license_Plate.toString())
+          .set({"Name": widget.car.name.toString(),
+                "modele": widget.car.model.toString(),
+                "Year": widget.car.year.toString(),
+                "intial mileage" : widget.car.initial_mileage.toString(), "license_plat" : widget.car.license_Plate.toString()})
           .then((value) {
             for(OBD obd in obdsbydate) {
               FirebaseFirestore.instance
                   .collection("Users")
                   .doc("firstuser")
                   .collection("Chauffeurs")
-                  .doc(this.widget.user.email.toString())
+                  .doc(widget.user.email.toString())
                   .collection("Cars")
-                  .doc(this.widget.car.license_Plate.toString())
+                  .doc(widget.car.license_Plate.toString())
                   .collection("OBD")
-                  .add({ "vitesse": obd.speed.toString(), "RPM" : obd.rpm.toString(),
+                  .add({ "vitesse": obd.speed.toString(),
+                         "RPM" : obd.rpm.toString(),
                          "kilometrage": obd.DistanceMILOn.toString(),
                          "temperature" : obd.CoolantTemperature.toString(),
-                         "date" : obd.time.toString()
-                  });
-            }
+                         "date" : obd.date.toString(),
+                         "time" : obd.time.toString()
+                  }); }
           });
              return ;
              });
@@ -167,10 +125,9 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
 
   List<OBD> obdsbydate = [];
   Future<List<OBD>> retrieveOBDBydate(UserDatabase db , String date) async {
-    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date, this.widget.car.id!.toInt());
+    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date, widget.car.id!.toInt());
     setState(() {});
     return obds;
-
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
@@ -213,17 +170,18 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
     ThemeData theme = Theme.of(context);
     List<Widget> _pages = [
 
-      HomeScreen(database: widget.database ,user: this.widget.user, car : this.widget.car ,key: GlobalKey(),),
-      DashboardScreen(database: this.widget.database ,user: this.widget.user ,key: _dashkey),
+      HomeScreen(database: widget.database ,user: widget.user, car : widget.car ,key: GlobalKey(),),
+      DashboardScreen(database: widget.database ,user: widget.user ,car : widget.car, key: _dashkey),
       //dashboard(database: this.widget.database ,user: this.widget.user,key: GlobalKey()),
-      obd(),
-      StatsScreen(database: this.widget.database ,user: this.widget.user,key: GlobalKey()),
+      const obd(),
+      //LocalNotifications(),
+      StatsScreen(database: widget.database ,user: widget.user, car : widget.car , key: GlobalKey()),
 
     ];
     navigateTo(int index) {
       setState(() {
       _pages.removeAt(0);
-      _pages.insert(0,  HomeScreen(database: this.widget.database,user: this.widget.user, car : this.widget.car , key: GlobalKey()));
+      _pages.insert(0,  StatsScreen(database: widget.database,user: widget.user, car : widget.car , key: GlobalKey()));
         _selectedIndex = index;
       });
     }
@@ -286,7 +244,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
                               child: IconButton(
                                   iconSize: 60,
                                   onPressed: () {
-                                    Get.to( connexion(theme: theme,),arguments: {"database" : this.widget.database , "user" : this.widget.user, });
+                                    Get.to( connexion(theme: theme,),arguments: {"database" : widget.database , "user" : widget.user, });
                                   },
                                   icon: Icon(
                                     Icons.power_settings_new_rounded,
@@ -297,7 +255,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
                     ),
                   ),
                   _bottomAppBarIcon(index: 2, icon: Icons.map),
-                  _bottomAppBarIcon(index: 3, icon: IconData(0xebef, fontFamily: 'MaterialIcons')),
+                  _bottomAppBarIcon(index: 3, icon: const IconData(0xebef, fontFamily: 'MaterialIcons')),
 
                 ],
               ),
@@ -312,7 +270,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
       return false;
       },
     child:*/ Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: kBackGroundGradient
         ),
         /*child: TabBarView(

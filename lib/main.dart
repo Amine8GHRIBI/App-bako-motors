@@ -1,42 +1,27 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/data/stathome.dart';
 import 'package:mini_project/tesla_app/app.dart';
-import 'package:mini_project/ui/pages/Dashboard.dart';
-import 'package:mini_project/ui/pages/DashbordScreen.dart';
-import 'package:mini_project/ui/pages/Gallerie-page.dart';
 import 'package:mini_project/ui/pages/Login.dart';
 import 'package:mini_project/ui/pages/Loging_screen.dart';
 import 'package:mini_project/ui/pages/Meteo-page.dart';
-import 'package:mini_project/ui/pages/Home-page.dart';
-import 'package:mini_project/ui/pages/Obd-Home-page.dart';
 import 'package:mini_project/ui/pages/SignIn.dart';
 import 'package:mini_project/ui/pages/SpeedometerContainer.dart';
-import 'package:mini_project/ui/pages/TransitionRouteObserver.dart';
-import 'package:mini_project/ui/pages/car_page.dart';
 import 'package:mini_project/ui/pages/connectivity.dart';
-import 'package:mini_project/ui/pages/connexion_obd.dart';
-import 'package:mini_project/ui/pages/number.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
-import 'package:mini_project/ui/pages/setting_screen.dart';
-import 'package:mini_project/ui/pages/slider_page.dart';
 import 'package:mini_project/ui/pages/userDetails.dart';
 import 'package:mini_project/ui/pages/user-page.dart';
-//import 'package:splashscreen/splashscreen.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 import 'DataBase/user_database.dart';
-import 'data/OBDParametres.dart';
 import 'data/model.dart';
-import 'data/themes_data.dart';
-import 'data/userEntity.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 //import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+//import 'package:awesome_notifications/awesome_notifications.dart';
 
 
 
@@ -56,11 +41,33 @@ WidgetsFlutterBinding.ensureInitialized();
   ),
   );*/
   //WidgetsFlutterBinding.ensureInitialized();
+/*AwesomeNotifications().initialize(
+  // set the icon to null if you want to use the default app icon
+    'resource://drawable/res_app_icon',
+    [
+      NotificationChannel(
+          channelGroupKey: 'basic_channel_group',
+          channelKey: 'basic_channel',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          defaultColor: Color(0xFF9D50DD),
+          ledColor: Colors.white)
+    ],
+    // Channel groups are only visual and are not required
+    channelGroups: [
+      NotificationChannelGroup(
+          channelGroupkey: 'basic_channel_group',
+          channelGroupName: 'Basic group')
+    ],
+    debug: true
+);*/
+
+
   runApp( MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ObdReader()),
       ],
-      child: MyApp(),),);
+      child: const MyApp(),),);
 }
 
 class MyApp extends StatefulWidget {
@@ -81,7 +88,7 @@ class _MyAppState extends State<MyApp> {
         .databaseBuilder('user_database.db')
         .build()
         .then((value) async {
-      this.database = value;
+      database = value;
       setState(() {});
     });
   }
@@ -129,12 +136,12 @@ class _MyAppState extends State<MyApp> {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
               .copyWith(secondary: Colors.orange),
         ),
-        home :LoginScreen(),
+        //home : obd(),
 
         //navigatorObservers: [TransitionRouteObserver()],
-        /* home:  SplashScreen(
+        home:  SplashScreen(
         seconds: 8,
-        navigateAfterSeconds: LoginScreen()
+        navigateAfterSeconds: const LoginScreen()
         ,
      /* image : Image.asset(
         'assets/image/logo.png',
@@ -142,26 +149,25 @@ class _MyAppState extends State<MyApp> {
       height: 30,
       width: 30,),*/
         //backgroundColor: Colors.indigo.shade700,
-         imageBackground: AssetImage("assets/image/background.png")
-      ),*/
+         imageBackground: const AssetImage("assets/image/background.png")
+      ),
 
         routes: {
-          '/méteo': (context) => MeteoPage(),
-          '/register' : (context) => userRegister(),
-          '/login' : (context) => UserLogin(),
-          '/home' : (context) => car_page(),
-          '/users' : (context) => userPage(),
+          '/méteo': (context) => const MeteoPage(),
+          '/register' : (context) => const userRegister(),
+          '/login' : (context) => const UserLogin(),
+          '/users' : (context) => const userPage(),
 
-          '/user'  : (context) => userDetails(),
-          '/conn' : (context) => connectivity_home(),
-          '/profile':(context) => profile_page(),
-          '/log' : (context) => LoginScreen(),
+          '/user'  : (context) => const userDetails(),
+          '/conn' : (context) => const connectivity_home(),
+          '/profile':(context) => const profile_page(),
+          '/log' : (context) => const LoginScreen(),
           //'/log' : (context) => DashboardScreen(),
           //'/dashboard' : (context) => DashboardScreen(),
-          '/kilo' : (context) => kilometrage_data(),
+          '/kilo' : (context) => const kilometrage_data(),
           //'/bleu' : (context) => obd_home(daaa),
           //'/dash' : (context) => dashboard(),
-          '/Speed' : (context) => SpeedometerContainer(),
+          '/Speed' : (context) => const SpeedometerContainer(),
          // '/cnxobd' : (context) => connexion(),
           '/app' : (context) => TeslaApp(),
           //'/slider' : (context) => slider_connexion(),

@@ -1,7 +1,6 @@
 
 
 import 'package:floor/floor.dart';
-import 'package:mini_project/data/CarEntity.dart';
 /*@Entity(
   tableName: 'user',
   foreignKeys: [
@@ -51,14 +50,14 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': this.name,
-      'lastName': this.surName,
-      'password' : this.password,
-      'username' : this.username,
-      'phoneNumber': this.phoneNumber,
-      'email': this.email,
-      'birthday': this.birthday,
-      'adresse': this.adresse,
+      'name': name,
+      'lastName': surName,
+      'password' : password,
+      'username' : username,
+      'phoneNumber': phoneNumber,
+      'email': email,
+      'birthday': birthday,
+      'adresse': adresse,
      // 'cars': [this.cars],
     };
   }

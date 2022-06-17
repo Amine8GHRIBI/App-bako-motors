@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../DataBase/user_database.dart';
-import '../../data/CarEntity.dart';
 import '../../data/userEntity.dart';
 import '../constant.dart';
 import '../widget/LoginSignupButton.dart';
@@ -38,7 +36,7 @@ class _userRegisterState extends State<userRegister> {
         .databaseBuilder('user_database.db')
         .build()
         .then((value) async {
-      this.database = value;
+      database = value;
 
       setState(() {});
     });
@@ -52,12 +50,12 @@ class _userRegisterState extends State<userRegister> {
         backgroundColor: Colors.grey[200],
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black,size: 30,),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,size: 30,),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: isloading
-          ? Center(
+          ? const Center(
         child: CircularProgressIndicator(),
       )
           : Form(
@@ -72,11 +70,11 @@ class _userRegisterState extends State<userRegister> {
                 color: Colors.grey[200],
                 child: SingleChildScrollView(
                   padding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 120),
+                  const EdgeInsets.symmetric(horizontal: 25, vertical: 120),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Hero(
+                      const Hero(
                         tag: '1',
                         child: Text(
                           "Sign up",
@@ -86,7 +84,7 @@ class _userRegisterState extends State<userRegister> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         onChanged: (value) {
@@ -98,7 +96,7 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your Email',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.email,
                             color: Colors.black,
                           ),
@@ -106,7 +104,7 @@ class _userRegisterState extends State<userRegister> {
                       ),
 
 
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.name,
                         onChanged: (value) {
@@ -118,13 +116,13 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your Name',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.supervised_user_circle,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.name,
                         onChanged: (value) {
@@ -136,13 +134,13 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your Last Name',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.supervised_user_circle_rounded,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.phone,
                         onChanged: (value) {
@@ -154,13 +152,13 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your Phone Number',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.add_call,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.datetime,
                         onChanged: (value) {
@@ -172,13 +170,13 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your Phone birthday',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.date_range,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.streetAddress,
                         onChanged: (value) {
@@ -190,13 +188,13 @@ class _userRegisterState extends State<userRegister> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Enter Your adresse',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.add_location_alt,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 80),
+                      const SizedBox(height: 80),
                       LoginSignupButton(
                         title: 'Register',
                         ontapp: () async {
@@ -205,13 +203,13 @@ class _userRegisterState extends State<userRegister> {
                               isloading = true;
                             });
 
-                              await this.addUsers(database , name , lastName , mail , phoneNumber,birthday,adresse );
+                              await addUsers(database , name , lastName , mail , phoneNumber,birthday,adresse );
 
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                   backgroundColor: Colors.blueGrey,
                                   content: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Text(
 
                                         'Sucessfully Register.You Can Login Now'),

@@ -2,24 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_sparkline/flutter_sparkline.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:provider/provider.dart';
-import 'package:unicons/unicons.dart';
-import '../widget/bottom_nav_bar.dart';
 
 
 import '../../DataBase/user_database.dart';
 import '../../data/OBDParametres.dart';
-import '../../data/model.dart';
 import '../../data/userEntity.dart';
-import '../Constants.dart';
-import '../widget/bottom_nav_item.dart';
-import '../widget/drawer/drawer.dart';
-import '../widget/login_widget/fadeIn.dart';
 import 'TransitionRouteObserver.dart';
-import 'OBD.dart';
 
 
 
@@ -71,7 +59,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
 
 
   Future<List<OBD>> retrieveOBD(UserDatabase db) async {
-    obds =await this.widget.database.obdDAO.retrieveAllOBD();
+    obds =await widget.database.obdDAO.retrieveAllOBD();
     debugPrint("obd diagno " + obds.length.toString());
     setState(() {});
 
@@ -83,8 +71,8 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
     // int i = context.read<ObdReader>().obdData.length;
     //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
 
-    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date : '22/04/2022', car_id:this.widget.user.id!, time: '22/04/2022', DistanceMILOn: '');
-    List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
+    OBD obddtat= OBD( speed: "180", rpm: "60", CoolantTemperature: "45", ModuleVoltage: "10", date : '22/04/2022', car_id:widget.user.id!, time: '22/04/2022', DistanceMILOn: '', engineload: '', tripRecords: '', troublecodes: '');
+    List<int> obdsaved = await widget.database.obdDAO.insertOBD([obddtat]);
 
     for (int idsaved in obdsaved) {
       ob.add(idsaved);
@@ -102,9 +90,9 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
       //  retrieveOBD(this.widget.database);
       //debugPrint("obd diagno " + obds.last.speed.toString());
       setState(() async {
-        database = this.widget.database;
-        user = this.widget.user;
-        newobd = await retrieveOBD(this.database);
+        database = widget.database;
+        user = widget.user;
+        newobd = await retrieveOBD(database);
         debugPrint("obd stat " + newobd.last.speed.toString());
       },);
     });
@@ -136,7 +124,7 @@ class _dashboardState extends State<dashboard> with SingleTickerProviderStateMix
   }
 
   Future<List<OBD>> retrievCarsusers(UserDatabase database) async {
-    obds =await this.widget.database.obdDAO.retrieveAllOBD();
+    obds =await widget.database.obdDAO.retrieveAllOBD();
     return obds;
   }
 

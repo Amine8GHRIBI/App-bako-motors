@@ -1,28 +1,27 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gauge/flutter_gauge.dart';
 import 'package:flutter_speedometer/flutter_speedometer.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sensors/sensors.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../../DataBase/user_database.dart';
+import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
-import '../../data/Speedometre.dart';
 
 
 import '../../data/model.dart';
-import '../Constants.dart';
-import '../pages/TransitionRouteObserver.dart';
-import 'login_widget/fadeIn.dart';
 
 class speedo extends StatefulWidget {
   ThemeData theme;
   UserDatabase database;
+  Car car;
 
-  speedo({Key? key , required this.theme, required this.database}) : super(key: key);
+
+  speedo({Key? key , required this.theme, required this.database ,required this.car}) : super(key: key);
 
   @override
   State<speedo> createState() => _speedoState();
@@ -31,13 +30,31 @@ class speedo extends StatefulWidget {
 class _speedoState extends State<speedo> {
   double velocity = 0;
   double highestVelocity = 0.0;
-  late Timer timer;
+  int speed= 0;
+  int rpm = 0;
+  int temperature = 0;
+  int module_voltage = 0;
+  double engineload = 0.0;
+  double DistanceMILOn = 0.0;
 
-
+  List<OBD> obds = [];
+  Timer? timer;
+  List<OBD> DD = [];
   @override
   void initState() {
-    //addOBDst(this.widget.database ,Map<dynamic, dynamic> obdwatch );
-    timer = Timer.periodic( Duration(seconds: 1), (Timer t) => context.read<ObdReader>().increment());
+   // if(this.widget.car.id != null) {
+    Future.delayed(Duration.zero, () async {
+      timer = Timer.periodic(const Duration(microseconds: 1), (Timer t) => getdata());
+      //timer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => context.read<ObdReader>().increment());
+      timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => DistanceMILOn += DistanceMILOn);
+      //timer = Timer.periodic(Duration(milliseconds: 1), (Timer t) => Provider.of<ObdReader>(context, listen: false));
+
+      timer = Timer.periodic(const Duration(seconds: 2), (Timer t) => addOBDst(widget.database));
+      timer = Timer.periodic(const Duration(seconds: 6), (Timer t) => retrieveOBD(widget.database));
+      DD = await retrieveOBD(widget.database);
+
+    });
+    setState(()  {});
     userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       _onAccelerate(event);
     });
@@ -45,21 +62,63 @@ class _speedoState extends State<speedo> {
     if (mounted) {
       setState (() {});
     }
-
   }
 
+  Future<List<OBD>> retrieveOBD(UserDatabase db) async {
+    obds =await widget.database.obdDAO.retrieveAllOBD();
+    debugPrint("obd diagno " + obds.last.speed.toString());
+    setState(() {});
+    return obds;
+  }
+  void getdata(){
+    context.read<ObdReader>().increment();
+    if(context.read<ObdReader>().obdData['0'][1] != "Failed to get speed." || context.read<ObdReader>().obdData['0'][1] != "Null"){
+      context.read<ObdReader>().increment();
+      speed = int.parse(context.read<ObdReader>().obdData['0'][1]);
+      rpm = int.parse(context.read<ObdReader>().obdData['2'][1]);
+      temperature =int.parse(context.read<ObdReader>().obdData['1'][1].substring(0,2));
+      engineload = double.parse(context.read<ObdReader>().obdData['3'][1]);
+      timer = Timer.periodic(const Duration(seconds: 50), (Timer t) => DistanceMILOn++);
+}
+        //timer = Timer.periodic(Duration(seconds:1 ), (Timer t) => DistanceMILOn += DistanceMILOn);
+    // timer = Timer.periodic(Duration(seconds: 1), (Timer t) => DistanceMILOn++);
+     // context.read<ObdReader>().increment();
+      //context.read<ObdReader>().increment();
+    setState (() {
+    });}
 
-  Future<List<int>> addOBDst(UserDatabase db ,Map<dynamic, dynamic> obdwatch ) async {
+  Future<List<int>> addOBDst(UserDatabase db ) async {
+    double DistanceMILO =0.0;
+    final DateTime now = DateTime.now();
+    final DateFormat formatterdate = DateFormat('yyyy-MM-dd');
+    final DateFormat formattertime = DateFormat('HH:mm:ss');
+
+    final String formatteddate = formatterdate.format(now);
+    final String formattedtime = formattertime.format(now);
+
     List<int> ob =[];
-    obdwatch.forEach((k, v) async {
-      OBD obddtat= OBD( speed: v[0], rpm: v[1], CoolantTemperature: v[2], ModuleVoltage: v[3], date: '05/04/2022', car_id: 1, time: '06/04/2022', DistanceMILOn: '20');
-      List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
-      for (int idsaved in obdsaved) {
-        ob.add(idsaved);
-      }
-    });
-    debugPrint(ob.first.toString());
+  /*  OBD obddtat= OBD(
+        speed: "90",
+        rpm: context.read<ObdReader>().obdData['2'][1].toString(),
+        CoolantTemperature: context.read<ObdReader>().obdData['1'][1].substring(0,2).toString(),
+        ModuleVoltage: context.read<ObdReader>().obdData['4'][1].toString(), date: now.toString(), car_id: this.widget.car.id!, time: formattedtime,
+        DistanceMILOn: DistanceMILOn.toString(), troublecodes: context.read<ObdReader>().obdData['7'][1].toString(),
+        tripRecords: context.read<ObdReader>().obdData['6'][1].toString(), engineload: context.read<ObdReader>().obdData['3'][1].toString()
+    );*/
+
+    OBD obddtat= OBD(
+        speed: speed.toString(),
+        rpm: rpm.toString(),
+        CoolantTemperature: temperature.toString(),
+        ModuleVoltage: module_voltage.toString(), date: now.toString(), car_id: widget.car.id!, time: formattedtime,
+        DistanceMILOn: DistanceMILOn.toString(), troublecodes: context.read<ObdReader>().obdData['7'][1].toString(),
+        tripRecords: context.read<ObdReader>().obdData['6'][1].toString(), engineload: engineload.toString()
+    );
+    List<int> obdsaved = await widget.database.obdDAO.insertOBD([obddtat]);
+    debugPrint("ib last" +obddtat.speed.toString());
+    setState (() {});
     return ob;
+
   }
 
   @override
@@ -77,10 +136,10 @@ class _speedoState extends State<speedo> {
 
   Widget _getRadialGauge() {
     return SfRadialGauge(
-        title: GaugeTitle(
+        title: const GaugeTitle(
             text: 'Speedometer',
             textStyle:
-            const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+            TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
         axes: <RadialAxis>[
 
           RadialAxis(minimum: 0, maximum: 150, ranges: <GaugeRange>[
@@ -102,7 +161,7 @@ class _speedoState extends State<speedo> {
                 color: Colors.red,
                 startWidth: 10,
                 endWidth: 10)
-          ], pointers: <GaugePointer>[
+          ], pointers: const <GaugePointer>[
             NeedlePointer(value: 90)
           ], annotations: <GaugeAnnotation>[
             GaugeAnnotation(
@@ -122,14 +181,14 @@ class _speedoState extends State<speedo> {
           minimum: 0.0,
           maximum: 100.0,
           orientation: LinearGaugeOrientation.horizontal,
-          majorTickStyle: LinearTickStyle(length: 20),
-          axisLabelStyle: TextStyle(fontSize: 12.0, color: Colors.black),
-          axisTrackStyle: LinearAxisTrackStyle(
+          majorTickStyle: const LinearTickStyle(length: 20),
+          axisLabelStyle: const TextStyle(fontSize: 12.0, color: Colors.black),
+          axisTrackStyle: const LinearAxisTrackStyle(
               color: Colors.cyan,
               edgeStyle: LinearEdgeStyle.bothFlat,
               thickness: 15.0,
               borderColor: Colors.grey)),
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
     );
   }
   void _onAccelerate(UserAccelerometerEvent event) {
@@ -150,116 +209,80 @@ class _speedoState extends State<speedo> {
     });
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('Syncfusion Flutter Gauge')),
-        body: ListView(
-            children: <Widget>[
-              _getGauge(),
-              _getGauge(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(child: FlutterGauge(index: 50.0,width: 800,counterStyle : TextStyle(color: Colors.black,fontSize: 25,),widthCircle: 10,secondsMarker: SecondsMarker.none,number: Number.all),),
-                ],
-              ),
-
-
-
-            ]
-    )
-    );
-  }*/
-
-
 
   @override
   Widget build(BuildContext context){
 
     return Directionality(
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
         child: Scaffold(
           appBar:
           AppBar(iconTheme : IconThemeData(
-              color: this.widget.theme.iconTheme.color,
+              color: widget.theme.iconTheme.color,
           ),
-            title: Text('Dashboard', style: TextStyle(color : this.widget.theme.primaryColor),),
-                 backgroundColor: this.widget.theme.bottomAppBarColor),
+            title: Text(obds.length.toString()  + obds.last.DistanceMILOn.toString() /*+ "distance " + obds.last.DistanceMILOn.toString()*/, style: TextStyle(color : widget.theme.primaryColor),),
+                 backgroundColor: widget.theme.bottomAppBarColor),
 
           body:
           Container(
           child: Flex(
             direction: Axis.vertical,
             children: <Widget>[
-              IconButton(
-                tooltip: 'connect OBD',
-                icon: const Icon(
-                  Icons.bluetooth,
-                ),
-                onPressed: () => context.read<ObdReader>().startOBD(),
-              ),
-              IconButton(
-                  tooltip: 'Refresh OBD Data',
-                  icon: const Icon(
-                    Icons.refresh,
-                  ),
-                  onPressed: () => context.read<ObdReader>().increment()
-              ),
 
-              Spacer(),
             Speedometer(
               size: 100,
               minValue: -10,
-              maxValue: 50,
-              currentValue: 30,
+              maxValue: 100,
+              currentValue: temperature,
               warningValue: 40,
-              backgroundColor: this.widget.theme.cardColor,
-              meterColor: Colors.lightBlueAccent,
-              warningColor: Colors.orange,
-              kimColor: Colors.purpleAccent,
+              backgroundColor: widget.theme.cardColor,
+              meterColor: widget.theme.primaryColor,
+              warningColor: Colors.deepOrange.shade500,
+              kimColor:  Colors.white,
               displayNumericStyle: TextStyle(
                   fontFamily: 'Digital-Display',
-                  color: this.widget.theme.iconTheme.color,
+                  color: widget.theme.iconTheme.color,
                   fontSize: 18),
-              displayText: context.watch<ObdReader>().obdData['1'][1].toString() + '°C',
-              displayTextStyle: TextStyle(color: this.widget.theme.iconTheme.color, fontSize: 8),
+              displayText: '°C',
+              displayTextStyle: TextStyle(color: widget.theme.iconTheme.color, fontSize: 8),
             ),
-            Spacer(),
+            const Spacer(),
             Speedometer(
               size: 300,
               minValue: 0,
               maxValue: 180,
-              currentValue: 58,
+              currentValue: speed,
+              //int.parse(context.watch<ObdReader>().obdData['0'][1]),
               warningValue: 90,
-              backgroundColor:  this.widget.theme.cardColor,
-              meterColor: Colors.green,
-              warningColor: Colors.orange,
+              backgroundColor:  widget.theme.cardColor,
+              meterColor: widget.theme.primaryColor,
+              warningColor: Colors.deepOrange.shade500,
               kimColor: Colors.white,
               displayNumericStyle: TextStyle(
                   fontFamily: 'Digital-Display',
-                  color: this.widget.theme.iconTheme.color,
+                  color: widget.theme.iconTheme.color,
                   fontSize: 40),
-              displayText:context.watch<ObdReader>().obdData['0'][1].toString() + 'km/h',
-              displayTextStyle: TextStyle(color: this.widget.theme.iconTheme.color, fontSize: 15),
+              displayText:context.watch<ObdReader>().obdData['0'][1]+ 'km/h',
+              displayTextStyle: TextStyle(color: widget.theme.iconTheme.color, fontSize: 15),
             ),
-            Spacer(),
+            const Spacer(),
             Speedometer(
               minValue: 0,
-              maxValue: 180,
-              currentValue: 58,
+              maxValue:7000,
+              currentValue: rpm,
+             // int.parse(context.watch<ObdReader>().obdData['2'][1]),
               warningValue: 90,
-              backgroundColor:  this.widget.theme.cardColor,
-              meterColor: Colors.green,
-              warningColor: Colors.orange,
+              backgroundColor:  widget.theme.cardColor,
+              meterColor: widget.theme.primaryColor,
+              warningColor: Colors.deepOrange.shade500,
               kimColor: Colors.white,
               displayNumericStyle: TextStyle(
                   fontFamily: 'Digital-Display',
-                  color: this.widget.theme.iconTheme.color,
+                  color: widget.theme.iconTheme.color,
                   fontSize: 40),
-              displayText: context.watch<ObdReader>().obdData['2'][1].toString() + 'x1000RPM',
-              displayTextStyle: TextStyle(color: this.widget.theme.iconTheme.color, fontSize: 15)),
-            Spacer(),
+              displayText:rpm.toString() + 'x1000RPM',
+              displayTextStyle: TextStyle(color: widget.theme.iconTheme.color, fontSize: 15)),
+            const Spacer(),
 
           ],
         ),

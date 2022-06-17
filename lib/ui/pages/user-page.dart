@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
 import '../../data/userEntity.dart';
-import '../widget/profile-widget/button_widget.dart';
 
 
 class userPage extends StatefulWidget {
@@ -26,10 +24,10 @@ class _userPageState extends State<userPage> {
   }
 
   Future<List<User>> retrieveUsers() async {
-    return await this.database.userDAO.retrieveUsers();
+    return await database.userDAO.retrieveUsers();
   }
   Future<List<Car>> retrievCars() async {
-    return await this.database.carDAO.retrieveCars();
+    return await database.carDAO.retrieveCars();
   }
   @override
   void initState() {
@@ -50,7 +48,7 @@ class _userPageState extends State<userPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("list users"),
+        title: const Text("list users"),
 
       ),
       body: FutureBuilder(
@@ -67,14 +65,13 @@ class _userPageState extends State<userPage> {
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Icon(Icons.delete_forever),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: const Icon(Icons.delete_forever),
 
                   ),
                   key: ValueKey<int>(snapshot.data![index].id!),
                   onDismissed: (DismissDirection direction) async {
-                    await this
-                        .database
+                    await database
                         .userDAO
                         .deleteUser(snapshot.data![index].id!);
                     setState(() {
@@ -85,7 +82,7 @@ class _userPageState extends State<userPage> {
                       child: Card(
 
                         child: ListTile(
-                          contentPadding: EdgeInsets.all(8.0),
+                          contentPadding: const EdgeInsets.all(8.0),
                           title: Text(snapshot.data![index].name),
                           subtitle: Text(snapshot.data![index].surName),
                         ),
@@ -102,7 +99,7 @@ class _userPageState extends State<userPage> {
               },
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mini_project/data/kilometragedata.dart';
@@ -97,24 +96,24 @@ class _kilometrage_dataState extends State<kilometrage_data> {
       body: Center(
         child: Container(
           height:600,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: <Widget>[
-                  Text(
+                  const Text(
                     "kilometrage",
                     style: TextStyle(
                         fontWeight: FontWeight.bold
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   Expanded(
                     child: charts.BarChart(
                       _getSeriesData(),
                       animate: true,
-                      domainAxis: charts.OrdinalAxisSpec(
+                      domainAxis: const charts.OrdinalAxisSpec(
                           renderSpec: charts.SmallTickRendererSpec(
                               labelRotation: 60)
                       ),

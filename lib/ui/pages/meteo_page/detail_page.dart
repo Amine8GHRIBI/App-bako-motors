@@ -156,7 +156,7 @@ class _DetailPageState extends State<DetailPage> {
                       width: size.width * .7,
                       height: 300,
                       decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.center,
                               colors: [

@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -15,7 +14,7 @@ import '../../ui/Constants.dart';
 import '../../ui/pages/TransitionRouteObserver.dart';
 import '../../ui/widget/drawer/drawer.dart';
 import '../../ui/widget/login_widget/fadeIn.dart';
-import '../configs/colors.dart';
+
 
 class HomeScreen extends StatefulWidget {
 
@@ -40,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   List<OBD> obdsbydate = [];
 
   List<OBD> newobd = [];
-  int kilometrage = 0;
+  double kilometrage = 0;
   String conduite ="";
 
   int conduiteheure =0;
@@ -55,15 +54,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   Future<List<OBD>> retrieveOBDBydate(UserDatabase db , String date) async {
 
-    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date, this.widget.car.id!.toInt());
+    obdsbydate =await db.obdDAO.retrieveLastOBDByDate(date, 1);
+    DateTime lastdate =  DateTime.parse(obds.last.date);
+    DateTime firstdate = DateTime.parse(obds.first.date);
+    //date1.difference(date2).inHours;
+    conduiteheure =lastdate.difference(firstdate).inHours;
+    conduiteminute = lastdate.difference(firstdate).inMinutes;
+    //conduiteheure = (int.parse(obds.last.time.substring(0,2))) - (int.parse(obds.first.time.substring(0,2)));
+    //conduiteminute = int.parse(obds.last.time.substring(3,5)) - int.parse(obds.first.time.substring(3,5));
+    conduite = conduiteheure.toString() + ':' + conduiteminute.toString();
 
-    conduiteheure = (int.parse(obds.last.time.substring(0,2))) - (int.parse(obds.first.time.substring(0,2)));
-    conduiteminute = int.parse(obds.last.time.substring(3,5)) - int.parse(obds.first.time.substring(3,5));
-    conduite = conduiteheure.toString() + ':' + "0";
-
-    for(OBD o in obdsbydate){
-      kilometrage += int.parse(o.DistanceMILOn);
+    for (OBD obd in obds) {
+      if (double.tryParse(obd.DistanceMILOn) != null) {
+        kilometrage += double.parse(obd.DistanceMILOn);
+      }
     }
+
     debugPrint("obds by date  " + obdsbydate.length.toString());
     setState(() {});
     return obds;
@@ -71,13 +77,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
 
-
-
   Future<String> Mybattery(UserDatabase db) async {
     newobd = await retrieveOBD(db);
     late String speedtest;
     if(newobd.last != null ) {
-      speedtest = newobd.last.CoolantTemperature;
+      speedtest = newobd.last.ModuleVoltage;
     }else{
       speedtest = "no element in base ";
     }
@@ -132,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
     } else if (connectivityResult == ConnectivityResult.wifi) {
-      await this.chauffeurSetup();
+      await chauffeurSetup();
       debugPrint("data send ...");
     }
     setState(()  {},);
@@ -146,24 +150,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   void initState()  {
-
     super.initState();
-
     Future.delayed(Duration.zero,() async {
       //await this.initConnectivity();
       final DateTime now = DateTime.now();
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
       final String formatted = formatter.format(now);
       print(formatted);
-      await Mybattery(this.widget.database);
-      await retrieveOBDBydate(this.widget.database, formatted);
-
-      debugPrint("time " + obds.last.time.substring(0,2).toString());
-      debugPrint("time " + obds.first.time.substring(0,2).toString());
-
-
-      setState(() {
-        },);
+      await Mybattery(widget.database);
+      await retrieveOBDBydate(widget.database, now.toString());
+      setState(() {},);
     });
 
     _loadingController = AnimationController(
@@ -281,45 +277,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
             Column(
              children: <Widget>[
-
-              /*Material(
-                type: MaterialType
-                    .transparency, // to visible splash / ripple effect. the parent's decoration color is covering ripple effect
-                child: Row(
-                  children: [
-                    IconButton(
-                        iconSize: 50,
-                        splashRadius: 25,
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.menu_rounded,
-                          color: kPrimaryColor,
-                        )),
-                    Spacer(),
-                    Stack(
-                      children: [
-                        IconButton(
-                            iconSize: 50,
-                            splashRadius: 25,
-                            onPressed: () {},
-                            icon: FittedBox(
-                                child: Icon(Icons.account_circle_rounded))),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                                color: kPrimaryColor, shape: BoxShape.circle),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),*/
-              Text(
+               Text(
                 'Your Bako',
                 style: TextStyle(fontSize: 25,color: theme.textTheme.headline1?.color, fontWeight: FontWeight.bold),
               ),
@@ -327,14 +285,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               Padding(
                 padding: const EdgeInsets.only(top: 5, bottom: 35),
                 child: Text(
-                  'MODEL X',
+                  'MODEL' + widget.car.name,
                   style: TextStyle(fontSize: 35,color: theme.textTheme.headline1?.color, fontWeight: FontWeight.w200),
                 ),
               ),
 
               Image.asset('lib/tesla_app/images/homepage_tesla.png'),
 
-              new CircularPercentIndicator(
+              CircularPercentIndicator(
                 radius: 200.0,
                 lineWidth: 25.0,
                 animation: true,
@@ -395,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                   style: TextStyle(fontWeight: FontWeight.bold , color: theme.textTheme.headline1?.color)),
                               Text('Today' , style: TextStyle(color: theme.textTheme.headline1?.color)),
 
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Center(
                                 child: RichText(
                                   text: TextSpan(children: [
@@ -404,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                         style: theme.textTheme.headline2),
                                     WidgetSpan(
                                       child: Transform.translate(
-                                        offset: Offset(0, -12),
+                                        offset: const Offset(0, -12),
                                         child: Text('km',
                                             style: theme.textTheme.bodyText2,
                                       ),
@@ -422,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Card(
@@ -441,8 +399,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               Text('Conduite',
                                   style: TextStyle(fontWeight: FontWeight.bold , color: theme.textTheme.headline1?.color) ),
                               Text('Today', style: TextStyle(color: theme.textTheme.headline1?.color)),
-                              SizedBox(height: 10),
-                          SizedBox(height: 10),
+                              const SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Center(
                             child: RichText(
                               text: TextSpan(children: [
@@ -451,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                     style: theme.textTheme.headline2),
                                 WidgetSpan(
                                   child: Transform.translate(
-                                    offset: Offset(0, -12),
+                                    offset: const Offset(0, -12),
                                     child: Text('h/min',
                                       style: theme.textTheme.bodyText2,
                                     ),
@@ -474,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
         ),
             if (_showDrawer)(
-              Container(
+              SizedBox(
                 width: 195.0,
               height: 600.0,
               child:

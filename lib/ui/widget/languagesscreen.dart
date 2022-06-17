@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -15,33 +14,33 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Languages')),
+      appBar: AppBar(title: const Text('Languages')),
       body: SettingsList(
         sections: [
           SettingsSection(tiles: [
             SettingsTile(
-              title: Text("English"),
+              title: const Text("English"),
               trailing: trailingWidget(0),
               onPressed: (BuildContext context) {
                 changeLanguage(0);
               },
             ),
             SettingsTile(
-              title: Text("Spanish"),
+              title: const Text("Spanish"),
               trailing: trailingWidget(1),
               onPressed: (BuildContext context) {
                 changeLanguage(1);
               },
             ),
             SettingsTile(
-              title: Text("Chinese"),
+              title: const Text("Chinese"),
               trailing: trailingWidget(2),
               onPressed: (BuildContext context) {
                 changeLanguage(2);
               },
             ),
             SettingsTile(
-              title: Text("German"),
+              title: const Text("German"),
               trailing: trailingWidget(3),
               onPressed: (BuildContext context) {
                 changeLanguage(3);
@@ -55,8 +54,8 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
 
   Widget trailingWidget(int index) {
     return (languageIndex == index)
-        ? Icon(Icons.check, color: Colors.blue)
-        : Icon(null);
+        ? const Icon(Icons.check, color: Colors.blue)
+        : const Icon(null);
   }
 
   void changeLanguage(int index) {

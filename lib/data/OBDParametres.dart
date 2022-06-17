@@ -1,7 +1,6 @@
 
 
 import 'package:floor/floor.dart';
-import 'package:mini_project/data/userEntity.dart';
 
 @Entity(
   tableName: 'OBD',
@@ -22,8 +21,12 @@ class OBD{
   final String rpm;
   final String CoolantTemperature;
   final String ModuleVoltage;
+  
   final String date ;
   final String time;
+  final String troublecodes;
+  final String tripRecords;
+  final String engineload;
 
   @ColumnInfo(name: 'car_id' )
   final int car_id;
@@ -36,7 +39,10 @@ class OBD{
     required this.speed,
     required this.rpm,
     required this.CoolantTemperature,
-    required this.ModuleVoltage});
+    required this.ModuleVoltage,
+    required this.tripRecords,
+   required this.troublecodes,
+    required this.engineload});
 
   static fromJson(Map<String, dynamic> parsedJson){
     return OBD(
@@ -47,7 +53,10 @@ class OBD{
         car_id: parsedJson["car_id"],
         date: parsedJson["date"],
         time: parsedJson["time"],
-        DistanceMILOn:parsedJson["DistanceMILOn"]
+        DistanceMILOn:parsedJson["DistanceMILOn"],
+        tripRecords:parsedJson["tripRecords"],
+        troublecodes:parsedJson["troublecodes"],
+        engineload:parsedJson["engineload"],
     );
   }
 }

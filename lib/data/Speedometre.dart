@@ -4,7 +4,7 @@ import 'SpeedometerPainter.dart';
 
 class speedometer extends StatelessWidget {
 
-  speedometer({
+  const speedometer({
     required this.speed,
     required this.speedRecord,
     this.size = 300

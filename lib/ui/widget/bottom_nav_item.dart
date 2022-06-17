@@ -7,10 +7,10 @@ BottomNavigationBarItem buildBottomNavItem(
       height: size.width * 0.12,
       width: size.width * 0.12,
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           //themeData.primaryColor.withOpacity(0.05),
-          borderRadius: const BorderRadius.all(
+          borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
         ),

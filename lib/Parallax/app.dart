@@ -19,10 +19,10 @@ class ParallaxApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
-        iconTheme: IconThemeData(color: Color.fromARGB(255, 100,100,100)),
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 100,100,100)),
         
       ),
-      home: Home(),
+      home: const Home(),
     );
   }
 }

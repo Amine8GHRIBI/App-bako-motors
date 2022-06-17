@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mini_project/ui/pages/Home-page.dart';
 import 'package:mini_project/ui/pages/SignIn.dart';
 import '../../data/userEntity.dart';
 
@@ -29,7 +26,7 @@ class _UserLoginState extends State<UserLogin> {
 
     debugPrint(users.length.toString());
 
-    if (users.length > 0 ){
+    if (users.isNotEmpty ){
       user=users.first;
       return true;
     }
@@ -43,7 +40,7 @@ class _UserLoginState extends State<UserLogin> {
         .databaseBuilder('user_database.db')
         .build()
         .then((value) async {
-      this.database = value;
+      database = value;
 
       setState(() {});
     });
@@ -57,7 +54,7 @@ class _UserLoginState extends State<UserLogin> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isloading
-          ? Center(
+          ? const Center(
         child: CircularProgressIndicator(),
       )
           : Form(
@@ -72,18 +69,18 @@ class _UserLoginState extends State<UserLogin> {
                 color: Colors.grey[200],
                 child: SingleChildScrollView(
                   padding:
-                  EdgeInsets.symmetric(horizontal: 25, vertical: 120),
+                  const EdgeInsets.symmetric(horizontal: 25, vertical: 120),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Sign In",
                         style: TextStyle(
                             fontSize: 50,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         onChanged: (value) {
@@ -93,23 +90,25 @@ class _UserLoginState extends State<UserLogin> {
                           if (value!.isEmpty) {
                             return "Please enter Email";
                           }
+                          return null;
                         },
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Email',
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.email,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFormField(
                         obscureText: true,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please enter Password";
                           }
+                          return null;
                         },
                         onChanged: (value) {
                           password = value;
@@ -117,12 +116,12 @@ class _UserLoginState extends State<UserLogin> {
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
                             hintText: 'Password',
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.lock,
                               color: Colors.black,
                             )),
                       ),
-                      SizedBox(height: 80),
+                      const SizedBox(height: 80),
                       LoginSignupButton(
                         title: 'Login',
                         ontapp: () async {
@@ -139,7 +138,7 @@ class _UserLoginState extends State<UserLogin> {
                              }else {
                                await Navigator.of(context).push(
                                  MaterialPageRoute(
-                                   builder: (contex) =>userRegister(),
+                                   builder: (contex) =>const userRegister(),
                                  ),
                                );
                              }
@@ -168,17 +167,17 @@ class _UserLoginState extends State<UserLogin> {
                           }
                         },
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>userRegister(),
+                              builder: (context) =>const userRegister(),
                             ),
                           );
                         },
                         child: Row(
-                          children: [
+                          children: const [
                             Text(
                               "Don't have an Account ?",
                               style: TextStyle(

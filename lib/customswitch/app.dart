@@ -11,14 +11,14 @@ class App extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        iconTheme: IconThemeData(color: Color.fromARGB(255, 101, 101, 101)),
-        textTheme: TextTheme(
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 101, 101, 101)),
+        textTheme: const TextTheme(
           bodyText2: TextStyle(
             color: Colors.white,
           ),
         ),
       ),
-      home: CustomSwitch(),
+      home: const CustomSwitch(),
     );
   }
 }

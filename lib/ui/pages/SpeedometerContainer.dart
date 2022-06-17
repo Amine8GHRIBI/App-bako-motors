@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
 import '../../DataBase/user_database.dart';
@@ -64,11 +63,11 @@ class _SpeedometerContainerState extends State<SpeedometerContainer> {
         body: Stack(
             children: [
               Container(
-                  padding: EdgeInsets.only(bottom: 64),
+                  padding: const EdgeInsets.only(bottom: 64),
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     'Highest speed:\n${highestVelocity.toStringAsFixed(2)} km/h',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white
                     ),
                     textAlign: TextAlign.center,

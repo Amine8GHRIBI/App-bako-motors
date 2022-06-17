@@ -1,8 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:mini_project/ui/pages/userDetails.dart';
 
 import 'Gallerie-page.dart';
 
@@ -17,6 +15,7 @@ class _MeteoPageState extends State<MeteoPage> {
   int counter = 0;
 
 
+  @override
   void initState(){
     super.initState();
     print("initialisation");
@@ -26,30 +25,30 @@ class _MeteoPageState extends State<MeteoPage> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return  AnimatedTheme(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     data: Theme.of(context),
     child  : Scaffold(
-      appBar: AppBar(title: Text('Méteo Page'),),
+      appBar: AppBar(title: const Text('Méteo Page'),),
       body: Column(
         children: [
           Center(
-            child :Text("Counter Value ${counter} ",
+            child :Text("Counter Value $counter ",
              style: theme.textTheme.headline6),
              ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
 
             child: ElevatedButton(
               onPressed: () {
                 AdaptiveTheme.of(context).toggleThemeMode();
                 },
-              child: Text('Changer le thème'),
+              child: const Text('Changer le thème'),
             ),
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             color: theme.primaryColor,
               child: ElevatedButton(
 
@@ -57,18 +56,18 @@ class _MeteoPageState extends State<MeteoPage> {
                   AdaptiveTheme.of(context).setDark();
 
                 },
-                child: Text('Changer le thème'),
+                child: const Text('Changer le thème'),
               ),
           ),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
 
             child: ElevatedButton(
               onPressed: () {
-                Get.to(GalleriePage(),);
+                Get.to(const GalleriePage(),);
                 },
-              child: Text('GO'),
+              child: const Text('GO'),
             ),
           )
         ],

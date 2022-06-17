@@ -1,12 +1,10 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import '../../DataBase/user_database.dart';
-import '../../config/palette.dart';
 import '../../config/styles.dart';
+import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
 import '../../data/data.dart';
 import '../../data/userEntity.dart';
@@ -19,8 +17,9 @@ import 'TransitionRouteObserver.dart';
 class StatsScreen extends StatefulWidget {
   UserDatabase database;
   User user;
+  Car car;
 
-  StatsScreen({Key? key , required this.database, required this.user}) : super(key: key);
+  StatsScreen({Key? key , required this.database, required this.user, required this.car}) : super(key: key);
 
   @override
   State<StatsScreen> createState() => _StatsScreenState();
@@ -55,7 +54,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
   }
 
   Future<List<OBD>> retrieveLastOBD(UserDatabase db) async {
-    obdss = await db.obdDAO.retrieveLastOBD(1);
+    obdss = await db.obdDAO.retrieveLastOBD(widget.car.id!);
 
     setState(()  {},);
     return obdss;
@@ -67,14 +66,10 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
   void initState() {
     super.initState();
     Future.delayed(Duration.zero,() async {
-      await retrieveLastOBD(this.widget.database);
+      await retrieveLastOBD(widget.database);
       setState(() {
         debugPrint("last obd " + obdss.last.speed.toString());
 
-        /// database = this.widget.database;
-        //user = this.widget.user;
-        // await retrieveOBD(this.widget.database);
-        // debugPrint("obd car cnx " + obdss.length.toString());
       });
     });
 
@@ -201,7 +196,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
       body: Container(
         color: theme.primaryColor,
         child : CustomScrollView(
-        physics: ClampingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         slivers: <Widget>[
           _buildHeader(theme),
           _buildRegionTabBar(theme),
@@ -209,7 +204,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
          SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             sliver: SliverToBoxAdapter(
-              child: StatsGrid(database: this.widget.database ,user: this.widget.user),
+              child: StatsGrid(database: widget.database ,user: widget.user ,car : widget.car),
             ),
           ),
           SliverPadding(
@@ -225,13 +220,13 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
   }
 
   SliverPadding _buildHeader(ThemeData theme) {
-    return SliverPadding(
-      padding: const EdgeInsets.all(20.0),
+    return const SliverPadding(
+      padding: EdgeInsets.all(20.0),
       sliver: SliverToBoxAdapter(
         child: Text(
          // obdss.length.toString(),
           "Statistique",
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 25.0,
             fontWeight: FontWeight.bold,
@@ -253,7 +248,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
             borderRadius: BorderRadius.circular(25.0),
           ),
           child: TabBar(
-            indicator: BubbleTabIndicator(
+            indicator: const BubbleTabIndicator(
               tabBarIndicatorSize: TabBarIndicatorSize.tab,
               indicatorHeight: 40.0,
               indicatorColor: Colors.white,
@@ -261,11 +256,13 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
             labelStyle: Styles.tabTextStyle,
             labelColor:theme.primaryColor,
             unselectedLabelColor: theme.indicatorColor,
-            tabs: <Widget>[
+            tabs: const <Widget>[
+             Text('Offline'),
               Text('Online'),
-              Text('Offline'),
             ],
-            onTap: (index) {},
+            onTap: (index) async {
+
+            },
           ),
         ),
       ),
@@ -283,7 +280,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
             labelStyle: Styles.tabTextStyle,
             labelColor: theme.secondaryHeaderColor,
             unselectedLabelColor: theme.indicatorColor ,
-            tabs: <Widget>[
+            tabs: const <Widget>[
               Text('Total'),
               Text('Today'),
               Text('Yesterday'),

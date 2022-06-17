@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SpeedometerPainter extends CustomPainter {
@@ -63,11 +62,12 @@ class SpeedometerPainter extends CustomPainter {
               () => _drawMarker(isBigMarker)
       );
 
-      if (isBigMarker)
+      if (isBigMarker) {
         _drawRotated(
             relativeRotation,
                 () => _drawSpeedScaleText(relativeRotation, normalizedPercentage.toString())
         );
+      }
     }
   }
 
@@ -107,7 +107,7 @@ class SpeedometerPainter extends CustomPainter {
   }
 
   void _drawNeedleHolder() {
-    RadialGradient gradient = RadialGradient(
+    RadialGradient gradient = const RadialGradient(
         colors: [Colors.orange, Colors.red, Colors.red, Colors.black],
         radius: 1.2,
         stops: [0.0, 0.7, 0.9, 1.0]
@@ -159,8 +159,8 @@ class SpeedometerPainter extends CustomPainter {
   }
 
   void _drawSpeedScaleText(double rotation, String text) {
-    TextSpan span = new TextSpan(
-        style: new TextStyle(
+    TextSpan span = TextSpan(
+        style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.red,
             fontSize: size.width / 20
@@ -205,13 +205,13 @@ class SpeedometerPainter extends CustomPainter {
   }
 
   void _drawSpeed() {
-    TextSpan span = new TextSpan(
-        style: new TextStyle(
+    TextSpan span = TextSpan(
+        style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.red,
             fontSize: size.width / 12
         ),
-        text: '${speed.toStringAsFixed(0)}'
+        text: speed.toStringAsFixed(0)
     );
 
     TextPainter textPainter = TextPainter(
@@ -259,7 +259,7 @@ class SpeedometerPainter extends CustomPainter {
     double rotation = 0.15 + (speedRecord / 100);
 
     paintObject
-      ..color = Colors.white.withOpacity(0.5);
+      .color = Colors.white.withOpacity(0.5);
 
     Path needlePath = Path()
       ..moveTo(center.dx - size.width / 120, center.dy)

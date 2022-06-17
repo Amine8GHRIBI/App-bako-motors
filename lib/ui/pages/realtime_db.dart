@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/userEntity.dart';
 
 
 class realtime_db extends StatefulWidget {
@@ -39,24 +36,24 @@ class _realtime_dbState extends State<realtime_db> {
               ),
               TextButton(    onPressed: () {
                 _createDB();
-              }, child: Text(" create DB")),
+              }, child: const Text(" create DB")),
               TextButton(onPressed: () {
                 _realdb_once();
-              }, child: Text(" read value")),
+              }, child: const Text(" read value")),
               TextButton(onPressed: () {
                 _readdb_onechild();
-              }, child: Text(" read once child")),
+              }, child: const Text(" read once child")),
               TextButton(onPressed: () {
                 _updatevalue();
-              }, child: Text(" update value")),
+              }, child: const Text(" update value")),
 
               //   _updatevalue_count()
               TextButton(onPressed: () {
                 _delete();
-              }, child: Text(" delete value")),
+              }, child: const Text(" delete value")),
               TextButton(onPressed: () {
                 chauffeurSetup();
-              }, child: Text(" add chauffeur ")),
+              }, child: const Text(" add chauffeur ")),
             ],
           ),
         ),

@@ -1,20 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:mini_project/ui/pages/DashbordScreen.dart';
 
 import '../../DataBase/user_database.dart';
+import '../../data/CarEntity.dart';
 import '../../data/userEntity.dart';
-import '../../tesla_app/screens/base_screen.dart';
 import '../Constants.dart';
-import 'Home-Page.dart';
-import 'custom_route.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 
@@ -34,25 +26,22 @@ class _LoginScreenState extends State<LoginScreen> {
     String phoneNumber ="";
     String name ="";
 
-    if(user != null){
-      user.additionalSignupData?.forEach((key, value) {
+    user.additionalSignupData?.forEach((key, value) {
 
-         if (key == "Surname"){
-           surname = value;
-         }
-         if (key == "Username"){
-           username = value;
-         }
-         if (key == "phone_number"){
-            phoneNumber =value;
-         }
-         if (key == "Name"){
-            name=value;
-         }
+       if (key == "Surname"){
+         surname = value;
+       }
+       if (key == "Username"){
+         username = value;
+       }
+       if (key == "phone_number"){
+          phoneNumber =value;
+       }
+       if (key == "Name"){
+          name=value;
+       }
 
-      });
-
-    }
+    });
     User firstUser = User( name: name ,  surName : surname, phoneNumber : phoneNumber ,
         email : user.name.toString() , birthday :"" , adresse: "", username:username, password: user.password.toString() );
     debugPrint(firstUser.name + firstUser.phoneNumber);
@@ -74,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
             .databaseBuilder('user_database.db')
             .build()
             .then((value) async {
-          this.database = value;
+          database = value;
           //this.addUsers(this.database);
 
         });
@@ -90,18 +79,16 @@ class _LoginScreenState extends State<LoginScreen> {
        userss = await database.userDAO.finduserBypassword(data.password.toString());
 
        debugPrint("user succ" + users.length.toString());
-      if (users.length<=0) {
+      if (users.isEmpty) {
         return 'User not exists';
       }
 
-      if (userss.length <=0 ) {
+      if (userss.isEmpty ) {
         return 'Password does not match';
       }
 
-      if(users != null) {
-        user = users.first;
-        debugPrint("first user " + user.name.toString());
-      }
+      user = users.first;
+      debugPrint("first user " + user.name.toString());
       return null;
     });
   }
@@ -110,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
     debugPrint('user register   ${data.additionalSignupData}');
 
     return Future.delayed(loginTime).then((_) async {
-      int id = await this.addUsers(this.database, data) ;
+      int id = await addUsers(database, data) ;
       debugPrint("id user " + id.toString());
       return null;
     });
@@ -245,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
         debugPrint('Signup info');
         debugPrint('email: ${signupData.name}');
         debugPrint('Password: ${signupData.password}');
-        debugPrint('user register   ${signupData}');
+        debugPrint('user register   $signupData');
 
 
         signupData.additionalSignupData?.forEach((key, value) {
@@ -264,7 +251,9 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       onSubmitAnimationCompleted: () {
 
-          Navigator.pushNamed(context , '/app' , arguments: {"database" : this.database , "user" : this.user});
+          Navigator.pushNamed(context , '/app' , arguments: {"database" : database , "user" : user,
+            "car" : Car(name: "Aucun", model: "Aucun", year: "null", license_Plate: "null", initial_mileage: "null")});
+
        // Navigator.pushNamed(context ,BaseScreen(database: this.database,user: this.user));
         //Get.to(BaseScreen(database: this.database,  user : this.user));
 

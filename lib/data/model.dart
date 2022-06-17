@@ -1,25 +1,27 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:bluetooth_obd/bluetooth_obd.dart';
 import 'package:flutter/services.dart';
 
 /// Mix-in [DiagnosticableTreeMixin] to have access to [debugFillProperties] for the devtool
 // ignore: prefer_mixin
 class ObdReader with ChangeNotifier, DiagnosticableTreeMixin {
-  String _tripRecords = '';
+  final String _tripRecords = '';
   String _obdSpeed = '';
   String _obdEngineCoolantTemp = '';
   String _obdEngineLoad = '';
   String _obdEngineRpm = '';
   String _obdModuleVoltage = '';
   String _obdDistanceMILOn = '';
-  Map _obdData = {
+  final String _troublecodes = '';
+  final Map _obdData = {
     '0': ['Speed', '0'],
     '1': ['CoolantTemperature', '0'],
     '2': ['RPM', '0'],
     '3': ['EngineLoad', '0'],
     '4': ['ModuleVoltage', '0'],
-    '5': ['DistanceMILOn', '0']
+    '5': ['DistanceMILOn', '0'],
+    '6' : ['tripRecords' , '0' ],
+    '7' : ['troublecodes' , '0' ]
   };
 
   String get tripRecords => _tripRecords;
@@ -35,6 +37,8 @@ class ObdReader with ChangeNotifier, DiagnosticableTreeMixin {
   String get obdModuleVoltage => _obdModuleVoltage;
 
   String get obdDistanceMILOn => _obdDistanceMILOn;
+
+  String get troublecodes => _troublecodes;
 
   Map get obdData => _obdData;
 
@@ -107,6 +111,20 @@ class ObdReader with ChangeNotifier, DiagnosticableTreeMixin {
     } on PlatformException {
       _obdDistanceMILOn = 'Failed to get Distance MILOn.';
       _obdData['5'][1] = 'Failed to get Distance MILOn.';
+    }
+    try {
+      _obdDistanceMILOn = await BluetoothObd.tripRecord;
+      _obdData['6'][1] = _tripRecords;
+    } on PlatformException {
+      _obdDistanceMILOn = 'Failed to get tripRecord';
+      _obdData['6'][1] = 'Failed to get tripRecords';
+    }
+    try {
+      _obdDistanceMILOn = await BluetoothObd.getTroublecodes;
+      _obdData['7'][1] = _troublecodes;
+    } on PlatformException {
+      _obdDistanceMILOn = 'Failed to get troublecodes ';
+      _obdData['7'][1] = 'Failed to get troublecodes ';
     }
     notifyListeners();
   }

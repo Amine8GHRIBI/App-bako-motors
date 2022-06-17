@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomSwitch extends StatefulWidget {
-  CustomSwitch({Key? key}) : super(key: key);
+  const CustomSwitch({Key? key}) : super(key: key);
 
   @override
   _CustomSwitchState createState() => _CustomSwitchState();
 }
 
 class _CustomSwitchState extends State<CustomSwitch> {
-  double _switchWidth = 120.0;
-  double _switchHeight = 50.0;
+  final double _switchWidth = 120.0;
+  final double _switchHeight = 50.0;
 
-  Duration _animationDuration = Duration(milliseconds: 300);
-  Duration _animationDurationThumb = Duration(milliseconds: 100);
+  final Duration _animationDuration = const Duration(milliseconds: 300);
+  final Duration _animationDurationThumb = const Duration(milliseconds: 100);
 
   bool _isNight = true;
 
@@ -41,7 +41,7 @@ class _CustomSwitchState extends State<CustomSwitch> {
               type: MaterialType.transparency,
               child: InkWell(
                 onTap: _onTapSwitch,
-                child: Container(
+                child: SizedBox(
                   width: _switchWidth,
                   height: _switchHeight,
                   child: Stack(
@@ -57,11 +57,11 @@ class _CustomSwitchState extends State<CustomSwitch> {
                           width: _switchWidth,
                           height: _switchHeight,
                           child: Ink.image(
-                            image: AssetImage(
+                            image: const AssetImage(
                                 'lib/customswitch/images/night_background.png'),
                             fit: BoxFit.cover,
                           ),
-                          decoration: BoxDecoration(),
+                          decoration: const BoxDecoration(),
                         ),
                       ),
                       //moon
@@ -91,11 +91,11 @@ class _CustomSwitchState extends State<CustomSwitch> {
                           width: _switchWidth,
                           height: _switchHeight,
                           child: Ink.image(
-                            image: AssetImage(
+                            image: const AssetImage(
                                 'lib/customswitch/images/day_background.png'),
                             fit: BoxFit.cover,
                           ),
-                          decoration: BoxDecoration(),
+                          decoration: const BoxDecoration(),
                         ),
                       ),
 

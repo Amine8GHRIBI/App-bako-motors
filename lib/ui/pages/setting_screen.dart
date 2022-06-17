@@ -1,15 +1,13 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-import '../widget/languagesscreen.dart';
 
 class SettingsScreen extends StatefulWidget {
   //ThemeData theme ;
-  SettingsScreen({Key? key }) : super(key: key);
+  const SettingsScreen({Key? key }) : super(key: key);
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -26,6 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late String iconAdress;
 
 
+  @override
   void initState() {
     super.initState();
     getCurrentTheme();
@@ -88,14 +87,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   color:   theme.iconTheme.color,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-    ),),
+           ),),
               //title: const Text('English'),
-              leading: Icon(Icons.language),
-              onPressed: (context) {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => LanguagesScreen(),
-                ));
-              },
+              leading: const Icon(Icons.language),
+              onPressed: (context)
+                async {
+
+
+                  },
             ),
            /* CustomTile(
               child: Container(
@@ -118,27 +117,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),*/
             SettingsTile(
-              title: Text('Environment'),
+              title: const Text('Environment'),
               //subtitle: 'Production',
-              leading: Icon(Icons.cloud_queue),
+              leading: const Icon(Icons.cloud_queue),
             ),
           ],
         ),
         SettingsSection(
-          title: Text('Account'),
+          title: const Text('Account'),
           tiles: [
-            SettingsTile(title: Text('Phone number'), leading: Icon(Icons.phone)),
-            SettingsTile(title: Text('Email'), leading: Icon(Icons.email)),
-            SettingsTile(title: Text('Sign out'), leading: Icon(Icons.exit_to_app)),
+            SettingsTile(title: const Text('Phone number'), leading: const Icon(Icons.phone)),
+            SettingsTile(title: const Text('Email'), leading: const Icon(Icons.email)),
+            SettingsTile(title: const Text('Sign out'), leading: const Icon(Icons.exit_to_app)),
           ],
         ),
         SettingsSection(
-          title: Text('Security'),
+          title: const Text('Security'),
           tiles: [
 
             SettingsTile.switchTile(
-              title: Text('Mode theme'),
-              leading: Icon(Icons.dark_mode),
+              title: const Text('Mode theme'),
+              leading: const Icon(Icons.dark_mode),
               onToggle: (bool value) {
                 print(value);
                 if (value == true) {
@@ -162,9 +161,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                initialValue: lockInBackground,
             ),
             SettingsTile.switchTile(
-              title: Text('WIFI'),
+              title: const Text('WIFI'),
               //subtitle: 'Allow application to access stored fingerprint IDs.',          AppSettings.openWIFISettings();
-              leading: Icon(Icons.fingerprint),
+              leading: const Icon(Icons.fingerprint),
               onToggle: (bool value) {
                 if (value == true) {
                   AppSettings.openWIFISettings();
@@ -184,9 +183,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
             SettingsTile.switchTile(
-              title: Text('Bluetooth'),
+              title: const Text('Bluetooth'),
               enabled: notificationsEnabled,
-              leading: Icon(Icons.notifications_active),
+              leading: const Icon(Icons.notifications_active),
               //switchValue: true,
               onToggle: (value) {
                   if (value == true) {
@@ -206,13 +205,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         SettingsSection(
-          title: Text('Misc'),
+          title: const Text('Misc'),
           tiles: [
             SettingsTile(
-                title: Text('Terms of Service'), leading: Icon(Icons.description)),
+                title: const Text('Terms of Service'), leading: const Icon(Icons.description)),
             SettingsTile(
-                title: Text('Open source licenses'),
-                leading: Icon(Icons.collections_bookmark)),
+                title: const Text('Open source licenses'),
+                leading: const Icon(Icons.collections_bookmark)),
           ],
         ),
 

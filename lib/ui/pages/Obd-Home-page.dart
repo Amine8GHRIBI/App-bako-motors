@@ -1,19 +1,13 @@
 import 'dart:async';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speedometer/flutter_speedometer.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_project/DataBase/user_database.dart';
 import 'package:mini_project/data/OBDParametres.dart';
-import 'package:mini_project/ui/widget/speedo-widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/model.dart';
 import '../../data/userEntity.dart';
-import '../../tesla_app/screens/home_screen.dart';
 import '../widget/car-obd-widget.dart';
 
 
@@ -37,20 +31,17 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
 
   @override
   void initState()  {
-    //timer = Timer.periodic( Duration(seconds: 1), (Timer t) =>addOBD(this.widget.database));
+   // timer = Timer.periodic( Duration(seconds: 1), (Timer t) =>addOBDst(this.widget.database));
 
     super.initState();
-    Future.delayed(Duration.zero,() {
+    Future.delayed(Duration.zero,() async{
+      //await this.addOBDst(this.widget.database);
+      await getmaxspeed(widget.database );
+      await getmaxkilometrage(widget.database);
+      OBDSS = await retrieveOBD(widget.database);
+
       setState(() async {
-        /*final routes =
-        ModalRoute
-            .of(context)
-            ?.settings
-            .arguments as Map<String, dynamic>;
-        database = routes["database"];
-        user = routes["user"];*/
-        OBDSS = await this.retrieveOBD(this.widget.database);
-       await this.addOBD(this.widget.database);
+
         debugPrint("obd diagno last " + OBDSS.last.speed.toString());
         },
       );
@@ -66,7 +57,7 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
   }
 
   Future<List<OBD>> retrieveOBD(UserDatabase db) async {
-      obds =await this.widget.database.obdDAO.retrieveAllOBD();
+      obds =await widget.database.obdDAO.retrieveAllOBD();
       debugPrint("obd diagno " + obds.length.toString());
       setState(() {});
       return obds;
@@ -83,10 +74,10 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
 
     print(formatteddate); // something like 2013-04-20
    // int i = context.read<ObdReader>().obdData.length;
-    //rMap<dynamic, dynamic> ii = context.watch<ObdReader>().obdData;
+    // context.watch<ObdReader>().increment();
 
-    OBD obddtat= OBD( speed: "192", rpm: "50", CoolantTemperature: "12.1", ModuleVoltage: "12", date:formatteddate , car_id: 1, time: formattedtime , DistanceMILOn: '120');
-      List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
+    OBD obddtat= OBD( speed: "19", rpm: "50", CoolantTemperature: "12.1", ModuleVoltage: "12", date:formatteddate , car_id: 1, time: formattedtime , DistanceMILOn: '5', engineload: '', troublecodes: '', tripRecords: '');
+      List<int> obdsaved = await widget.database.obdDAO.insertOBD([obddtat]);
       for (int idsaved in obdsaved) {
         ob.add(idsaved);
       }
@@ -96,18 +87,62 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
     return obdsaved;
   }
 
-  Future<List<int>> addOBDst(UserDatabase db ,Map<dynamic, dynamic> obdwatch ) async {
+  Future<List<int>> addOBDst(UserDatabase db ) async {
+    //context.watch<ObdReader>().increment();
     List<int> ob =[];
-    obdwatch.forEach((k, v) async {
-      OBD obddtat= OBD( speed: v[0], rpm: v[1], CoolantTemperature: v[2], ModuleVoltage: v[3], date: '05/04/2022', car_id: 1, time: '06/04/2022', DistanceMILOn: '20');
-      List<int> obdsaved = await this.widget.database.obdDAO.insertOBD([obddtat]);
-      for (int idsaved in obdsaved) {
-        ob.add(idsaved);
-      }
-    });
+    final DateTime now = DateTime.now();
+    final DateFormat formatterdate = DateFormat('yyyy-MM-dd');
+    final DateFormat formattertime = DateFormat('HH:mm:ss');
+
+    final String formatteddate = formatterdate.format(now);
+    final String formattedtime = formattertime.format(now);
+    //final _ObdReader = Provider.of<ObdReader>(context, listen: false);
+
+      OBD obddtat= OBD(
+          speed: "70",
+          rpm: context.read<ObdReader>().obdData['2'][1].toString(),
+          CoolantTemperature: context.read<ObdReader>().obdData['1'][1].toString(),
+          ModuleVoltage: context.read<ObdReader>().obdData['4'][1].toString(), date: formatteddate, car_id: 1, time: formattedtime,
+          DistanceMILOn: "", troublecodes: context.read<ObdReader>().obdData['7'][1].toString(),
+          tripRecords: context.read<ObdReader>().obdData['6'][1].toString(), engineload: context.read<ObdReader>().obdData['3'][1].toString()
+      );
+    List<int> obdsaved = await widget.database.obdDAO.insertOBD([obddtat]);
+
     return ob;
   }
+  List<OBD> obdskilom =[];
+  List<OBD> obdstemp = [];
+  //late UserDatabase database;
+  //late User user;
+  int max = 0;
+  int maxkilo =0;
+  String maxx = "";
+  Future<int> getmaxspeed(UserDatabase db) async {
+    obds = await widget.database.obdDAO.retrieveAllOBD();
+    for (OBD obd  in obds) {
+      // maxx = obd.speed;
+      if(int.tryParse(obd.speed) != null) {
+        if (int.parse(obd.speed) > max) {
+          max = int.parse(obd.speed);
+        }
+      }
+    }
+    setState(()  {},);
+    return max ;
+  }
+  Future<int> getmaxkilometrage(UserDatabase db) async {
+    obdskilom = await retrieveOBD(db);
+    for (OBD obd  in obdskilom) {
+      if (int. parse(obd.DistanceMILOn) > maxkilo  ){
+        debugPrint("kilom" + obd.DistanceMILOn.toString());
+        maxkilo = int. parse(obd.DistanceMILOn);
+      }
+      setState(()  {},);
+    }
 
+
+    return maxkilo ;
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -117,7 +152,7 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
         home: Scaffold(
           appBar: AppBar(
 
-              title:  Text('OBD READER' + OBDSS.length.toString()),
+              title:  Text( max.toString() + obds.length.toString()),
               actions: [
 
                 IconButton(
@@ -157,7 +192,7 @@ class _obd_homeState extends State<obd_home> with WidgetsBindingObserver {
         // Create a grid with 2 columns. If you change the scrollDirection to
         // horizontal, this produces 2 rows.
         crossAxisCount: 2,
-        children: List.generate(6, (index) {
+        children: List.generate(8, (index) {
          /* while(start) {
              context.read<ObdReader>().increment();
              addOBDst(database,context.watch<ObdReader>().obdData);

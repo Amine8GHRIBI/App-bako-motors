@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class RoundButton extends StatefulWidget {
   const RoundButton({
@@ -82,7 +81,7 @@ class _RoundButtonState extends State<RoundButton>
                     // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
                     heroTag: null,
                     backgroundColor:  theme.buttonColor,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
 
                     onPressed: () {
                       _pressController.forward().then((_) {

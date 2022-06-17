@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VerticalTabBar extends StatefulWidget {
-  VerticalTabBar({Key? key}) : super(key: key);
+  const VerticalTabBar({Key? key}) : super(key: key);
 
   @override
   _VerticalTabBarState createState() => _VerticalTabBarState();
@@ -9,7 +9,7 @@ class VerticalTabBar extends StatefulWidget {
 
 class _VerticalTabBarState extends State<VerticalTabBar> {
   int selectedIndex = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   int pagesCount = 50;
 
@@ -24,7 +24,7 @@ class _VerticalTabBarState extends State<VerticalTabBar> {
               child: ListView.separated(
                 itemCount: pagesCount,
                 separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 5);
+                  return const SizedBox(height: 5);
                 },
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
@@ -38,7 +38,7 @@ class _VerticalTabBarState extends State<VerticalTabBar> {
                       child: Row(
                         children: [
                           AnimatedContainer(
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             height: (selectedIndex == index) ? 50 : 0,
                             width: 5,
                             color: Colors.blue,
@@ -46,7 +46,7 @@ class _VerticalTabBarState extends State<VerticalTabBar> {
                           Expanded(
                               child: AnimatedContainer(
                             alignment: Alignment.center,
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             height: 50,
                             color: (selectedIndex == index)
                                 ? Colors.blueGrey.withOpacity(0.2)

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../data/CarEntity.dart';
 import '../../../../data/Moyenne.dart';
-import '../../../../data/cars.dart';
-import 'brand_logo.dart';
-import 'car.dart';
 import 'moyenne.dart';
 
 
-Column information (Size size, ThemeData theme) {
+Column information (Size size, ThemeData theme , Car car) {
   //
   return Column(
     children: [
@@ -35,7 +33,7 @@ Column information (Size size, ThemeData theme) {
             //scrollDirection: Axis.horizontal,
             itemCount: moyenne.length,
             itemBuilder: (context, i) {
-              return buildMoy(i, size, theme,);
+              return buildMoy(i, size, theme,car);
             },
           ),
         ),

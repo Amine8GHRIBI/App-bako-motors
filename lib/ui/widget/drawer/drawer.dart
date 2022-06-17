@@ -1,9 +1,7 @@
 import 'package:app_settings/app_settings.dart';
 import
 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
-import 'package:mini_project/ui/pages/user-page.dart';
 
 import 'drawer_collapse.dart';
 import 'drawer_item.dart';
@@ -30,7 +28,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   void initializeAnimation() {
     _controller = AnimationController(
-      duration: Duration(
+      duration: const Duration(
         milliseconds: 500,
       ),
       vsync: this,
@@ -61,7 +59,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   void onCollapseTap() {
     if (isCollapsed) {
-      Future.delayed(Duration(
+      Future.delayed(const Duration(
         milliseconds: 70,
       )).then((value) {
         setState(() {
@@ -105,7 +103,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             animation: _animation,
             builder: (ctx, child) {
               return AnimatedContainer(
-                duration: Duration(
+                duration: const Duration(
                   milliseconds: 70,
                 ),
                 width: (isCollapsed)
@@ -125,7 +123,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 child: (_animation.value > 0.7)
                     ? Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 23,
                           ),
                           DrawerUser(
@@ -136,14 +134,14 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
 
                           DrawerItem(
-                            icon:new IconButton(
+                            icon:IconButton(
                                 icon: Icon(Icons.account_circle_rounded,color:  theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => profile_page()));                                }),
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const profile_page()));                                }),
 
-                            label: Text(
+                            label: const Text(
                               'Profile         ',
                               style: TextStyle(
                                 color: Colors.black,
@@ -155,7 +153,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             isCollapsed: isCollapsedAfterSec,
                           ),
                           DrawerItem(
-                            icon:new IconButton(
+                            icon:IconButton(
                                 icon: Icon(Icons.bluetooth_connected,color: theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
@@ -163,7 +161,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                                   Navigator.pushNamed(context , '/conn');
                                 }),
 
-                            label: Text(
+                            label: const Text(
                               'connexion',
                               style: TextStyle(
                                 color: Colors.black,
@@ -175,7 +173,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                           ),
 
                           DrawerItem(
-                            icon:new IconButton(
+                            icon:IconButton(
                                 icon: Icon(Icons.ev_station,color: theme.iconTheme.color,
                                   size: 20,),
 //                  tooltip: "Admin",
@@ -194,7 +192,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             isCollapsed: isCollapsedAfterSec,
                           ),
                           DrawerItem(
-                            icon:new IconButton(
+                            icon:IconButton(
                                 icon: Icon(Icons.wifi
                                   ,color: theme.iconTheme.color,
                                   size: 20,),
@@ -216,8 +214,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
                           DrawerItem(
 
-                            icon:new IconButton(
-                                icon: Icon(Icons.logout),
+                            icon:IconButton(
+                                icon: const Icon(Icons.logout),
 //                  tooltip: "Admin",
                                 onPressed: () {
                                   Navigator.pushNamed(context , '/conn');
@@ -232,7 +230,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             ),
                             isCollapsed: isCollapsedAfterSec,
                           ),
-                          Spacer(),
+                          const Spacer(),
                           // * Bottom Toggle Button
                           if (_controller.value >= 1)
                             DrawerCollapse(
@@ -241,7 +239,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                             ),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               );
             },
           ),
@@ -256,7 +254,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 onTap: () {
                   reverseAnimation();
                   Future.delayed(
-                    Duration(
+                    const Duration(
                       milliseconds: 500,
                     ),
                   ).then(
