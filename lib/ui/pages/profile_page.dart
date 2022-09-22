@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mini_project/data/CarEntity.dart';
@@ -14,18 +15,19 @@ import '../../data/userEntity.dart';
 
 
 class profile_page extends StatefulWidget {
-
-
-  const profile_page({Key? key}) : super(key: key);
+  UserDatabase database;
+  User user;
+  ThemeData theme;
+   profile_page({Key? key, required this.database,required this.user,required this.theme}) : super(key: key);
 
   @override
   State<profile_page> createState() => _profile_pageState();
 }
 
 class _profile_pageState extends State<profile_page> {
-  late UserDatabase database;
-  late User? user ;
-  late ThemeData theme;
+ // late UserDatabase database;
+
+ // late ThemeData theme;
   String name='';
   String model ='';
   String year ='';
@@ -34,21 +36,25 @@ class _profile_pageState extends State<profile_page> {
 
 
   Future<List<caruser>> retrievCarsusers() async {
-    return await database.caruserDAO.retrieveAllcarsusers();
+    return await this.widget.database.caruserDAO.retrieveAllcarsusers();
+    setState (() {});
   }
 
   Future<User?> retrieveUserbyid(int id) async {
-    user = await database.userDAO.retrieveUser(id);
+    User? user ;
+    user = await this.widget.database.userDAO.retrieveUser(id);
     return user;
+
+    setState (() {});
   }
 
   Future<int> addcar(UserDatabase db ,String name , String model ,String year ,String licensePlate ,String initialMileage ) async {
     //, String phoneNumber , String birthday , String email,String  adresse
     Car firstcar = Car(name : name, model : model, year :year ,license_Plate: licensePlate, initial_mileage : initialMileage );
-     int idCar =  await db.carDAO.insertCar(firstcar);
+    int idCar =  await db.carDAO.insertCar(firstcar);
 
-     debugPrint("car add " + firstcar.name );
-    List<int> carusers = await addusercar(db, idCar, 1);
+   // debugPrint("car add " + firstcar.name );
+    List<int> carusers = await addusercar(db, idCar, this.widget.user.id!);
     //User firstUser = User(name: "amine ", lastName: "ghribi", phoneNumber : "94574896" , email : "agh@gmail.com ", birthday :"19595", adresse :"gabes ");
     return idCar;
   }
@@ -56,56 +62,50 @@ class _profile_pageState extends State<profile_page> {
   Future<List<int>> addusercar(UserDatabase db , int idcar , int iduser  ) async {
     //, String phoneNumber , String birthday , String email,String  adresse
     caruser firstcaruser = caruser(id_car: idcar , id_user: iduser);
-    debugPrint("car add " + firstcaruser.id_car.toString());
+   // debugPrint("car add " + firstcaruser.id_car.toString());
 
     //User firstUser = User(name: "amine ", lastName: "ghribi", phoneNumber : "94574896" , email : "agh@gmail.com ", birthday :"19595", adresse :"gabes ");
     return await db.caruserDAO.insertCaruser([firstcaruser]);
   }
 
   Future<List<Car>> retrievCarsByuser(int id ) async {
-    List<caruser> carsuser = await database.caruserDAO.findcaridbyuserid(id);
+    List<caruser> carsuser = await this.widget.database.caruserDAO.findcaridbyuserid(id);
     List<int> idcars = [] ;
     List<Car> cars =[];
     for (caruser cu in carsuser){
-      debugPrint("idcaruser" + cu.id_car.toString());
+      //debugPrint("idcaruser" + cu.id_car.toString());
       idcars.add(cu.id_car);
     }
     for (int id in idcars){
-      Car? cr = await database.carDAO.retrieveCar(id);
+      Car? cr = await this.widget.database.carDAO.retrieveCar(id);
       cars.add(cr!);
     }
 
     return cars;
+    setState (() {});
   }
 
 
   @override
   void initState() {
+    setState (() {});
+
   }
 
   @override
   Widget build(BuildContext context) {
 
-    final routes =
-    ModalRoute
-        .of(context)
-        ?.settings
-        .arguments as Map<String, dynamic>;
-    database = routes["database"];
-    user =routes["user"];
-    theme = routes["theme"];
-
     return Scaffold(
       appBar:
       AppBar(
         title: Text(
-          'Profile',
-          style: TextStyle(color: theme.iconTheme.color),
+          'Profile' ,
+          style: TextStyle(color: this.widget.theme.iconTheme.color),
         ),
-        backgroundColor: theme.bottomAppBarColor,
-        iconTheme: IconThemeData(color: theme.iconTheme.color),
+        backgroundColor: this.widget.theme.bottomAppBarColor,
+        iconTheme: IconThemeData(color: this.widget.theme.iconTheme.color),
       ),
-      backgroundColor: theme.cardTheme.color,
+      backgroundColor: this.widget.theme.cardTheme.color,
       body: SizedBox(
         width: MediaQuery
             .of(context)
@@ -128,19 +128,22 @@ class _profile_pageState extends State<profile_page> {
                     .size
                     .height / 4,
                 decoration: const BoxDecoration(
-                    image : DecorationImage(
-                      image : ExactAssetImage('assets/image/dash.jpg'),
-                        fit: BoxFit.cover,
-                      // height: 30,
-                    ),
-                   color: Color(0xff5a348b),
-                    gradient: LinearGradient(
+                  image : DecorationImage(
+                    image : ExactAssetImage('assets/newbako/interieur.png'),
+                    fit: BoxFit.cover,
+                    // height: 30,
+                  ),
+                  color: Colors.transparent,
+                  /* gradient: LinearGradient(
                         colors: [Color(0xff8d70fe), Color(0xff2da9ef)],
                         begin: Alignment.centerRight,
                         end: Alignment(-1.0, -1.0)
-                    )
+                    )*/
                 ),
-                child: Stack(
+
+
+
+               /* child: Stack(
                   fit: StackFit.expand,
                   children: [
                     ClipRRect( // Clip it cleanly.
@@ -154,97 +157,111 @@ class _profile_pageState extends State<profile_page> {
                       ),
                     ),
                   ],
-                ),
+                ),*/
               ),
             ),
             Positioned(
               top: 225.0,
               left: 10.0,
 
-            child: Container(
-              padding:  const EdgeInsets.all(2.3),
-              color: theme.cardColor,
-                  width: 340.0,
-                 height: MediaQuery
-        .of(context)
-        .size
-        .height / 0.5,
+              child: Container(
+                padding:  const EdgeInsets.all(2.3),
+                color: this.widget.theme.cardColor,
+                width: 340.0,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height / 0.5,
 
-    child:FutureBuilder(
-    future: retrieveUserbyid(1),
+                child:FutureBuilder(
+                  future: retrieveUserbyid(this.widget.user.id!),
+                  builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                      var data = snapshot.data;
+                     if (data == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else {
+                       return Column(
 
-    builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-      return Dismissible(
+                             children: <Widget>[
+                               Text('Complete profile ',
+                                 textAlign: TextAlign.right,
 
-          key: Key(snapshot.data!.id!.toString()),
-          background: _myHiddenContainer(
-              Colors.red
-          ),
-      child : Column(
+                                 style: GoogleFonts.poppins(
+                                   color: this.widget.theme.textTheme.headline1
+                                       ?.color,
+                                   fontSize: 14,
+                                   fontWeight: FontWeight.bold,
+                                 ),),
+                    Card(
+                    elevation: 8.0,
+                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                    child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 10.0),
+                    leading: Icon(Icons.account_circle),
+                    title: Text(data.name),
+                    trailing: Icon(Icons.arrow_forward),
+                    ),
+                    ),
+                    )] );
+                               //flex: 1, // takes 30% of available width
+                               /*_myListContainer(
+                                   data.name, data.surName,
+                                   data.phoneNumber,
+                                   this.widget.theme.cardTheme.color),
 
-          children: <Widget>[
-          Text( 'Complete profile ',
-            textAlign: TextAlign.right,
-
-            style: GoogleFonts.poppins(
-            color:    theme.textTheme.headline1?.color,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),),
-              //flex: 1, // takes 30% of available width
-               _myListContainer(snapshot.data!.name, snapshot.data!.surName,
-                  snapshot.data!.phoneNumber, theme.cardTheme.color),
-
-    ]),);
-
-    },),),),
+                             );*/
+                     }
+                     },),),),
             Positioned(
               top: 340.0,
               left: 20.0,
               child: Container(
                   padding:  const EdgeInsets.all(2.3),
-                  color: theme.cardColor,
+                  color: this.widget.theme.cardColor,
 
-                width: 320.0,
-                height: MediaQuery.of(context).size.height / 1,
-                child:FutureBuilder(
-                  future : retrievCarsByuser(1),
-                  builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
-                  return ListView.builder(
+                  width: 320.0,
+                  height: MediaQuery.of(context).size.height / 1,
+                  child:FutureBuilder(
+                    future : retrievCarsByuser(this.widget.user.id!),
+                    builder: (BuildContext context, AsyncSnapshot<List<Car>> snapshot) {
+                      var data = snapshot.data;
+                      if (data == null) {
+                        return const Center(child: CircularProgressIndicator());
+                      }else{
+                      return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return
+                              Card(
+                              elevation: 8.0,
+                              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                              child: ListTile(
+                              contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                              leading: Icon(Icons.car_rental),
+                              title: Text(data[index].name),
+                              trailing: Icon(Icons.arrow_forward),
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialog();
+                                        });
+                                  },
+                              ),
+                              ),
+                            /*  _myListContainer(
+                                  snapshot.data![index].name, snapshot.data![index].model,
+                                  snapshot.data![index].year,  this.widget.theme.cardTheme.color
+                              ),*/
 
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Dismissible(
 
-                        key: Key(snapshot.data![index].id!.toString()),
-                        background: _myHiddenContainer(Colors.red),
-                        child :
-                        _myListContainer(
-                            snapshot.data![index].name, snapshot.data![index].license_Plate,
-                            snapshot.data![index].year,  theme.cardTheme.color
-                        ),
-
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.startToEnd) {
-                            Scaffold.of(context).showSnackBar(
-                                const SnackBar(content: Text("Delete")));
-                            if (snapshot.data!.contains(snapshot.data!.removeAt(index))) {
-                              setState(() {
-                                snapshot.data!.remove(snapshot.data!.removeAt(index));
-                              });
-                            }
-                          } else {
-                            if (direction == DismissDirection.endToStart) {
-                              Scaffold.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Archive"))
                               );
-                              // Archive functionality
-                            }
                           }
-                        },
-                      );
-                    }
-                );},)
+                      );} },)
               ),
             ),
           ],
@@ -266,7 +283,7 @@ class _profile_pageState extends State<profile_page> {
                 Color taskcolor;
 
                 return AlertDialog(
-                  backgroundColor: theme.cardTheme.color,
+                  backgroundColor: this.widget.theme.cardTheme.color,
                   title: const Text("New car"),
                   content: SizedBox(
                     height: 280.0,
@@ -275,14 +292,14 @@ class _profile_pageState extends State<profile_page> {
                         Container(
                           child: TextField(
                             onChanged: (value) {
-                             name = value.toString().trim();
-                           },
+                              name = value.toString().trim();
+                            },
                             controller: taskval,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car name",
-                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
+                              hintStyle: TextStyle(color: this.widget.theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -297,7 +314,7 @@ class _profile_pageState extends State<profile_page> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car modele",
-                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
+                              hintStyle: TextStyle(color: this.widget.theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -312,7 +329,7 @@ class _profile_pageState extends State<profile_page> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "car year",
-                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
+                              hintStyle: TextStyle(color: this.widget.theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -328,7 +345,7 @@ class _profile_pageState extends State<profile_page> {
                               border: InputBorder.none,
                               hintText: "initial_mileage"
                               ,
-                              hintStyle: TextStyle(color: theme.textTheme.headline1?.color),
+                              hintStyle: TextStyle(color: this.widget.theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -343,9 +360,8 @@ class _profile_pageState extends State<profile_page> {
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "license_Plate"
-                                ,
-                              hintStyle: TextStyle(color:theme.textTheme.headline1?.color),
+                              hintText: "license_Plate",
+                              hintStyle: TextStyle(color:this.widget.theme.textTheme.headline1?.color),
                             ),
                           ),
                         ),
@@ -358,18 +374,14 @@ class _profile_pageState extends State<profile_page> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       ),
-                      color: theme.bottomAppBarColor,
+                      color: this.widget.theme.bottomAppBarColor,
                       child: const Text("Add", style: TextStyle(
                           color: Colors.white
                       ),),
                       onPressed: () {
-                        addcar(database ,name, model,year,license_Plate, initial_mileage);
+                        addcar(this.widget.database ,name, model,year,license_Plate, initial_mileage);
 
                         setState(() {
-
-                          /*tasks.add(new Task(
-                              taskval.text, subval.text, tasktime.text,
-                              taskcolor));*/
                         });
                         Navigator.pop(context);
                       },
@@ -379,14 +391,14 @@ class _profile_pageState extends State<profile_page> {
               }
           );
         },
-        backgroundColor:  theme.primaryColor,
+        backgroundColor:  this.widget.theme.primaryColor,
         foregroundColor: const Color(0xffffffff),
         tooltip: "Increment",
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: theme.primaryColor,
+        color: this.widget.theme.primaryColor,
         shape: const CircularNotchedRectangle(
 
         ),
@@ -423,64 +435,57 @@ class _profile_pageState extends State<profile_page> {
         height: 80.0,
         child: Material(
 
-          color: taskColor,
+          color: this.widget.theme.textTheme.headline1
+              ?.color,
           elevation: 14.0,
-          shadowColor: theme.primaryColor,
+          shadowColor: this.widget.theme.primaryColor,
 
           child: Container(
             child: Row(
               children: <Widget>[
-            InkWell(
+                Container(
+                    height: 80.0,
+                    width: 10.0,
+                    color: taskColor,
+                  ),
+                   Expanded(
+                    child: Padding(
 
-            child : Container(
-                  height: 80.0,
-                  width: 10.0,
-                  color: taskColor,
-                ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
 
-            ),
-          InkWell(
-           /* onTap: () {
-              Get.to( slider_connexion(database: this.database, use: this.user,theme:theme,));
-            },*/
-        child :          Expanded(
-                  child: Padding(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
 
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            child: Text(taskname, style: TextStyle(
-                                fontSize: 24.0,
-                                color: theme.textTheme.headline1?.color,
-                                fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-
-                          child: Container(
-                            child: Text(subtask, style: TextStyle(
-                                fontSize: 18.0, color:theme.textTheme.headline1?.color)
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              child: Text(taskname, style: TextStyle(
+                                  fontSize: 24.0,
+                                  color: taskColor,
+                                  fontWeight: FontWeight.bold)),
                             ),
                           ),
-                        ),
-                      ],
+                          Align(
+                            alignment: Alignment.topLeft,
+
+                            child: Container(
+                              child: Text(subtask, style: TextStyle(
+                                  fontSize: 18.0, color:taskColor)
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       child: Text(taskTime, style: TextStyle(
-                          fontSize: 18.0, color: theme.textTheme.headline1?.color)
+                          fontSize: 18.0, color: taskColor)
                       ),
                     ),
                   ),
@@ -531,11 +536,158 @@ class _profile_pageState extends State<profile_page> {
   Widget _myHeaderContent() {
     return Align(
       child: ListTile(
-        leading: Icon(Icons.account_box, size: 75, color:  theme.primaryColor),
+       // leading: Icon(Icons.account_box, size: 75, color:  theme.primaryColor),
         title: Text(
-            "Profile", style: TextStyle(fontSize: 28.0, color: theme.primaryColor)),
+            "", style: TextStyle(fontSize: 28.0, color: this.widget.theme.primaryColor)),
         subtitle: Text(
-            "Amine Ghribi", style: TextStyle(fontSize: 24.0, color:  theme.primaryColor)),
+            "", style: TextStyle(fontSize: 24.0, color:  this.widget.theme.primaryColor)),
+      ),
+    );
+  }
+}
+
+class CustomDialog extends StatelessWidget {
+
+  dialogContent(BuildContext context) {
+    return Container(
+      decoration: new BoxDecoration(
+        image: new DecorationImage(image: new AssetImage("assets/newbako/pan.png"), fit: BoxFit.cover,),
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10.0,
+            offset: const Offset(0.0, 10.0),
+          ),
+        ],
+
+      ),
+     /* child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+*/
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // To make the card compact
+        children: <Widget>[
+          Image.asset(
+            'assets/image/bakoappbar.png',
+            fit: BoxFit.cover,
+          ),
+
+          EditableCard(
+            labelText: 'Name',
+            hintText: 'Enter your car name',
+            onChanged: (valuename) => print('New name: $value'),
+          ),
+          EditableCard(
+            labelText: 'Model',
+            hintText: 'Enter your car model',
+            onChanged: (value) => print('New ID: $value'),
+          ),
+          EditableCard(
+            labelText: 'Car year',
+            hintText: 'Enter your car year',
+            onChanged: (value) => print('New phone: $value'),
+          ),
+          EditableCard(
+            labelText: 'Licence plate',
+            hintText: 'Enter your car licence plate',
+            onChanged: (value) => print('New school address: $value'),
+          ),
+          EditableCard(
+            labelText: 'Initial kilometrage',
+            hintText: 'Enter your car initial kilometrage',
+            onChanged: (value) => print('New home address: $value'),
+          ),
+            RaisedButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)
+              ),
+              color: theme.bottomAppBarColor,
+              child: const Text("Add", style: TextStyle(
+                  color: Colors.white
+              ),),
+              onPressed: () {
+                addcar(this.widget.database ,name, model,year,license_Plate, initial_mileage);
+
+                Navigator.pop(context);
+              },
+            ),
+
+          SizedBox(height: 24.0),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: new IconButton(
+              icon: new Icon(Icons.cancel),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+            ,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+}
+class EditableCard extends HookWidget {
+  final String initialValue = '';
+  final String labelText;
+  final String hintText;
+  final ValueChanged<String> onChanged;
+
+
+  const EditableCard({
+    Key? key,
+
+    required this.labelText,
+    required this.hintText,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _editing = useState(false);
+    final _controller = useTextEditingController(text: initialValue ?? '');
+    return _editing.value
+        ? TextField(
+      controller: _controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+      ),
+      autofocus: true,
+      onEditingComplete: () {
+        _editing.value = false;
+        onChanged.call(_controller.text);
+      },
+    )
+        : Card(
+      child: ListTile(
+        onTap: () => _editing.value = true,
+        leading: Icon(
+          Icons.arrow_back_ios_sharp,
+          color: Colors.blue,
+        ),
+        title: Text(
+          labelText,
+          style: TextStyle(fontSize: 20),
+        ),
+        subtitle: Text(
+            _controller.text.isNotEmpty ? _controller.text : hintText),
       ),
     );
   }

@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             ),
             flatButton("Scan QR CODE", ScanPage(theme :widget.theme!, use :widget.use,database : widget.database,car :widget.car, )),
             const SizedBox(height: 20.0,),
-            flatButton("Generate QR CODE", GeneratePage()),
+            //flatButton("Generate QR CODE", GeneratePage()),
           ],
         ),
       ),

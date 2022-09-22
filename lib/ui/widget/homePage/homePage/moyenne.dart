@@ -7,8 +7,8 @@ import '../../../../data/CarEntity.dart';
 Padding buildMoy(int i, Size size, ThemeData theme , Car car) {
   List<Map> moyenne = [
     {
-      'nom': "License Plate",
-      'valeur':car.license_Plate,
+      'nom': "Model",
+      'valeur':car.model,
     },
     {
       'nom':"Années",

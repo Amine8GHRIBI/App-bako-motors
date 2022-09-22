@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -8,6 +11,7 @@ import 'package:mini_project/ui/pages/loading_conx.dart';
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
 import '../../data/userEntity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 
 class slider_connexion extends StatefulWidget {
@@ -24,41 +28,29 @@ class slider_connexion extends StatefulWidget {
 
 class _slider_connexionState extends State<slider_connexion> {
   List<Slide> slides = [];
+  StreamSubscription? connection;
+  bool isoffline = false;
 
 
   @override
   void initState() {
     super.initState();
+    connection = Connectivity().onConnectivityChanged.listen((
+        ConnectivityResult result) {
+      // whenevery connection status is changed.
+      if (result == ConnectivityResult.none) {
+        //there is no any connection
+        setState(() {
+          isoffline = true;
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        //connection is from wifi
+        setState(() {
+          isoffline = false;
+        });
+      }
+    });
 
-    slides.add(
-      Slide(
-        title:
-        "OBD II",
-        maxLineTitle: 2,
-        styleTitle: const TextStyle(
-          color: Colors.white,
-          fontSize: 30.0,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'RobotoMono',
-        ),
-        description:
-        "install your device",
-        styleDescription: const TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontStyle: FontStyle.italic,
-          fontFamily: 'Raleway',
-        ),
-        marginDescription:
-        const EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0, bottom: 70.0),
-        centerWidget: const Text("",
-            style: TextStyle(color: Colors.white)),
-          backgroundImage: "assets/images/obdii.png",
-        directionColorBegin: Alignment.topLeft,
-        directionColorEnd: Alignment.bottomRight,
-        onCenterItemPress: () {},
-      ),
-    );
     slides.add(
       Slide(
         title: "start your car",
@@ -81,20 +73,20 @@ class _slider_connexionState extends State<slider_connexion> {
     );
     slides.add(
       Slide(
-        title: "Pairing bleutooth",
+        title: "Connect to ",
         styleTitle: const TextStyle(
             color: Color(0xffFFDAB9),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
             fontFamily: 'RobotoMono'),
         description:
-        "Turn on bleutooth",
+        "BAKO_MOTORS wifi",
         styleDescription: const TextStyle(
             color: Color(0xffFFDAB9),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
             fontFamily: 'Raleway'),
-        backgroundImage: "assets/images/bluetooth.png",
+        backgroundImage: "assets/image/wifi.png",
         directionColorBegin: Alignment.topCenter,
         directionColorEnd: Alignment.bottomCenter,
         maxLineTextDescription: 3,
@@ -103,10 +95,27 @@ class _slider_connexionState extends State<slider_connexion> {
   }
 
   void onDonePress() {
-    // Do what you want
-    Get.to(loading(user : widget.use , database : widget.database , car : widget.car,theme : widget.theme ));
-  }
+    EasyLoading.show(status: 'loading...');
 
+    // Do what you want
+    //Get.to(loading(user : widget.use , database : widget.database , car : widget.car,theme : widget.theme ));
+    if (isoffline == false) {
+      EasyLoading.showSuccess('Great Success!' );
+      EasyLoading.instance
+        ..displayDuration = const Duration(seconds: 3);
+     Navigator.pushNamed(context, '/app', arguments: {
+        "database": widget.database,
+        "user": widget.use,
+        "car": widget.car
+      });
+
+    }else{
+      EasyLoading.instance
+        ..displayDuration = const Duration(seconds: 3);
+      EasyLoading.showError('Failed with Error');
+
+    }
+  }
   void onPrevPress() {
     // Do what you want
     //Navigator.of(context).pushNamed( '/cnxobd',arguments: {"database" : widget.database, "user" : widget.use});
@@ -157,7 +166,8 @@ class _slider_connexionState extends State<slider_connexion> {
         .arguments as Map<String, dynamic>;
     //database = routes["database"];
     //user =routes["user"];
-    return MaterialApp(
+    return FlutterEasyLoading(
+      child : MaterialApp(
       home : Scaffold (
         body : IntroSlider(
       // List slides
@@ -193,6 +203,7 @@ class _slider_connexionState extends State<slider_connexion> {
     ),
       debugShowCheckedModeBanner: false,
 
+    ),
     );
   }
 }

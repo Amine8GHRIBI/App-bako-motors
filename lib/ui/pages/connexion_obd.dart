@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,7 +11,9 @@ import 'Qrcode/home.dart';
 
 class connexion extends StatefulWidget {
   ThemeData? theme;
- connexion({Key? key, this.theme}) : super(key: key);
+  UserDatabase database;
+  User user;
+ connexion({Key? key, this.theme, required this.user, required this.database}) : super(key: key);
 
   @override
   State<connexion> createState() => _connexionState();
@@ -19,13 +21,13 @@ class connexion extends StatefulWidget {
 
 class _connexionState extends State<connexion> {
 
-  late UserDatabase database;
-  late User use;
+  //late UserDatabase database;
+  //late User use;
   List<Car> cars =[];
 
 
-  Future<List<Car>> retrievCarsByuser(int? id , UserDatabase database ) async {
-    List<caruser> carsuser = await this.database.caruserDAO.findcaridbyuserid(id!);
+  Future<List<Car>> retrievCarsByuser(int id , UserDatabase database ) async {
+    List<caruser> carsuser = await this.widget.database.caruserDAO.findcaridbyuserid(id);
     List<int> idcars = [] ;
     List<String> ca =[];
     for (caruser cu in carsuser){
@@ -33,14 +35,12 @@ class _connexionState extends State<connexion> {
       idcars.add(cu.id_car);
     }
     for (int id in idcars) {
-      Car? cr = await this.database.carDAO.retrieveCar(id);
+      Car? cr = await this.widget.database.carDAO.retrieveCar(id);
       cars.add(cr!);
       ca.add(cr.name);
       _elements['List of Cars'] = ca;
 
     }
-    debugPrint("cars " + cars.length.toString());
-    debugPrint("user_id :" + use.id.toString());
     return cars;
   }
 
@@ -74,7 +74,7 @@ class _connexionState extends State<connexion> {
     //_foundUsers = _allUsers;
     super.initState();
     Future.delayed(Duration.zero,() async  {
-      _foundCars = await retrievCarsByuser(use.id,database);
+      _foundCars = await retrievCarsByuser(this.widget.user.id!,this.widget.database);
 
       setState(()  {
          //this.retrievCarsByuser(use.id, this.database);
@@ -131,20 +131,20 @@ class _connexionState extends State<connexion> {
   }*/
   @override
   Widget build(BuildContext context) {
-    final routes =
+   /* final routes =
     ModalRoute
         .of(context)
         ?.settings
         .arguments as Map<String, dynamic>;
     database = routes["database"];
-    use = routes["user"];
+    use = routes["user"];*/
 
     return Scaffold(
 
       appBar:
       AppBar(
           title: Text(
-            'Connexin OBD',
+            'Connect car' ,
             style: TextStyle(color: widget.theme?.iconTheme.color),
           ),
         backgroundColor: widget.theme?.bottomAppBarColor,
@@ -191,7 +191,7 @@ class _connexionState extends State<connexion> {
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: ListTile(
                             onTap: () {
-                              Get.to( HomePage(database: database, use: use , theme : widget.theme, car : _foundCars[index]));
+                              Get.to( HomePage(database: this.widget.database, use: this.widget.user , theme : widget.theme, car : _foundCars[index]));
                                   //slider_connexion(database: this.database, use: this.use , theme : this.widget.theme, car : _foundCars[index] ));
                             },
                             leading: Text(

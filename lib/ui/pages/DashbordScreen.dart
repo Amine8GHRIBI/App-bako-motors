@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mini_project/DataBase/user_database.dart';
 import 'package:mini_project/ui/pages/connexion_obd.dart';
+import 'package:mini_project/ui/pages/notfoundgpps.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
+import 'package:mini_project/ui/pages/setting_screen.dart';
 import 'package:mini_project/ui/widget/speedo-widget.dart';
+import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
 import '../../data/CarEntity.dart';
 import '../../data/OBDParametres.dart';
@@ -21,8 +26,10 @@ import '../widget/login_widget/AnimatedNumericText.dart';
 import '../widget/login_widget/fadeIn.dart';
 import '../widget/login_widget/roundButton.dart';
 import 'Obd-Home-page.dart';
-
 import 'TransitionRouteObserver.dart';
+import 'bewireless/bako_data.dart';
+import 'bewireless/pages/bako_page.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = '/dashboard';
@@ -30,7 +37,8 @@ class DashboardScreen extends StatefulWidget {
    User user;
    Car car;
 
-  DashboardScreen({Key? key ,  required this.database, required this.user, required this.car}) : super(key: key);
+ // final Map<String,dynamic> map;
+  DashboardScreen({Key? key, required this.database, required this.user, required this.car }) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -39,10 +47,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin, TransitionRouteAware {
 
-  late UserDatabase database;
-  late User user;
-  late ThemeData theme;
 
+  Timer? timer;
   bool _showDrawer = false;
   List<OBD> obds = [];
   List<OBD> obdss= [];
@@ -66,6 +72,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   late Animation<double> _headerScaleAnimation;
   AnimationController? _loadingController;
 
+   // var decoded = UTF8.decode([0x62, 0x6c, 0xc3, 0xa5, 0x62, 0xc3, 0xa6,
+  //0x72, 0x67, 0x72, 0xc3, 0xb8, 0x64]);
 
 
   Future<List<OBD>> retrieveOBD(UserDatabase db) async {
@@ -79,32 +87,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   void initState() {
     super.initState();
     Future.delayed(Duration.zero,()async {
-      if (mounted == true){
-      setState(()  {
+    timer = Timer.periodic(const Duration(milliseconds: 1), (Timer t) => context.read<bakodata>().fetchData );
 
-       // database = this.widget.database;
-        //user = this.widget.user;
-     //  obdss = await retrieveOBD(this.widget.database);
-       //debugPrint("obd car cnx " + obdss.length.toString());
-      },);}
+      setState(()  {},);
     },);
 
-    /*debugPrint("user" + this.widget.user!.surName.toString());
-    Future.delayed(Duration.zero,() {
-      setState(()  {
-        final routes =
-        ModalRoute
-            .of(context)
-            ?.settings
-            .arguments as Map<String, dynamic>;
-        database = routes["database"];
-        user = routes["user"];
-      },
-      );
-      },
-    );*/
-
-    _loadingController = AnimationController(
+ _loadingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1250),
     );
@@ -143,19 +131,17 @@ class _DashboardScreenState extends State<DashboardScreen>
   AppBar _buildAppBar(ThemeData theme) {
 
     final menuBtn = IconButton(
-      color:  theme.iconTheme.color,// parm color
-      icon: const Icon(FontAwesomeIcons.bars),
+        color:  theme.iconTheme.color,// parm color
+        icon: const Icon(FontAwesomeIcons.bars),
         onPressed: showDrawer
     );
     final signOutBtn = IconButton(
       icon: const Icon(FontAwesomeIcons.signOutAlt),
-      color: theme.iconTheme.color,
+      color:  theme.iconTheme.color,
       onPressed: () => _goToLogin(context),
     );
 
-
     final title = Center(
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -164,15 +150,13 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Hero(
               tag: Constants.logoTag,
               child: Image.asset(
-                'assets/image/bako.png',
-                color: theme.iconTheme.color,
+                'assets/image/bakoappbar.png',
                 filterQuality: FilterQuality.high,
-                height: 30,
-              ),
+                height: 38,),
             ),
           ),
 
-         // const SizedBox(width: 20),
+          // const SizedBox(width: 20),
         ],
       ),
     );
@@ -202,7 +186,6 @@ class _DashboardScreenState extends State<DashboardScreen>
       // iconTheme: theme.accentIconTheme,
     );
   }
-
   Widget _buildHeader(ThemeData theme) {
 
     final primaryColor =
@@ -280,7 +263,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     ThemeData themeData = Theme.of(context);
     ThemeData theme = Theme.of(context);
 
-
     return SafeArea(
       child: ListView(
         children: [
@@ -292,14 +274,14 @@ class _DashboardScreenState extends State<DashboardScreen>
               right: size.width * 0.05,
             ),
             child: Container(
-              decoration: BoxDecoration(
+
+              decoration:
+              BoxDecoration(
                 /*image: new DecorationImage(
+                  image: new AssetImage('assets/newbako/bako_avant.png'),
                   fit: BoxFit.cover,
-                  colorFilter: new ColorFilter.mode(HexColor("#175989"), BlendMode.softLight),
-                  image: AssetImage(
-                    'assets/image/back.png',
-                  ),
                 ),*/
+
                 border: Border.all(
                     width: 0.5,
                     color: theme.primaryColor
@@ -308,12 +290,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                 borderRadius: const BorderRadius.all(
                   Radius.circular(15),
                 ),
-
-                color: theme.cardColor, //section bg color
+              color: theme.cardColor, //section bg color
               ),
+
+             // child: Image.asset('assets/newbako/bako_avant.png'),
               child: Column(
-                children: [
-                  Padding(
+               children: [
+                   Padding(
                     padding: EdgeInsets.only(
                       //padd cnx+bako
                       left: size.width *0.04,
@@ -325,9 +308,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         height: size.width * 0.15,
                         child : Container(
                             decoration: BoxDecoration(
-
-
-                              border: Border.all(
+                            border: Border.all(
                                   width: 0.5,
                                   color: theme.primaryColor
                               ),
@@ -367,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       left: size.width *0.001,
                                     ),
                                     child: Align(
-                                      child: Text( 'Connected :' + widget.car.name.toString(),
+                                      child: Text('Connected :' + this.widget.car.name.toString(),
                                         style: GoogleFonts.poppins(
                                           color: theme.textTheme.headline1?.color,
                                           fontSize: size.width * 0.036,
@@ -385,7 +366,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   ),
                                 ]
                             )
-                        )
+                        ),
 
                     ),),
                   /* */
@@ -417,108 +398,72 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
 
-  Widget _buildButton({Widget? icon, String? label, required Interval interval}) {
-
-
+  Widget _buildButton({Widget? icon, String? label, required Interval interval }) {
     Size size = MediaQuery.of(context).size; //check the size of device
     ThemeData theme = Theme.of(context);
-
-
-    /* return Padding(
-      padding: const EdgeInsets.all(8.0),
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-              SizedBox(
-                width:72,
-                height: 72,
-                child: FittedBox(
-                  child: FloatingActionButton(
-                    // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
-                    heroTag: null,
-                    backgroundColor:  HexColor("#175989"),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
-
-                    onPressed: () {
-
-                      Get.to( profile_page() ,arguments: {"database" : this.widget.database , "user" : this.widget.user});
-                    },
-                    foregroundColor: Colors.white,
-                    child: const Icon(Icons.car_repair_outlined, size: 20),
-
-                  ),
-                ),
-              ),
-
-            const SizedBox(height: 10),
-            Text(
-              "Dashboard",
-              style:
-              theme.textTheme.caption!.copyWith(color: Colors.white),
-              textAlign: TextAlign.center,
+         return RoundButton(
+            size: 72,
+            icon: icon,
+            label: label,
+            loadingController: _loadingController,
+            interval: Interval(
+              interval.begin,
+              interval.end,
+              curve: const ElasticOutCurve(0.1),
             ),
-          ],
-        ),
 
-    );*/
-
-    return RoundButton(
-
-      size: 72,
-      icon: icon,
-      label: label,
-      loadingController: _loadingController,
-      interval: Interval(
-        interval.begin,
-        interval.end,
-        curve: const ElasticOutCurve(0.1),
-      ),
-
-      onPressed: () {
-        debugPrint("pr " + label!);
-        if( label == "Profile"){
-          Get.to( const profile_page() ,arguments: {"database" : widget.database , "user" : widget.user,"theme" : theme});
+            onPressed: () {
+              debugPrint("pr " + label!);
+              if (label == "Profile") {
+                Get.to(profile_page(theme: theme,database : widget.database , user : widget.user));
+              }
+              if (label == "connexion") {
+                Get.to(connexion(theme: theme,database : widget.database , user : widget.user,));
+              }
+              if (label == "Station") {
+                Get.to(notfoundgps());
+                //notfoundgps());
+                //blueapp());
+              }
+              if (label == "Dashboard") {
+                //Get.to(bako_page(user:widget.user , theme: theme, database: widget.database,car: widget.car, name: 'dash',));
+                Get.to(
+                    speedo(theme: theme,
+                    database: widget.database,
+                    car: widget.car,
+                    )
+                );
+                // Get.to(MyHomedemoPage(title : "demoble"));
+              }
+              if (label == "Maintenance") {
+                //buildCar(1, size, themeData);
+                Get.to(DiagnostcScreen(database: widget.database,
+                  user: widget.user,
+                  theme: theme,
+                  car: widget.car));
+                //Get.to((FlutterBlueApphome()));
+                //Navigator.pushNamed(context , '/cnxobd' , arguments: {"database" : this.database , "user" : this.user});
+              }
+              if (label == "Settings") {
+                //buildCar(1, size, themeData);
+                // Get.to(MeteoPage());
+               // Get.to( obd_home( database : widget.database , user : widget.user) );
+                // Navigator.pushNamed(context, '/setting');
+              Get.to(()=> SettingsScreen());
+                /// Navigator.of(context).pushReplacement(
+                //MaterialPageRoute(builder: (context) => SettingsScreen()));
+              }
+              // Get.to(realtime_db());
+            },
+          );
         }
-        if( label == "connexion"){
-          Get.to( connexion(theme: theme) ,arguments: {"database" : widget.database , "user" : widget.user,});
-        }
-        if( label == "Station"){
-          Get.to( obd_home( database : widget.database , user : widget.user) );
-        }
-        if (label == "Dashboard") {
-          //buildCar(1, size, themeData);
-          Get.to( speedo(theme : theme , database : widget.database, car : widget.car));
-          //Get.to( SpeedometerContainer(),arguments: {"database" : this.widget.database , "user" : this.widget.user});
-        }
-        if (label == "Maintenance") {
-          //buildCar(1, size, themeData);
-          Get.to(DiagnostcScreen(database : widget.database , user : widget.user , theme: theme,car : widget.car));
-          //Navigator.pushNamed(context , '/cnxobd' , arguments: {"database" : this.database , "user" : this.user});
-        }
-        if (label == "Settings") {
-          //buildCar(1, size, themeData);
-         // Get.to(MeteoPage());
-         // Get.toNamed('/setting');
-          Navigator.pushNamed(context, '/setting');
-            //Get.to(()=> SettingsScreen());
-         /// Navigator.of(context).pushReplacement(
-          //MaterialPageRoute(builder: (context) => SettingsScreen()));
-    }
-        // Get.to(realtime_db());
-      },
-    );
-  }
-
 
   Widget _buildDashboardGrid() {
     const step = 0.04;
     const aniInterval = 0.75;
 
     return GridView.count(
-
-      padding: const EdgeInsets.symmetric(
+     padding: const EdgeInsets.symmetric(
         horizontal: 25.0,
         vertical: 14,
       ),
@@ -527,7 +472,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       crossAxisCount: 3,
       children: [
         _buildButton(
-          icon: const Icon(UniconsLine.dashboard),
+          icon: const Icon(UniconsLine.dashboard ),
           label: 'Dashboard',
           interval: const Interval(0, aniInterval),
         ),
@@ -567,62 +512,46 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
   @override
   Widget build(BuildContext context) {
-    //final theme = Theme.of(context);
     ThemeData theme = Theme.of(context);
-    // Size size = MediaQuery.of(context).size; //check the size of device
-    ThemeData themeData = Theme.of(context);
+
     int currIndex;
-
     return WillPopScope(
+        onWillPop: () => _goToLogin(context),
+        child: SafeArea(
+          child: Scaffold(
+            //bottomNavigationBar: buildBottomNavBar(1,size ,themeData,context , this.widget.database , this.widget.user),
 
-      onWillPop: () => _goToLogin(context),
-      child: SafeArea(
-        child: Scaffold(
-          //bottomNavigationBar: buildBottomNavBar(1,size ,themeData,context , this.widget.database , this.widget.user),
+            appBar: _buildAppBar(theme),
+            body: Container(
+              decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.cover,
 
-          appBar: _buildAppBar(theme),
-          body:  Container(
-
-            //width: double.infinity,
-            //height: double.infinity,
-            //color: const Color(0xfff8f8f8), // background color
-             decoration: BoxDecoration(
-
-             image: DecorationImage(
-             fit: BoxFit.cover,
-
-             colorFilter: ColorFilter.mode(theme.primaryColor, BlendMode.softLight),
-             image: const AssetImage('assets/image/back.png',),),),
-             child :BackdropFilter(
-             filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-              child: Stack(
-               children: <Widget>[
-                //kilometrage_data(),
-                Column(
+                  colorFilter: ColorFilter.mode(
+                      Colors.transparent, BlendMode.softLight),
+                  image: const AssetImage('assets/newbako/homescreen.png',),),),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                child: Stack(
                   children: <Widget>[
-                    const SizedBox(height: 20),
-                    Expanded(
-                      flex: 6,
-                      child:
-                      buildhead(),
-                     // _buildHeader(theme),
-                    ),
-                   /* Padding(
-                      padding: EdgeInsets.only(
-                        top: size.height * 0.3,
-                      ),),*/
-                  /*  Expanded(
-                      flex: 14,
-                      child:  kilometrage_data(),
-                      //_buildHeader(theme),
-                    ),*/
-                    const SizedBox(height : 5),
-                    Expanded(
-                      flex: 6,
+                    //kilometrage_data(),
+                    Column(
+                      children: <Widget>[
+                        const SizedBox(height: 20),
+                        Expanded(
+                          flex: 6,
+                          child:
+                          buildhead(),
 
-                      //child:// ShaderMask(
-                        // blendMode: BlendMode.srcOver,
-                       /* shaderCallback: (Rect bounds) {
+                        ),
+
+                        const SizedBox(height: 5),
+                        Expanded(
+                          flex: 6,
+
+                          //child:// ShaderMask(
+                          // blendMode: BlendMode.srcOver,
+                          /* shaderCallback: (Rect bounds) {
                           return LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -642,22 +571,24 @@ class _DashboardScreenState extends State<DashboardScreen>
                           ).createShader(bounds);
                         },
 */
-                        child:
-                        _buildDashboardGrid(),
+                          child:
+                          _buildDashboardGrid(),
+                        ),
+
+                      ],
+                    ),
+
+                    if (_showDrawer)
+                      DrawerWidget(
+                        closeFunction: showDrawer,
                       ),
-
                   ],
-                ),
+                ),),
 
-                if (_showDrawer)
-                  DrawerWidget(
-                    closeFunction: showDrawer,
-                  ),
-              ],
-           ),),
+            ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 }

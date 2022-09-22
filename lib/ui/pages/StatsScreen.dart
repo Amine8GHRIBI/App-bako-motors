@@ -68,7 +68,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
     Future.delayed(Duration.zero,() async {
       await retrieveLastOBD(widget.database);
       setState(() {
-        debugPrint("last obd " + obdss.last.speed.toString());
+       // debugPrint("last obd " + obdss.last.speed.toString());
 
       });
     });
@@ -148,7 +148,7 @@ class _StatsScreenState extends State<StatsScreen> with SingleTickerProviderStat
             child: Hero(
               tag: Constants.logoTag,
               child: Image.asset(
-                'assets/image/bako.png',
+                'assets/image/bakoappbar.png',
                 filterQuality: FilterQuality.high,
                 height: 30,
               ),

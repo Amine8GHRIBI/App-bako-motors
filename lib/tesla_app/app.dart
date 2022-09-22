@@ -2,10 +2,13 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mini_project/ui/pages/Loging_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../DataBase/user_database.dart';
 import '../data/CarEntity.dart';
 import '../data/userEntity.dart';
+import '../ui/pages/bewireless/bako_data.dart';
 import '../ui/pages/setting_screen.dart';
 import 'configs/colors.dart';
 import 'screens/base_screen.dart';
@@ -63,14 +66,14 @@ class TeslaApp extends StatelessWidget {
            textTheme: const TextTheme(
              headline1: TextStyle(fontWeight: FontWeight.bold , color: kPrimaryColorlight),
              bodyText1: TextStyle(fontWeight: FontWeight.bold , color: kPrimaryColorlight),
-             headline2: TextStyle( fontSize: 50,fontWeight: FontWeight.bold , color: kPrimaryColorlight),
+             headline2: TextStyle( fontSize: 15,fontWeight: FontWeight.bold , color: kPrimaryColorlight),
              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: kPrimaryColorlight),
 
              //bodyText2: TextStyle( fontSize: 30,fontWeight: FontWeight.bold , color: kPrimaryColorlight),
              headline4: TextStyle( color: kPrimaryColorlight, fontWeight: FontWeight.w200),
              headline5: TextStyle(fontSize: 40, color: kPrimaryColorlight, fontWeight: FontWeight.w300),
 
-           ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue).copyWith(secondary: HexColor("#175989")),
+           ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.yellow).copyWith(primary : PrimaryColorlight ,secondary: HexColor("#175989")),
 
          ),
 
@@ -80,8 +83,8 @@ class TeslaApp extends StatelessWidget {
         color: kCardColordark2
       ),
 
-      primaryColor :  PrimaryColordark,
-      brightness: Brightness.dark ,
+     // primaryColor :  PrimaryColordark,
+      //brightness: Brightness.dark ,
       bottomAppBarColor: kBottomAppBarColordark,
       indicatorColor : CourbeColordark,
       secondaryHeaderColor: kSecondaryColordark,
@@ -92,28 +95,29 @@ class TeslaApp extends StatelessWidget {
       iconTheme: const IconThemeData(color: kPrimaryColorDark ),
       textTheme: const TextTheme(
         headline1: TextStyle(fontWeight: FontWeight.bold , color: kPrimaryColorDark),
-        headline2: TextStyle( fontSize: 50,fontWeight: FontWeight.bold , color: kPrimaryColorDark),
+        headline2: TextStyle( fontSize: 10,fontWeight: FontWeight.bold , color: kPrimaryColorDark),
         headline3: TextStyle( fontSize: 30,fontWeight: FontWeight.bold , color: kPrimaryColorDark),
         headline4: TextStyle( color: kPrimaryColorDark, fontWeight: FontWeight.w200),
         headline5: TextStyle(fontSize: 40, color: kPrimaryColorDark, fontWeight: FontWeight.w300),
 
         headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
         bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind',color:kPrimaryColorDark),
-      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red).copyWith(secondary: Colors.white),
+      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red).copyWith(secondary: Colors.white  ,primary :  PrimaryColordark,   brightness    : Brightness.dark ,
     ),
-    initial: AdaptiveThemeMode.light,
-    builder: (theme, darkTheme) => MaterialApp(
+    ),
+      initial: AdaptiveThemeMode.light,
+      builder: (theme, darkTheme) => MaterialApp(
 
-    debugShowCheckedModeBanner: false,
-    theme: theme,
-    darkTheme: darkTheme,
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        darkTheme: darkTheme,
         home: BaseScreen(database: database,user: user , car: car ),
         routes: {
           '/setting' : (context)=> const SettingsScreen(),
           '/base' : (context) => BaseScreen(database: database,user: user , car: car ),
         },
-    // initialRoute: '/base',
-    ),
+        // initialRoute: '/base',
+      ),
     );
   }
 }

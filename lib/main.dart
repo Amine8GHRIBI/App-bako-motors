@@ -1,18 +1,19 @@
 
-import 'package:flutter/material.dart';
+import
+'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:mini_project/data/stathome.dart';
 import 'package:mini_project/tesla_app/app.dart';
 import 'package:mini_project/ui/pages/Login.dart';
 import 'package:mini_project/ui/pages/Loging_screen.dart';
-import 'package:mini_project/ui/pages/Meteo-page.dart';
+import 'package:mini_project/ui/pages/Obd-Home-page.dart';
 import 'package:mini_project/ui/pages/SignIn.dart';
 import 'package:mini_project/ui/pages/SpeedometerContainer.dart';
+import 'package:mini_project/ui/pages/bewireless/bako_data.dart';
 import 'package:mini_project/ui/pages/connectivity.dart';
 import 'package:mini_project/ui/pages/profile_page.dart';
-import 'package:mini_project/ui/pages/userDetails.dart';
-import 'package:mini_project/ui/pages/user-page.dart';
+
 import 'package:splashscreen/splashscreen.dart';
 
 import 'DataBase/user_database.dart';
@@ -20,14 +21,23 @@ import 'data/model.dart';
 
 import 'package:provider/provider.dart';
 //import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
+
 //import 'package:awesome_notifications/awesome_notifications.dart';
 
 
 
 Future <void> main() async {
 WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp firebaseApp = await Firebase.initializeApp();
+ // FirebaseApp firebaseApp = await Firebase.initializeApp();
+const _themeColor = Colors.lightGreen;
+WidgetsFlutterBinding.ensureInitialized();
+
+runApp( MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => bakodata()),
+  ],
+  child:  const MyApp()),);
   /*FirebaseApp firebaseApp = await Firebase.initializeApp(
       options: FirebaseOptions(
       apiKey: "AIzaSyAkVwF1hIKEo-kcZI50pBHSnsMUrQo9s3c",
@@ -63,11 +73,11 @@ WidgetsFlutterBinding.ensureInitialized();
 );*/
 
 
-  runApp( MultiProvider(
+  /*runApp( MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ObdReader()),
       ],
-      child: const MyApp(),),);
+      child: const MyApp(),),);*/
 }
 
 class MyApp extends StatefulWidget {
@@ -143,24 +153,21 @@ class _MyAppState extends State<MyApp> {
         seconds: 8,
         navigateAfterSeconds: const LoginScreen()
         ,
+            loaderColor : Colors.white,
      /* image : Image.asset(
         'assets/image/logo.png',
       filterQuality: FilterQuality.high,
       height: 30,
       width: 30,),*/
         //backgroundColor: Colors.indigo.shade700,
-         imageBackground: const AssetImage("assets/image/background.png")
+         imageBackground: const AssetImage("assets/newbako/newscreen.png")
       ),
 
         routes: {
-          '/méteo': (context) => const MeteoPage(),
           '/register' : (context) => const userRegister(),
           '/login' : (context) => const UserLogin(),
-          '/users' : (context) => const userPage(),
-
-          '/user'  : (context) => const userDetails(),
           '/conn' : (context) => const connectivity_home(),
-          '/profile':(context) => const profile_page(),
+
           '/log' : (context) => const LoginScreen(),
           //'/log' : (context) => DashboardScreen(),
           //'/dashboard' : (context) => DashboardScreen(),

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 const Color kBottomAppBarColordark =Colors.black38;
 const Color kBottomAppBarColorlight =  Color(0xFFEEEEEE);
 
-const Color PrimaryColorlight =  Color(0xff175989); //bleu
+const Color PrimaryColorlight = Color(0xFF2e5a80); //bleu
 const Color PrimaryColordark = Color(0xFF303030);
 
-const Color kPrimaryColorlight =  Color(0xff175989); //bleu for text
+const Color kPrimaryColorlight =  Color(0xFF2e5a80); //bleu for text
 const Color kPrimaryColorDark = Colors.white;   //white for text
 
-const Color kSecondaryColordark =  Color(0xff175989);
+const Color kSecondaryColordark =  Color(0xFF2e5a80);
 const Color kSecondaryColorlight =  Color(0xFFEEEEEE);
 
 
-const Color progressColorlight = Color(0xff175989);
+const Color progressColorlight = Color(0xFF2e5a80);
 const Color progressColordark = Color(0xFFF5F5F5);
 
 const Color CourbeColorlight = Colors.black;

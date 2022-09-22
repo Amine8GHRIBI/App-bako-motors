@@ -80,7 +80,7 @@ class _RoundButtonState extends State<RoundButton>
                   child: FloatingActionButton(
                     // allow more than 1 FAB in the same screen (hero tag cannot be duplicated)
                     heroTag: null,
-                    backgroundColor:  theme.buttonColor,
+                    backgroundColor:  theme.colorScheme.primary,
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
 
                     onPressed: () {

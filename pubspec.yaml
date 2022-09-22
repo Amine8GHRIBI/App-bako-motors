@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning ats
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.0.0+5
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -32,77 +32,68 @@ dependencies:
   unicons: ^2.0.2
   google_fonts: ^2.2.0
   get: ^4.6.3
-  get_storage: ^2.0.3
+
+  #get_storage: ^2.0.3
   percent_indicator: ^3.3.0-nullsafety.1
   flutter_svg: ^0.22.0
-  firebase_core: any
-  firebase_auth: any
+  #firebase_core: any
+  #firebase_auth: any
   #firebase_storage: ^4.0.0
-  cloud_firestore: any
+  #cloud_firestore: any
   adaptive_theme: ^2.3.1
   qr_flutter: any
-  http: ^0.13.4
+  http: ^0.13.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  awesome_notifications: ^0.0.6+10
+  #awesome_notifications: ^0.0.6+10
 
   numberpicker: ^2.0.1
   giffy_dialog: ^1.8.0
-  vibration: ^1.7.4-nullsafety.0
-  device_info: ^2.0.3
   cupertino_icons: any
   animated_theme_switcher: "^2.0.5"
   bluetooth_obd: ^0.0.6
   floor: ^1.2.0
   provider: ^6.0.1
   splashscreen: ^1.3.5
-  #mobile_number: ^1.0.4
   connectivity_plus: ^2.2.1
   fluttertoast: ^8.0.9
   intro_slider: ^3.0.3
-  flutter_login: ^3.2.0
-  font_awesome_flutter: ^9.1.0
+  font_awesome_flutter: any
   intl: any
-  charts_flutter: ^0.12.0
+  charts_flutter: any
   hexcolor: ^2.0.6
-  #flutter_sparkline: ^0.1.0
-  #flutter_circular_chart: ^0.1.0
-  #chart_sparkline: ^1.0.10
   flutter_staggered_grid_view: ^0.4.0
-  #battery_indicator: ^0.1.0
   flutter_speedometer: ^1.0.2
   sensors: ^2.0.3
   group_list_view: ^1.1.1
-  #camera: ^0.9.4+19
   dio: ^4.0.0
-  image_compare: ^1.1.2
-  change_app_package_name: ^1.0.0
   bubble_tab_indicator: ^0.1.6
   fl_chart: ^0.20.1
   settings_ui: ^2.0.1
   flutter_gauge: ^1.0.8
   syncfusion_flutter_gauges: ^20.1.52
   flutter_barcode_scanner: ^2.0.0
-  places_service: ^0.1.1
-  wifi_iot: ^0.3.15+2
   app_settings: ^4.1.6
-  flutter_bluetooth_serial: ^0.4.0
-  widget_loading: ^0.3.1
-  upgrade_tool: ^1.0.6
-  bindings_compatible: ^1.0.1
-
-
-  #flutter_svg: ^1.0.3
-#  flutter_flip_view: ^1.0.3
-
+  widget_loading: 0.3.1
+  flutter_colorpicker: ^0.5.0
+  sleek_circular_slider: ^1.1.0
+  flutter_easyloading: ^1.0.1
+  flutter_hooks: ^0.18.5+1
+  syncfusion_flutter_maps: ^20.2.44
+  syncfusion_flutter_charts: ^20.1.60+1
 
 dev_dependencies:
   floor_generator: ^1.2.0
   build_runner: ^2.1.4
+  flutter_login:
+   git:
+    url: https://github.com/bulanni00/flutter_login.git
+
 
 
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -115,6 +106,11 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/logo_app.png"
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -124,90 +120,26 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+     - assets/newbako/home.png
+     - assets/image/wifi.png
      - images/profile.png
-     - assets/icons/SobGOGlight.png
-     - assets/icons/SobGOGdark.png
-     - assets/icons/bako.png
-     - assets/icons/logo.png
-     - assets/images/golf.png
-     - assets/images/i30n.png
-     - assets/images/yaris.png
-     - assets/images/bord.png
-     - assets/icons/hyundai.png
-     - assets/icons/volkswagen.png
-     - assets/icons/toyota.png
-     - assets/images/diagno.png
-     - assets/images/bord2.png
-     - assets/images/compt.jpg
-     - assets/images/bako.png
-     - assets/images/logo.png
-     - assets/images/ecorp.png
-     - assets/images/ecorp-lightblue.png
-     - assets/images/ecorp-lightgreen.png
-     - assets/images/bakodash.png
      - assets/image/logo.png
      - assets/image/logo2.png
      - assets/image/background.png
-     - assets/image/bako.png
-     - assets/image/back.png
-     - assets/image/dash.jpg
-     - assets/images/photo_eraser.png
-     - assets/images/photo_pencil.png
-     - assets/images/photo_ruler.png
-     - assets/images/photo_school.png
-     - assets/images/photo_museum.png
-     - assets/images/photo_coffee_shop.png
-     - assets/images/forest.png
-     - assets/images/beach.jpeg
-     - assets/images/city.jpeg
-     - assets/images/obdii.png
-     - assets/images/bluetooth.png
      - assets/images/startcar.jpg
+     - assets/images/Myproject.png
      - images/dashboard-icon.png
-     - lib/tesla_app/images/
-     - lib/customswitch/images/
-     - lib/Parallax/assets/
      - assets/images/qrcode.png
-     - assets/weather_image/alarm.png
-     - assets/weather_image/checked.png
-     - assets/weather_image/clear.png
-     - assets/weather_image/get-started.png
-     - assets/weather_image/hail.png
-     - assets/weather_image/heavycloud.png
-     - assets/weather_image/humidity.png
-     - assets/weather_image/lightcloud.png
-     - assets/weather_image/heavyrain.png
-     - assets/weather_image/lightrain.png
-     - assets/weather_image/max-temp.png
-     - assets/weather_image/menu-bar.png
-     - assets/weather_image/pin.png
-     - assets/weather_image/profile.png
-     - assets/weather_image/showers.png
-     - assets/weather_image/sleet.png
-     - assets/weather_image/snow.png
-     - assets/weather_image/thunderstorm.png
-     - assets/weather_image/unchecked.png
-     - assets/weather_image/windspeed.png
-     - assets/ass/images/awesome-notifications-logo-color.png
-     - assets/ass/images/awesome-notifications-logo-black.png
-     - assets/ass/images/awesome-notifications-logo-white.png
-     - assets/ass/images/girl-phonecall.jpg
-     - assets/ass/images/animated-bell.gif
-     - assets/ass/images/animated-clock.gif
-     - assets/ass/images/animated-warning.gif
-     - assets/ass/images/placeholder.gif
-     - assets/ass/images/happy-dogs.jpg
-     - assets/ass/images/balloons-in-sky.jpg
-     - assets/ass/images/android-bg-worker.jpg
-     - assets/ass/images/fireman-hero.jpg
-     - assets/ass/images/delivery.jpeg
-     - assets/ass/images/melted-clock.png
-     - assets/ass/images/rock-disc.jpg
-     - assets/ass/images/classic-disc.jpg
-     - assets/ass/images/dj-disc.jpg
-     - assets/ass/images/80s-disc.jpg
-     - assets/ass/images/remix-disc.jpg
-     - assets/ass/images/old-disc.jpg
+     - assets/images/comingsoon.jpg
+     - assets/image/bakoappbar.png
+     - assets/image/bakosplash.png
+     - assets/image/diag.png
+     - assets/newbako/newscreen.png
+     - assets/newbako/newlogo.png
+     - assets/newbako/interieur.png
+     - assets/newbako/homescreen.png
+     - assets/newbako/paneaux.png
+     - assets/newbako/pan.png
 
 
 

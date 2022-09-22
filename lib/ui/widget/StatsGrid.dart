@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -29,11 +29,14 @@ class _StatsGridState extends State<StatsGrid> {
 
   //late UserDatabase database;
   //late User user;
-  int max = 0;
+  double max = 0;
   double maxkilo = 0;
   double moytemp = 0.0;
-  int conduiteheure = 0;
-  int conduiteminute = 0;
+  double moykilo = 0.0;
+  String conduite ="";
+
+  int conduiteheure =0;
+  int conduiteminute=0;
   int kilometragetoday = 0;
   String conduitetoday = "";
 
@@ -45,15 +48,14 @@ class _StatsGridState extends State<StatsGrid> {
     return obds;
   }
 
-  Future<int> getmaxspeed(UserDatabase db) async {
+  Future<double> getmaxspeed(UserDatabase db) async {
     obdss = await retrieveOBD(db);
     for (OBD obd in obdss) {
-      if(int.tryParse(obd.speed) != null) {
-        if (int.parse(obd.speed) > max) {
-          max = int.parse(obd.speed);
-          moytemp +=  (int.parse(obd.speed)/ obdss.length).roundToDouble();
+      if(double.tryParse(obd.speed) != null) {
+        if (double.parse(obd.speed) > max) {
+          max = double.parse(obd.speed);
+          moytemp +=  (double.parse(obd.speed)/ obdss.length).roundToDouble();
         }
-
       }
     }
     return max;
@@ -76,18 +78,22 @@ class _StatsGridState extends State<StatsGrid> {
   }
 
   Future<List<OBD>> retrieveKiloConBydate(UserDatabase db, String date) async {
-    obdsbydate =
-    await db.obdDAO.retrieveLastOBDByDate(date, widget.car.id!.toInt());
-    conduiteheure = (int.parse(obds.last.time.substring(0, 2))) -
-        (int.parse(obds.first.time.substring(0, 2)));
-    conduiteminute = int.parse(obds.last.time.substring(3, 5)) -
-        int.parse(obds.first.time.substring(3, 5));
-    conduitetoday = conduiteheure.toString() + ':' + "0";
-
+    obdsbydate = await db.obdDAO.retrieveAllOBD();
     for (OBD o in obdsbydate) {
       kilometragetoday += int.parse(o.DistanceMILOn);
     }
+
+    moykilo = (kilometragetoday /  obdsbydate.length).roundToDouble();
     debugPrint("obds by date  " + obdsbydate.length.toString());
+    DateTime lastdate =  DateTime.parse(obds.last.date);
+    DateTime firstdate = DateTime.parse(obds.first.date);
+    //date1.difference(date2).inHours;
+    conduiteheure =lastdate.difference(firstdate).inHours;
+    conduiteminute = lastdate.difference(firstdate).inMinutes;
+    //conduiteheure = (int.parse(obds.last.time.substring(0,2))) - (int.parse(obds.first.time.substring(0,2)));
+    //conduiteminute = int.parse(obds.last.time.substring(3,5)) - int.parse(obds.first.time.substring(3,5));
+    conduite = conduiteheure.toString() + ':' + conduiteminute.toString();
+
     setState(() {});
     return obds;
   }
@@ -106,7 +112,7 @@ class _StatsGridState extends State<StatsGrid> {
   }
 
   Future<double> getmoytemperature(UserDatabase db) async {
-    double totaltemp = 0;
+    double totaltemp = 0.0;
     obdstemp = await retrieveOBD(db);
     for (OBD obd in obdstemp) {
       totaltemp += double.parse(obd.CoolantTemperature);
@@ -127,7 +133,7 @@ class _StatsGridState extends State<StatsGrid> {
     final String formattedtime = formattertime.format(now);
     // timer = Timer.periodic(Duration(seconds: 1), (Timer t) => context.read<ObdReader>().increment());
     debugPrint("use mail " + widget.user.email.toString());
-    FirebaseFirestore.instance.collection("Users")
+    /*FirebaseFirestore.instance.collection("Users")
         .doc("firstuser")
         .collection("Chauffeurs").doc(widget.user.email.toString())
         .set({ "userName": widget.user.username.toString(),
@@ -172,14 +178,13 @@ class _StatsGridState extends State<StatsGrid> {
         });
       });
       return;
-    });
+    });*/
   }
 
   List<OBD> obdsbydate = [];
 
   Future<List<OBD>> retrieveOBDBydate(UserDatabase db, String date) async {
-    obdsbydate =
-    await db.obdDAO.retrieveLastOBDByDate(date, widget.car.id!.toInt());
+    obdsbydate = await db.obdDAO.retrieveLastOBDByDate(date, widget.car.id!.toInt());
     setState(() {});
     return obds;
   }
@@ -190,11 +195,12 @@ class _StatsGridState extends State<StatsGrid> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
-      // await retrieveOBD(this.widget.database);
+
+
+        //await retrieveOBD(this.widget.database);
       await getmaxspeed(widget.database);
       await getmaxkilometrage(widget.database);
       await getmoytemperature(widget.database);
-
 
       final DateTime now = DateTime.now();
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -204,13 +210,15 @@ class _StatsGridState extends State<StatsGrid> {
       final String formattedtime = formatter.format(now);
 
       await retrieveKiloConBydate(widget.database, formatteddate);
+       //await retrieveOBDBydate(widget.database, formatteddate);
 
-
-      await retrieveOBDBydate(widget.database, formatteddate);
-
-      //timer = Timer.periodic(Duration(seconds: 1), (Timer t) => getmaxspeed(this.widget.database));
-
-      await initConnectivity();
+/*
+      timer = Timer.periodic(Duration(seconds: 1), (Timer t) => getmaxspeed(this.widget.database));
+      timer = Timer.periodic(Duration(seconds: 2), (Timer t) =>  getmaxkilometrage(widget.database));
+      timer = Timer.periodic(Duration(seconds: ), (Timer t) => getmoytemperature(widget.database));
+      timer = Timer.periodic(Duration(seconds: 1), (Timer t) => retrieveKiloConBydate(widget.database, formatteddate));
+*/
+     // await initConnectivity();
       setState(() {
         //database = this.widget.database;
         //user = this.widget.user;
@@ -231,10 +239,8 @@ class _StatsGridState extends State<StatsGrid> {
           Flexible(
             child: Row(
               children: <Widget>[
-                _buildStatCard('Max speed' ,
-                    max.toString() + ' KM', Colors.orange),
-                _buildStatCard(
-                    'Max kilometrage', maxkilo.toString() + ' KM', Colors.red),
+                _buildStatCard('Max speed' , max.toString() + ' KM', Colors.amber.shade800),
+                _buildStatCard('Max kilometrage', maxkilo.toString() + ' KM', Colors.amber.shade600),
               ],
             ),
           ),
@@ -242,9 +248,9 @@ class _StatsGridState extends State<StatsGrid> {
             child: Row(
               children: <Widget>[
                 _buildStatCard(
-                    'Moy témperature', moytemp.toString() + ' °', Colors.green),
-                _buildStatCard('Moy kilométrage', ' 319km', Colors.lightBlue),
-                _buildStatCard('Moy temps de conduie', 'N/A', Colors.purple),
+                    'Moy témperature', moytemp.toString() + ' °', Colors.amber.shade300),
+                _buildStatCard('Moy kilométrage', moykilo.toString(), Colors.green.shade400),
+                _buildStatCard('Moy temps de conduie', conduite.toString() , Colors.green.shade300),
               ],
             ),
           ),
@@ -253,7 +259,7 @@ class _StatsGridState extends State<StatsGrid> {
     );
   }
 
-  Expanded _buildStatCard(String title, String count, MaterialColor color) {
+  Expanded _buildStatCard(String title, String count, Color color) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.all(8.0),

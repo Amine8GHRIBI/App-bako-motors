@@ -1,5 +1,5 @@
 <manifest xmlns:tools="http://schemas.android.com/tools"  xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.datahub">
+    package="com.bako.datahub">
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -10,10 +10,10 @@
 
     <application
 
-        android:label="mini_project"
+        android:label="MyBako"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <receiver android:name= "com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+        <receiver android:exported="true" android:name= "com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>

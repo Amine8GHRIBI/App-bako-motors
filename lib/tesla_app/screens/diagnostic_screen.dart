@@ -9,12 +9,15 @@ import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
 import '../../data/model.dart';
 import '../../data/userEntity.dart';
+import '../../ui/pages/bewireless/bako_data.dart';
 
 class DiagnostcScreen extends StatefulWidget {
   UserDatabase database;
   User user;
   Car car;
   late ThemeData theme;
+  //final Map<String,dynamic> map;
+
 
   DiagnostcScreen({Key? key , required this.database, required this.user, required this.theme , required this.car}) : super(key: key);
 
@@ -25,76 +28,79 @@ class DiagnostcScreen extends StatefulWidget {
 
 class _DiagnostcScreenState extends State<DiagnostcScreen> {
 
-  double batt =0.0;
   Timer? timer;
-  double motors = 0.0;
-  double batterie=0.0;
-  double Coolant_Temperature =0.0;
 
 
   @override
   void initState() {
     Future.delayed(Duration.zero,() async {
-    await Mybattery(widget.database);
-  timer = Timer.periodic(
-  const Duration(minutes: 1), (Timer t) => calculdata());
+   // await Mybattery(widget.database);
+    timer = Timer.periodic(const Duration(milliseconds: 1), (Timer t) => context.read<bakodata>().fetchData );
+  //timer = Timer.periodic(
+  //const Duration(minutes: 1), (Timer t) => calculdata());
 
   });
     setState(() {});
 
   }
+
+  /*
   Future<double> Mybattery(UserDatabase db) async {
    // motors = (double.parse(context.watch<ObdReader>().obdData['3'][1])) / 100 ;
     //Coolant_Temperature = (double.parse(context.watch<ObdReader>().obdData['1'][1] )/100);
     //batterie = double.parse(context.watch<ObdReader>().obdData['4'][1]);
-   double getbatt = double.parse(context.read<ObdReader>().obdData['3'][1]);
+   double getbatt = 12.1;
+   //double.parse(context.read<ObdReader>().obdData['3'][1]);
     //OBD speedtestt = newobd.firstWhere((element) => element.speed.isNotEmpty,
     //  orElse: () => 'No matching color found');
+   if (this.widget.car.name != "Aucun") {
+     motors = (double.parse(context.watch<ObdReader>().obdData['3'][1])) / 100 ;
+     Coolant_Temperature = (double.parse(context.watch<ObdReader>().obdData['1'][1] )/100);
+     batterie = double.parse(context.watch<ObdReader>().obdData['4'][1]);
+     //motors = 0.9 ;
+     //Coolant_Temperature = 0.8;
+     if (getbatt >= 12.6) {
+       batt = 100;
+     } else if (12.5 <= (getbatt) && (getbatt) < 12.6) {
+       batt = 85;
+     } else if (12.4 <= (getbatt) && (getbatt) < 12.5) {
+       batt = 75;
+     } else
 
-    if (getbatt >= 12.6){
-      batt = 100;
-    }else
-    if (12.5 <= (getbatt) && (getbatt) < 12.6){
-      batt = 85;
-    }else
-    if (12.4 <=  (getbatt) &&  (getbatt) < 12.5 ){
-      batt = 75;
-    }else
-
-    if (12.2 <=  (getbatt) &&  (getbatt) < 12.4 ){
-      batt = 65;
-    }else
-    if (12.1 <=  (getbatt) &&  (getbatt) <  12.2 ){
-      batt = 50;
-    }else
-    if (12.0 <=  (getbatt) && (getbatt) <  12.1 ){
-      batt = 35;
-    }else
-    if (11.9 <=  (getbatt)&& (getbatt) <  12.0 ){
-      batt = 25;
-    }else
-    if (11.8 <= (getbatt) &&  (getbatt) < 11.9 ){
-      batt = 15;
-    }else
-    if (getbatt <= 11.8 ){
-      batt = 0;
-    }
+     if (12.2 <= (getbatt) && (getbatt) < 12.4) {
+       batt = 65;
+     } else if (12.1 <= (getbatt) && (getbatt) < 12.2) {
+       batt = 50;
+     } else if (12.0 <= (getbatt) && (getbatt) < 12.1) {
+       batt = 35;
+     } else if (11.9 <= (getbatt) && (getbatt) < 12.0) {
+       batt = 25;
+     } else if (11.8 <= (getbatt) && (getbatt) < 11.9) {
+       batt = 15;
+     } else if (getbatt <= 11.8) {
+       batt = 0;
+     }
+   }
     setState(() {});
     return batt;
   }
+ */
 
-  void calculdata() async {
-    motors = double.parse(context.read<ObdReader>().obdData['6'][1]) / 100 ;
-    Coolant_Temperature = double.parse(context.read<ObdReader>().obdData['1'][1]);
-    batterie = double.parse(context.read<ObdReader>().obdData['4'][1]);
 
-    setState(() {});
-
-  }
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    double batterie;
+    double coolant_temperature;
+    if(context.watch<bakodata>().map['0x10261022'].toString() == "null" || (this.widget.car.name == "Aucun")){
+      coolant_temperature = 0.0;
+      batterie = 0.0;
+    }else {
+      coolant_temperature = (double.parse((int.parse(context.watch<bakodata>().map['ID_10261023'].toString().substring(0,2),radix: 16)).toString()));
+      batterie = (double.parse((int.parse((context.watch<bakodata>().map['ID_10261022'].toString().substring(10,12) + context.watch<bakodata>().map['ID_10261022'].toString().substring(8,10)),radix: 16) *0.1) .toString()));
 
+
+    };
     return Scaffold(
         backgroundColor : widget.theme.cardColor,
      body : SafeArea(
@@ -119,7 +125,7 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                 ),
                 const Spacer(),
                 Text(
-                  'MODEL' + widget.car.name.toString(),
+                  'MODEL ' + widget.car.model.toString(),
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ,  color : widget.theme.indicatorColor),
                 ),
               ],
@@ -140,15 +146,14 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                 children: [
                   SizedBox(
                     width: double.maxFinite,
-                    height: 600,
+                    height: 400,
                     child: Stack(
-
                       children: [
                         Positioned(
                           top: 0,
                           left: 0,
                           child: Text(
-                            'Santé globale',
+                            'Global Health',
                             style: TextStyle(fontWeight: FontWeight.bold , color : widget.theme.indicatorColor),
                           ),
                         ),
@@ -175,7 +180,7 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                             left: 0,
                             child: SizedBox(
                               width: 350,
-                              height: 650,
+                              height: 350,
                               child: Stack(
                                 children: [
                                   Positioned.fill(
@@ -192,16 +197,16 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                                   const Center(
                                     child: SizedBox(width: 350, height: 350, child: CustomRipple()),
                                   ),
-                                  const Positioned(
-                                      top: 100,
-                                      right: 40,
+                                /*  const Positioned(
+                                      top: 170,
+                                      right: -10,
                                       child: SizedBox(
                                           width: 100,
                                           height: 100,
                                           child: CustomRipple())),
                                   const Positioned(
-                                      top: 115,
-                                      right: 55,
+                                      top: 185,
+                                      right: -2,
                                       child: SizedBox(
                                           width: 70,
                                           height: 70,
@@ -247,12 +252,12 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                                       child: SizedBox(
                                           width: 70,
                                           height: 70,
-                                          child: CustomRipple())),
+                                          child: CustomRipple())),*/
                                   Center(
                                     child: SizedBox(
                                       height: 650,
                                       child: Image.asset(
-                                        'lib/tesla_app/images/bird_view_tesla.png',
+                                        'assets/image/diag.png',
                                         fit: BoxFit.contain,
                                       ),
                                     ),
@@ -271,37 +276,40 @@ class _DiagnostcScreenState extends State<DiagnostcScreen> {
                   LinearPercentIndicator(
                     animation: true,
                     backgroundColor: widget.theme.cardColor,
-                    percent: batt,
+                    percent:batterie / 100,
+                    //double.parse(this.widget.map['time'].toString().substring(0, 2)) / 100 ,
                     lineHeight: 20,
                     animationDuration: 2500,
-                    center: Text(batt.toString() + '%', style: TextStyle(color : widget.theme.secondaryHeaderColor)),
+                    center: Text(batterie.toString() + '%', style: TextStyle(color : widget.theme.secondaryHeaderColor)),
                     linearGradient: LinearGradient(
 
                         colors: [widget.theme.highlightColor, widget.theme.highlightColor]),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 20),
-                    child: Text('Sensors',
+                    child: Text('',
+                        //context.watch<bakodata>().map['time'].toString().substring(6,8),
                         style: TextStyle(fontWeight: FontWeight.bold,color : widget.theme.indicatorColor)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Sensor(
-                        value: motors,
+                        value: 0.0,
                         label: 'Motors',
                         theme: widget.theme,
                       ),
                       Sensor(
-                        value: Coolant_Temperature,
+                        value: coolant_temperature,
                         label: 'C Temperature ',
                         theme: widget.theme,
                       ),
                       Sensor(
-                        value: 0.9,
+                        value: 0.0,
                         label: 'Brakes',
                         theme: widget.theme,
                       ),
+
 
                     ],
                   )

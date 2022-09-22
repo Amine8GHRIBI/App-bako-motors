@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_project/ui/pages/DashbordScreen.dart';
+import 'package:provider/provider.dart';
 
 import '../../DataBase/user_database.dart';
 import '../../data/CarEntity.dart';
@@ -12,7 +13,10 @@ import '../../data/OBDParametres.dart';
 import '../../data/userEntity.dart';
 import '../../ui/pages/OBD.dart';
 import '../../ui/pages/StatsScreen.dart';
+import '../../ui/pages/bewireless/bako_data.dart';
 import '../../ui/pages/connexion_obd.dart';
+import '../../ui/pages/maps/_LocationTrackerBlogState.dart';
+import '../../ui/pages/notfoundgpps.dart';
 import '../configs/colors.dart';
 import 'home_screen.dart';
 import 'package:get/get.dart';
@@ -39,7 +43,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
   final Connectivity _connectivity = Connectivity();
 
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
+  Timer? timer;
   int _selectedIndex = 0;
   late final TabController _tabController;
   final int _tabLength = 4;
@@ -51,8 +55,8 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
     final String formatted = formatter.format(now);
     super.initState();
     //initConnectivity();
-
-    retrieveOBDBydate(widget.database , formatted);
+    timer = Timer.periodic(const Duration(milliseconds: 1), (Timer t) => context.read<bakodata>().fetchData );
+   // retrieveOBDBydate(widget.database , formatted);
 
    // _connectivitySubscription =
       //  _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -71,14 +75,11 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
   }
 
 
-  Future<void> deletedatafromlocal() async {
+  Future<void> deletedatafromlocal() async {}
 
-
-
-  }
   Future<void> useradd() async {
 // timer = Timer.periodic(Duration(seconds: 1), (Timer t) => context.read<ObdReader>().increment());
-    debugPrint("use mail " + widget.user.email.toString());
+  /*  debugPrint("use mail " + widget.user.email.toString());
     FirebaseFirestore.instance.collection("Users")
         .doc("firstuser")
         .collection("Chauffeurs").doc(widget.user.email.toString())
@@ -120,7 +121,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
                   }); }
           });
              return ;
-             });
+             });*/
   }
 
   List<OBD> obdsbydate = [];
@@ -169,15 +170,14 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     List<Widget> _pages = [
-
-      HomeScreen(database: widget.database ,user: widget.user, car : widget.car ,key: GlobalKey(),),
+      HomeScreen(database: widget.database ,user: widget.user, car : widget.car ,key: GlobalKey()),
       DashboardScreen(database: widget.database ,user: widget.user ,car : widget.car, key: _dashkey),
       //dashboard(database: this.widget.database ,user: this.widget.user,key: GlobalKey()),
-      const obd(),
+      locationtracker(),
       //LocalNotifications(),
       StatsScreen(database: widget.database ,user: widget.user, car : widget.car , key: GlobalKey()),
-
     ];
+
     navigateTo(int index) {
       setState(() {
       _pages.removeAt(0);
@@ -185,22 +185,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
         _selectedIndex = index;
       });
     }
-   /* navigateTo(int index)  {
 
-
-      Future.delayed(Duration.zero,() {
-      setState(() async {
-        _pages.removeAt(0);
-        _pages.insert(0,  HomeScreen(database: this.widget.database ,user: this.widget.user ,key: GlobalKey()));
-       // obds =await this.widget.database.obdDAO.retrieveAllOBD();
-        //debugPrint("obdss" + obds.length.toString());
-        _tabController.animateTo(index);
-        _selectedIndex = index;
-      });
-      });
-
-    }
-*/
     Widget _bottomAppBarIcon({required int index, required IconData icon}) {
 
       return IconButton(
@@ -244,7 +229,7 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
                               child: IconButton(
                                   iconSize: 60,
                                   onPressed: () {
-                                    Get.to( connexion(theme: theme,),arguments: {"database" : widget.database , "user" : widget.user, });
+                                    Get.to( connexion(theme: theme,database : widget.database , user: widget.user,));
                                   },
                                   icon: Icon(
                                     Icons.power_settings_new_rounded,
@@ -264,31 +249,18 @@ class _BaseScreenState extends State<BaseScreen> with SingleTickerProviderStateM
         ),
       ),
       body:
-     /* NotificationListener(
-      onNotification: (scrollNotification) {
-      if (scrollNotification is ScrollEndNotification) _onTabChanged();
-      return false;
-      },
-    child:*/ Container(
+      Container(
         decoration: const BoxDecoration(
           gradient: kBackGroundGradient
         ),
-        /*child: TabBarView(
-          controller: _tabController,
-          children:
-            _pages
-            /*HomeScreen(database: this.widget.database ,user: this.widget.user), DashboardScreen(database: this.widget.database ,user: this.widget.user),
-            dashboard(database: this.widget.database ,user: this.widget.user),
-            SettingsScreen(),*/
+      child:
+     IndexedStack(
+    index: _selectedIndex,
+    children: _pages
+    ),
 
-        ),*/
-      child: IndexedStack(
-        index: _selectedIndex,
-        children: _pages
-      ),
-      ),
-
-    );
+    ),
+  );
   }
 
   void _onTabChanged() {

@@ -32,7 +32,7 @@ class _loadingState extends State<loading> {
     super.initState();
 
     _subscription = Stream.periodic(const Duration(seconds: 12)).listen((i) {
-      context.read<ObdReader>().startOBD();
+     // context.read<ObdReader>().startOBD();
       setState(() {
         loading = !loading;
         counter++;
@@ -47,6 +47,7 @@ class _loadingState extends State<loading> {
           onTap: () {
             //Get.to(BaseScreen(user: this.widget.user!,database: this.widget.database!, car: this.widget.car!,theme: this.widget.theme,));
             Navigator.pushNamed(context , '/app' , arguments: {"database" : widget.database , "user" : widget.user , "car":widget.car});
+
           },
           leading: Text(
             'Loaded!',

@@ -19,7 +19,6 @@ abstract class UserDAO {
   @Query('SELECT * FROM User WHERE id = :id')
   Future<User?> retrieveUser(int id);
 
-
   @Query('SELECT * FROM User WHERE email = :email')
   Future<List<User>> finduserByemail(String email);
 

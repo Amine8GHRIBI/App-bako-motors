@@ -139,10 +139,11 @@ class _DrawerWidgetState extends State<DrawerWidget>
                                   size: 20,),
 //                  tooltip: "Admin",
                                 onPressed: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const profile_page()));                                }),
+                              //    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>  profile_page(user: "null", database: "null", theme: "null",)));
+                                  }),
 
                             label: const Text(
-                              'Profile         ',
+                              'Profile',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,

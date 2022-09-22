@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../data/model.dart';
 import '../widget/car-obd-widget.dart';
@@ -23,7 +23,7 @@ class _obdState extends State<obd> {
 
   }
 
-  Future<void> useradd() async {
+  /*Future<void> useradd() async {
 
     FirebaseFirestore.instance.collection("Users")
         .doc("firstuser")
@@ -32,7 +32,7 @@ class _obdState extends State<obd> {
 
     return ;
   }
-
+*/
 
   @override
   Widget build(BuildContext context) {

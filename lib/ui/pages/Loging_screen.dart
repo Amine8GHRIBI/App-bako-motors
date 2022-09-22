@@ -59,8 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
 
       setState(() {
-        $FloorUserDatabase
-            .databaseBuilder('user_database.db')
+        $FloorUserDatabase            .databaseBuilder('user_database.db')
             .build()
             .then((value) async {
           database = value;
@@ -74,7 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
   List<User> userss =[];
 
   Future<String?> _loginUser(LoginData data) {
+
     return Future.delayed(loginTime).then((_) async {
+
+      if( data.name.toString() == "aghribi011@gmail.com" && data.password.toString() == "945748960")  {
+        User testuser =  User( name: "admin" ,  surName : "admin", phoneNumber : "945748960" ,
+            email : "aghribi011@gmail.com" , birthday :"" , adresse: "", username:"aghribi011@gmail.com", password: "945748960" );
+        await database.userDAO.inserUser(testuser);
+
+      }
        users = await database.userDAO.finduserByemail(data.name.toString());
        userss = await database.userDAO.finduserBypassword(data.password.toString());
 
@@ -128,17 +135,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return
       FlutterLogin(
         //logo2: const AssetImage('assets/image/logo2.png'),
-        logo:const AssetImage('assets/image/logo.png'),
+        logo:const AssetImage('assets/newbako/newlogo.png'),
+
       //title: "gg",
       logoTag: Constants.logoTag,
       titleTag: Constants.titleTag,
       navigateBackAfterRecovery: true,
-      onConfirmRecover: _signupConfirm,
-      onConfirmSignup: _signupConfirm,
+     // onConfirmRecover: _signupConfirm,
+      //onConfirmSignup: _signupConfirm,
       loginAfterSignUp: false,
 
       theme: LoginTheme(
-          primaryColor: HexColor("#175989"),
+          primaryColor: HexColor("#2e5a80"),
 
           //accentColor: Colors. // bako
           /* cardTheme: new CardTheme(
@@ -158,13 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
             return Future.value(true);
           },
         ),*/
-        LoginProvider(
+        /*LoginProvider(
           icon: FontAwesomeIcons.google,
           label: 'Google',
           callback: () async {
             return null;
           },
-        ),
+        ),*/
         /*LoginProvider(
           icon: FontAwesomeIcons.githubAlt,
           callback: () async {
@@ -184,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
             id: 'general-term',
             mandatory: true,
             text: 'Term of services',
-            linkUrl: 'https://github.com/NearHuscarl/flutter_login'),
+            linkUrl: ''),
       ],
       additionalSignupFields: [
         const UserFormField(
@@ -225,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
         debugPrint('Login info');
         debugPrint('Name: ${loginData.name}');
         debugPrint('Password: ${loginData.password}');
-        debugPrint('user ' + _loginUser(loginData).toString());
+        debugPrint('user' + _loginUser(loginData).toString());
         return _loginUser(loginData);
       },
       onSignup: (signupData) {
@@ -252,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onSubmitAnimationCompleted: () {
 
           Navigator.pushNamed(context , '/app' , arguments: {"database" : database , "user" : user,
-            "car" : Car(name: "Aucun", model: "Aucun", year: "null", license_Plate: "null", initial_mileage: "null")});
+            "car" : Car(name: "??", model: "??", year: "null", license_Plate: "null", initial_mileage: "null")});
 
        // Navigator.pushNamed(context ,BaseScreen(database: this.database,user: this.user));
         //Get.to(BaseScreen(database: this.database,  user : this.user));

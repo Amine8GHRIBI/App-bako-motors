@@ -120,7 +120,7 @@ class ObdReader with ChangeNotifier, DiagnosticableTreeMixin {
       _obdData['6'][1] = 'Failed to get tripRecords';
     }
     try {
-      _obdDistanceMILOn = await BluetoothObd.getTroublecodes;
+   //   _obdDistanceMILOn = await BluetoothObd.getTroublecodes;
       _obdData['7'][1] = _troublecodes;
     } on PlatformException {
       _obdDistanceMILOn = 'Failed to get troublecodes ';
